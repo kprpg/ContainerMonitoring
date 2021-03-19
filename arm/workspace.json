@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+       "workspaceName": {
+          "type": "string"
+       },
+       "tags": {
+          "type": "object",
+          "defaultValue": {}
+       },
+       "location": {
+          "type": "string"
+       }
+    },
+    "variables": {
+        "workspaceName": "[parameters('workspaceName')]",
+        "location": "[parameters('location')]",
+        "tags": "[parameters('tags')]",
+        "sku": "PerGB2018"
+    },
+    "resources": [
+       {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "name": "[variables('workspaceName')]",
+            "apiVersion": "2020-08-01",
+            "tags": "[variables('tags')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "sku": {
+                    "Name": "[variables('sku')]"
+                },
+                "retentionInDays": 90
+            }
+        }
+    ],
+    "outputs": {
+       "workspaceResourceId": {
+          "type": "String",
+          "value": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+       }
+    }
+ }

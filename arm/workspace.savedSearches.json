@@ -1,0 +1,137 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaceName": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "savedSearches": [
+            {
+                "category": "Container Insights",
+                "displayName": "CPU usage by Namespace",
+                "query": "KubePodInventory
+| where isnotempty(Computer)
+// eliminate unscheduled pods
+| where PodStatus in ('Running','Unknown')
+| summarize by bin(TimeGenerated, 1m), Computer, ClusterId, ContainerName, Namespace
+| project TimeGenerated, InstanceName = strcat(ClusterId, '/', ContainerName), Namespace
+| join
+(
+    Perf
+    | where ObjectName == 'K8SContainer'
+    | where CounterName == 'cpuUsageNanoCores'
+    | summarize UsageValue = max(CounterValue) by bin(TimeGenerated, 1m), Computer, InstanceName, CounterName
+    | project-away CounterName
+    | join kind = fullouter
+    (
+        Perf
+        | where ObjectName == 'K8SContainer'
+        | where CounterName == 'cpuRequestNanoCores'
+        | summarize RequestValue = max(CounterValue) by bin(TimeGenerated, 1m), Computer, InstanceName, CounterName
+        | project-away CounterName
+    )
+    on Computer, InstanceName, TimeGenerated
+    | project TimeGenerated = iif(isnotempty(TimeGenerated), TimeGenerated, TimeGenerated1),   Computer = iif(isnotempty(Computer), Computer, Computer1),  InstanceName = iif(isnotempty(InstanceName), InstanceName, InstanceName1),  UsageValue = iif(isnotempty(UsageValue), UsageValue, 0.0),   RequestValue = iif(isnotempty(RequestValue), RequestValue, 0.0)
+    | extend ConsumedValue = iif(UsageValue > RequestValue, UsageValue, RequestValue)
+)
+on InstanceName, TimeGenerated
+| summarize TotalCpuConsumedCores = sum(ConsumedValue) / 60 / 1000000 by bin(TimeGenerated, 1h), Namespace
+| render piechart"
+            },
+            {
+                "category": "Container Insights",
+                "displayName": "Disk RPS per disk per node",
+                "query": "InsightsMetrics
+| where Namespace == 'container.azm.ms/diskio'
+| where TimeGenerated > ago(1h)
+| where Name == 'reads'
+| extend Tags = todynamic(Tags)
+| extend HostName = tostring(Tags.hostName), Device = Tags.name
+| extend NodeDisk = strcat(Device, \"/\", HostName)
+| order by NodeDisk asc, TimeGenerated asc
+| serialize
+| extend PrevVal = iif(prev(NodeDisk) != NodeDisk, 0.0, prev(Val)), PrevTimeGenerated = iif(prev(NodeDisk) != NodeDisk, datetime(null), prev(TimeGenerated))
+| where isnotnull(PrevTimeGenerated) and PrevTimeGenerated != TimeGenerated
+| extend Rate = iif(PrevVal > Val, Val / (datetime_diff('Second', TimeGenerated, PrevTimeGenerated) * 1), iif(PrevVal == Val, 0.0, (Val - PrevVal) / (datetime_diff('Second', TimeGenerated, PrevTimeGenerated) * 1)))
+| where isnotnull(Rate)
+| project TimeGenerated, NodeDisk, Rate
+| render timechart"
+            },
+            {
+                "category": "Container Insights",
+                "displayName": "KubeEvents Insights by Reason",
+                "query": "KubeEvents
+| summarize count() by Message
+| render columnchart"
+            },
+            {
+                "category": "Container Insights",
+                "displayName": "Logs contains Failure or Error or Exception",
+                "query": "ContainerLog
+| where TimeGenerated > ago(30m)
+| where (LogEntry contains \"failed\" or LogEntry contains \"error\" or LogEntry contains \"exception\")
+| project TimeGenerated, LogEntry, ContainerID, Computer"
+            },
+            {
+                "category": "Container Insights",
+                "displayName": "Memory usage by Namespace",
+                "query": "// ********************
+// memory usage
+// ********************
+KubePodInventory
+//| where ClusterName == 'contosoretail2'
+| where isnotempty(Computer)
+// eliminate unscheduled pods
+| where PodStatus in ('Running','Unknown')
+| summarize by bin(TimeGenerated, 1m), Computer, ClusterId, ContainerName, Namespace
+| project TimeGenerated, InstanceName = strcat(ClusterId, '/', ContainerName), Namespace
+| join
+(
+    Perf
+    | where ObjectName == 'K8SContainer'
+    | where CounterName == 'memoryRssBytes'
+    | summarize UsageValue = max(CounterValue) by bin(TimeGenerated, 1m), Computer, InstanceName, CounterName
+    | project-away CounterName
+    | join kind = fullouter
+    (
+        Perf
+        | where ObjectName == 'K8SContainer'
+        | where CounterName == 'memoryRequestBytes'
+        | summarize RequestValue = max(CounterValue) by bin(TimeGenerated, 1m), Computer, InstanceName, CounterName
+        | project-away CounterName
+    )
+    on Computer, InstanceName, TimeGenerated
+    | project TimeGenerated = iif(isnotempty(TimeGenerated), TimeGenerated, TimeGenerated1), Computer = iif(isnotempty(Computer), Computer, Computer1), InstanceName = iif(isnotempty(InstanceName), InstanceName, InstanceName1), UsageValue = iif(isnotempty(UsageValue), UsageValue, 0.0), RequestValue = iif(isnotempty(RequestValue), RequestValue, 0.0)
+    | extend ConsumedValue = iif(UsageValue > RequestValue, UsageValue, RequestValue)
+)
+on InstanceName, TimeGenerated
+| summarize TotalMemoryConsumedMb = sum(ConsumedValue)/60/1024/1024 by bin(TimeGenerated, 1h), Namespace
+| render timechart"
+            }
+        ]
+    },
+    "resources": [
+        {
+            "type": "Microsoft.OperationalInsights/workspaces/savedSearches",
+            "name": "[concat(parameters('workspaceName'), '/',  guid(resourceGroup().id, parameters('workspaceName'), 
+                if(empty(variables('savedSearches')), '__blank__', variables('savedSearches')[copyIndex()].category), 
+                if(empty(variables('savedSearches')), '__blank__', variables('savedSearches')[copyIndex()].displayName)))]",
+            "apiVersion": "2020-08-01",
+            "copy": {
+                "name": "savedSearchLoop",
+                "count": "[length(variables('savedSearches'))]"
+            },
+            "properties": {
+                "etag": "*",
+                "category": "[variables('savedSearches')[copyIndex()].category]",
+                "displayName": "[variables('savedSearches')[copyIndex()].displayName]",
+                "query": "[variables('savedSearches')[copyIndex()].query]",
+                "version": 2,
+                "tags": "[if(contains(variables('savedSearches')[copyIndex()], 'tags'), variables('savedSearches')[copyIndex()].tags, json('[]'))]"
+            }
+        }
+    ],
+    "outputs": {}
+ }

@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraft-redmond
+  labels:
+    app: minecraft-redmond
+  namespace: minecraft
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 25565
+      targetPort: 25565
+      protocol: TCP
+      name: ui
+    - port: 25575
+      targetPort: 25575
+      protocol: TCP
+      name: rcon
+  selector:
+    run: minecraft
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: minecraftvolume-redmond
+  namespace: minecraft
+spec:
+  storageClassName: managed-standard
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft-redmond
+  namespace: minecraft
+spec:
+  replicas: 4
+  selector:
+    matchLabels: 
+      app: minecraft-redmond
+  template:
+    metadata:
+      labels:
+        run: minecraft
+        app: minecraft-redmond
+        namespace: minecraft
+    spec:
+      containers:
+        - name: minecraft
+          image: 'openhack/minecraft-server:1.0'
+          args:
+          - /bin/sh
+          - c
+          - echo "memory error" /dev/stderr
+          env:
+            - name: EULA
+              value: 'TRUE'
+          ports:
+            - containerPort: 25565
+              name: ui
+            - containerPort: 25575
+              name: rcon
+          resources:
+           limits:
+            cpu: 10m
+            memory: 12Mi
+          volumeMounts:
+          - mountPath: /data
+            name: minecraftvolume-redmond
+      volumes:
+      - name: minecraftvolume-redmond
+        persistentVolumeClaim:
+          claimName: minecraftpvc-redmond
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: minecraftpvc-redmond
+  namespace: minecraft
+  annotations:
+    volume.beta.kubernetes.io/storage-class: managed-standard
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

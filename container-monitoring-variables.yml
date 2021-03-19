@@ -1,0 +1,13 @@
+variables:
+- name: workspaceName
+  value: $(prefix)-LA$(suffix)
+- name: workspaceResourceGroupName
+  value: $(prefix)-OpsRG-Pri$(suffix)
+- name: resourceGroupName
+  value: $(prefix)-ContosoSH360ClusterRG$(suffix)
+- name: AKSName
+  value: $(prefix)-ContosoSH360Cluster$(suffix)
+- name: NonMonitoredAKSName
+  value: $(prefix)-ContosoNonMonitoredCluster$(suffix)
+- name: ContosoSH360ClusterFolder
+  value: '$(Build.SourcesDirectory)'

@@ -1,0 +1,13 @@
+variables:
+- name: prefix
+  value: '<name prefix>'
+- name: suffix
+  value: '<name suffix>'
+- name: azureSubscriptionEndpoint
+  value: 'ADO service connection name'
+
+- name: stagingKeyVaultName
+  value: 'key vaul name'
+
+- name: location
+  value: <Azure region>

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: purchasing-app
+ labels:
+  VishwadeploymentLabel1: d1
+  VishwadeploymentLabel2: d2
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: purchasing-app
+ template:
+  metadata:
+   labels:
+    VishwaPodLabel1: p1
+    VishwaPodLabel2: p2
+    app: purchasing-app
+  spec:
+   nodeSelector:
+     "beta.kubernetes.io/os": linux
+   containers:
+    - name: c1
+      image: vishiy/hello:err100eps
+    - name: c2
+      image: vishiy/hello:err123100eps
+    - name: c3
+      image: vishiy/hello:err123100eps

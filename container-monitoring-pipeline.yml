@@ -1,0 +1,11 @@
+trigger:
+- none
+
+variables:
+- template: container-monitoring-integration.variables.yml
+
+stages:
+- stage: Deploy
+  displayName: Deploy
+  jobs:
+  - template: ${{ variables['System.DefaultWorkingDirectory'] }}\container-monitoring-template.yml
