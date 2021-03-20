@@ -4,8 +4,10 @@ variables:
 - name: suffix
   value: '<name suffix>'
 - name: azureSubscriptionEndpoint
-  value: 'ADO service connection name'
+  value: '<ADO service connection name>'
 
+- name: stagingSubscriptionEndpoint
+  value: '<Staging key vault ADO service connection name>' # $(azureSubscriptionEndpoint) if the key vault is in the same subscription
 - name: stagingKeyVaultName
   value: 'key vaul name'
 

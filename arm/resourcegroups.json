@@ -5,9 +5,8 @@
         "resourceGroupLocation": {
             "type": "string"
         },
-        "resourceGroupName": {
-            "type": "string",
-            "defaultValue": "CR-RetailRG-Play"
+        "resourceGroupNames": {
+            "type": "array"
         },
         "tags": {
             "type": "object",
@@ -19,8 +18,12 @@
     "resources": [
        {
           "type": "Microsoft.Resources/resourceGroups",
-          "name": "[parameters('resourceGroupName')]",
+          "name": "[parameters('resourceGroupNames')[copyIndex()]]",
           "apiVersion": "2020-10-01",
+          "copy": {
+              "name": "resourceGroupLoop",
+              "count": "[length(parameters('resourceGroupNames'))]"
+          },
           "location": "[parameters('resourceGroupLocation')]",
           "tags": "[parameters('tags')]",
           "properties": {}
