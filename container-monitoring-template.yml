@@ -26,7 +26,7 @@ jobs:
       Inline: |
         New-AzDeployment -Location '$(location)' -TemplateFile '$(ContosoSH360ClusterFolder)/arm/resourcegroups.json' -TemplateParameterObject @{
           resourceGroupLocation = '$(location)'
-          resourceGroupName = @('$(resourceGroupName)', '$(workspaceResourceGroupName)')
+          resourceGroupNames = @('$(resourceGroupName)', '$(workspaceResourceGroupName)')
         } -Verbose
 
   - task: AzurePowerShell@4
