@@ -24,7 +24,7 @@ jobs:
       azureSubscription:  $(azureSubscriptionEndpoint)
       ScriptType: InlineScript
       Inline: |
-        New-AzDeployment -Location '$(location)' -TemplateFile '$(ContosoSH360ClusterFolder)/arm/resourcegroup.json' -TemplateParameterObject @{
+        New-AzDeployment -Location '$(location)' -TemplateFile '$(ContosoSH360ClusterFolder)/arm/resourcegroups.json' -TemplateParameterObject @{
           resourceGroupLocation = '$(location)'
           resourceGroupName = @('$(resourceGroupName)', '$(workspaceResourceGroupName)')
         } -Verbose
