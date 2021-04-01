@@ -24,29 +24,38 @@ This solution deployes resources for the Azure Monitor for containers demo scena
 
 | File/folder       | Description                                |
 |-------------------|--------------------------------------------|
-| `arm`             | ARM templates.                        |
-| `yaml`            | Kubernetes configuration files.                        |
+| `arm`             | ARM templates.                             |
+| `yaml`            | Kubernetes configuration files.            |
 | `.gitignore`      | Define what to ignore at commit time.      |
-| `CHANGELOG.md`    | List of changes to the sample.             |
-| `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
+| `CHANGELOG.md`    | List of changes.                           |
+| `CONTRIBUTING.md` | Guidelines for contributing.               |
 | `README.md`       | This README file.                          |
-| `LICENSE`         | The license for the sample.                |
+| `LICENSE`         | The license.                               |
 
 ## Prerequisites
 
-Outline the required components and tools that a user might need to have on their machine in order to run the sample. This can be anything from frameworks, SDKs, OS versions or IDE releases.
+* Azure subscription
+* You should be an owner of the subscription
+* Azure DevOps project
+* Permissions to create repositories, import and run pipelines
 
 ## Setup
 
-Explain how to prepare the sample once the user clones or downloads the repository. The section should outline every step necessary to install dependencies and set up any settings (for example, API keys and output folders).
+1.	Clone the repository to your Azure DevOps project
+1.	Create a service connection
+1.	Ensure that the Contributor role is assigned to the service connection's service principal
+1.	If you don't have a key vault, create one
+1.  Create a service principal for the Kubernetes cluster
+1.  Add service principal's application ID, object ID and secret to the key vault as ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPObjectId and ContosoSH360ClusterSPClientSecret secrets
+1.  Create a Key Vault access policy to allow the service connection's service principal to read secrets
+1.  Copy the container-monitoring-environment.variables.yml variables file and rename it to match your environment
+1.  Update the environment variables file with correponding values
+1.  Update the container-monitoring-pipeline.yml pipeline to use your environment variables file
+1.  Import the container-monitoring-pipeline.yml pipeline to your Azure DevOps project
 
 ## Runnning the sample
 
-Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
-
-## Key concepts
-
-Provide users with more context on the tools and services used in the sample. Explain some of the code that is being used and how services interact with each other.
+1.  Run the pipeline
 
 ## Contributing
 
@@ -62,19 +71,3 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-
-# Azure Monitor for Containers 
-This solution demostrates how to monitor an Azure Kubernetes Service (AKS) cluster with Azure Monitor for containers.
-
-# Getting Started
-1.	Clone the repository to your Azure DevOps project
-1.	Create a service connection
-1.	Ensure that the Contributor role is assigned to the service connection's service principal
-1.	If you don't have a key vault, create one
-1.  Create a service principal for the Kubernetes cluster
-1.  Add service principal's application ID, object ID and secret to the key vault as ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPObjectId and ContosoSH360ClusterSPClientSecret secrets
-1.  Copy the container-monitoring-environment.variables.yml variables file and rename it to match your environment
-1.  Update the environment variables file with correponding values
-1.  Update the container-monitoring-pipeline.yml pipeline to use your environment variables file
-1.  Import the container-monitoring-pipeline.yml pipeline to your Azure DevOps project
-1.  Run the pipeline
