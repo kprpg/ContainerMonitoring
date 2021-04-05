@@ -1,3 +1,6 @@
+Copyright (c) Microsoft Corporation.  
+Licensed under the MIT license.
+
 ---
 page_type: Azure Monitor for Containers
 languages:
