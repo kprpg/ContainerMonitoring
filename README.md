@@ -50,7 +50,7 @@ This solution deployes resources for the Azure Monitor for containers demo scena
 
 1.	Clone the repository to your Azure DevOps project
 1.	Create a service connection
-1.	Ensure that the Contributor role is assigned to the service connection's service principal
+1.	Ensure that the Owner role is assigned to the service connection's service principal
 1.	If you don't have a key vault, create one
 1.  Create a service principal for the Kubernetes cluster
 1.  Add service principal's application ID, object ID and secret to the key vault as ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPObjectId and ContosoSH360ClusterSPClientSecret secrets
