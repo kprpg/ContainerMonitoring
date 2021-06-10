@@ -32,9 +32,8 @@ This solution deployes resources for the Azure Monitor for containers demo scena
 | `.gitignore`                                     | Define what to ignore at commit time.      |
 | `CHANGELOG.md`                                   | List of changes.                           |
 | `CONTRIBUTING.md`                                | Guidelines for contributing.               |
-| `container-monitoring-pipeline.yml`              | Main pipeline.                             |
+| `container-monitoring-pipeline.yml`              | Pipeline.                             |
 | `container-monitoring-environment.variables.yml` | Environment specific variables.            |
-| `container-monitoring-template.yml`              | Pipeline template.                         |
 | `container-monitoring-variables.yml`             | Pipeline variables.                        |
 | `LICENSE`                                        | The license.                               |
 | `README.md`                                      | This README file.                          |
