@@ -83,7 +83,7 @@
             "name": "[parameters('clusterName')]",
             "location": "[parameters('location')]",
             "properties": {
-                "kubernetesVersion": "1.18.10",
+                "kubernetesVersion": "1.19.9",
                 "dnsPrefix": "[variables('dnsPrefix')]",
                 "agentPoolProfiles": [
                     {
