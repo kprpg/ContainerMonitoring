@@ -85,7 +85,7 @@
     "resources": [
         {
             "type": "Microsoft.ContainerService/managedClusters",
-            "apiVersion": "2022-02-01",
+            "apiVersion": "2021-10-01",
             "name": "[parameters('clusterName')]",
             "location": "[parameters('location')]",
             "properties": {
@@ -102,7 +102,8 @@
                         "storageProfile": "ManagedDisks",
                         "type": "VirtualMachineScaleSets",
                         "minCount": 2,
-                        "maxCount": 2
+                        "maxCount": 2,
+                        "mode": "System"
                     },
                     {
                         "name": "[parameters('windowsNodePoolName')]",
