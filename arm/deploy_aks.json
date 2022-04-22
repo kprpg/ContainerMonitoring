@@ -71,6 +71,17 @@
                 "description": "The type of operating system."
             }
         },
+        "osTypeWindows": {
+            "defaultValue": "Windows",
+            "allowedValues": [
+                "Linux",
+                "Windows"
+            ],
+            "type": "string",
+            "metadata": {
+                "description": "The type of operating system."
+            }
+        },
         "workspaceName": {
             "type": "string"
         },
@@ -110,7 +121,7 @@
                         "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
                         "count": 1,
                         "vmSize": "[parameters('agentVMSize')]",
-                        "osType": "[parameters('osType')]",
+                        "osType": "[parameters('osTypeWindows')]",
                         "enableAutoScaling": true,
                         "storageProfile": "ManagedDisks",
                         "type": "VirtualMachineScaleSets",
