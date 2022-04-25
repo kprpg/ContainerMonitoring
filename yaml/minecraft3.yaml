@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
         - name: minecraft
-          image: 'openhack/minecraft-server:1.0'
+          image: 'openhack/minecraft-server'
           args:
           - /bin/sh
           - c
@@ -68,10 +68,10 @@ spec:
               name: ui
             - containerPort: 25575
               name: rcon
-          resources:
-           limits:
-            cpu: 10m
-            memory: 12Mi
+          # resources:
+          #  limits:
+          #   cpu: 1000m
+          #   memory: 1Gi
           volumeMounts:
           - mountPath: /data
             name: minecraftvolume-redmond

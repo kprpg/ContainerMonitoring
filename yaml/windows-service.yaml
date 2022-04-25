@@ -16,10 +16,12 @@ spec:
         app: sample
     spec:
       nodeSelector:
-        "beta.kubernetes.io/os": windows
+      # not found windows
+        "beta.kubernetes.io/os": linux
       containers:
       - name: sample
-        image: mcr.microsoft.com/dotnet/framework/samples:aspnetapp
+      # image not correct
+        image: mcr.microsoft.com/dotnet/samples:aspnetapp
         resources:
           limits:
             cpu: 1
