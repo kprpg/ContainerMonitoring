@@ -16,8 +16,7 @@ spec:
         app: sample
     spec:
       nodeSelector:
-      # not found windows
-        "beta.kubernetes.io/os": linux
+        "beta.kubernetes.io/os": windows
       containers:
       - name: sample
       # image not correct
