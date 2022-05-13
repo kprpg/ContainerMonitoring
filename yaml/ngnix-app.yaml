@@ -54,7 +54,6 @@ spec:
         app: nginx
     spec:
       volumes:
-      # need to have a secret then we can create this volume
       # - name: secret-volume
       #   secret:
       #     secretName: nginxsecret
