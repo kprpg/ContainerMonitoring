@@ -4,8 +4,24 @@
 trigger:
 - none
 
+parameters:
+- name: environment
+  displayName: 'Environment to deploy'
+  type: string
+  default: Integration
+  values:
+  - Integration
+  - Production
+  - PreProd
+
 variables:
-- template: container-monitoring-integration.variables.yml
+- ${{ if eq(parameters.environment, 'Integration') }}:
+  - template: container-monitoring-integration.variables.yml
+- ${{ if eq(parameters.environment, 'Production') }}:
+  - template: gearama-production.variables.yml
+- ${{ if eq(parameters.environment, 'PreProd') }}:
+  - template: gearama-preprod.variables.yml
+
 
 stages:
 - stage: Deploy
