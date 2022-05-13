@@ -19,7 +19,6 @@ spec:
         "beta.kubernetes.io/os": windows
       containers:
       - name: sample
-      # image not correct
         image: mcr.microsoft.com/dotnet/samples:aspnetapp
         resources:
           limits:
