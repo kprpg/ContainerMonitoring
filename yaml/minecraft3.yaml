@@ -68,10 +68,10 @@ spec:
               name: ui
             - containerPort: 25575
               name: rcon
-          # resources:
-          #  limits:
-          #   cpu: 1000m
-          #   memory: 1Gi
+          resources:
+           limits:
+            cpu: 10m
+            memory: 12Mi
           volumeMounts:
           - mountPath: /data
             name: minecraftvolume-redmond
