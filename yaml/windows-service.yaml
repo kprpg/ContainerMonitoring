@@ -19,7 +19,7 @@ spec:
         "beta.kubernetes.io/os": windows
       containers:
       - name: sample
-        image: mcr.microsoft.com/dotnet/framework/samples:aspnetapp
+        image: mcr.microsoft.com/dotnet/samples:aspnetapp
         resources:
           limits:
             cpu: 1

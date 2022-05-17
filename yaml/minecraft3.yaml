@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
         - name: minecraft
-          image: 'openhack/minecraft-server:1.0'
+          image: 'openhack/minecraft-server'
           args:
           - /bin/sh
           - c

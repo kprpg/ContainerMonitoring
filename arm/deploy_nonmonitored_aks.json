@@ -83,7 +83,7 @@
             "name": "[parameters('clusterName')]",
             "location": "[parameters('location')]",
             "properties": {
-                "kubernetesVersion": "1.20.13",
+                "kubernetesVersion": "1.23.5",
                 "dnsPrefix": "[variables('dnsPrefix')]",
                 "agentPoolProfiles": [
                     {
@@ -96,7 +96,8 @@
                         "storageProfile": "ManagedDisks",
                         "type": "VirtualMachineScaleSets",
                         "minCount": 2,
-                        "maxCount": 3
+                        "maxCount": 3,
+                        "mode": "System"
                     }
                 ],
                 "servicePrincipalProfile": {

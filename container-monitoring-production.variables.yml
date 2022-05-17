@@ -1,0 +1,15 @@
+variables:
+- name: prefix
+  value: CH1
+- name: suffix
+  value: 
+- name: azureSubscriptionEndpoint
+  value: 'Contoso Hotels Tenant - Production'
+
+- name: stagingSubscriptionEndpoint
+  value: 'Contoso Hotels Tenant - Pre Prod'
+- name: stagingKeyVaultName
+  value: $(prefix)-StagingKV-Dev
+
+- name: location
+  value: eastus
