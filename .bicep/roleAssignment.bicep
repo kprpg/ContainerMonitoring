@@ -2,9 +2,9 @@ param clusterName string
 @description('Client ID (used by cloudprovider)')
 @secure()
 param ContosoSH360ClusterSPObjectId string
-param roleDefinition string = '3913510d-42f4-4e42-8a64-420c390055eb'
+param monitoringMetricsPublisherRoleDefinition string = '3913510d-42f4-4e42-8a64-420c390055eb'
 
-var roleDefinitionId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinition)
+var roleDefinitionId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', monitoringMetricsPublisherRoleDefinition)
 
 resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-01-01' existing = {
   name: clusterName

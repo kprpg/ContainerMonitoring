@@ -29,7 +29,7 @@ var savedSearches = [
 ]
 
 resource savedSearch 'Microsoft.OperationalInsights/workspaces/savedSearches@2020-08-01' = [for item in savedSearches: {
-  name: '${workspaceName}/${guid(resourceGroup().id, workspaceName, (empty(savedSearches) ? '__blank__' : item.category), (empty(savedSearches) ? '__blank__' : item.displayName))}'
+  name: '${workspaceName}/${guid(resourceGroup().id, workspaceName, item.category)}'
   properties: {
     category: item.category
     displayName: item.displayName

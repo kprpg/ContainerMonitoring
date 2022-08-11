@@ -68,6 +68,7 @@ stages:
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
             agentVMSize = '$(agentVMSize)'
+            workspaceSkuName = '$(workspaceSkuName)'
           } -Verbose
 
     - task: KubectlInstaller@0

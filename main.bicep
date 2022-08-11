@@ -7,6 +7,7 @@ param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
 param montioredClusterName string
 param nonMontioredClusterName string
+
 param servicePrincipalClientId string
 @secure()
 param servicePrincipalClientSecret string
@@ -16,6 +17,7 @@ param adminUser string
 param adminPassword string
 @secure()
 param contosoSH360ClusterSPObjectId string
+param workspaceSkuName string
 
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
@@ -69,6 +71,7 @@ var nonMonitoredAKSPrimaryAgentPoolProfile = [
 
 targetScope = 'subscription'
 
+// AKS cluster Resource group and workspace Resource group deployment 
 module rgModule '.bicep/resourceGroup.bicep' = [for resourceGroup in resourceGroups: {
   scope: subscription(subscriptionId)
   name: 'rgDeploy${resourceGroup}'
@@ -78,18 +81,21 @@ module rgModule '.bicep/resourceGroup.bicep' = [for resourceGroup in resourceGro
   }
 }]
 
+//Log analytics workspace deployment
 module workspaceModule '.bicep/logAnalyticsWorkspace.bicep' = {
   scope: resourceGroup(opsResourceGroupName)
   name: '${prefix}workspaceDeploy'
   params: {
     workspaceName: logAnalyticsWorkspaceName
     location: location
+    workspaceSkuName: workspaceSkuName
   }
   dependsOn: [
     rgModule
   ]
 }
 
+// Saved Searches Deployment
 module savedSearchModule '.bicep/workspaceSavedSearches.bicep' = {
   scope: resourceGroup(opsResourceGroupName)
   name: '${prefix}savedSearchesDeploy'
@@ -98,6 +104,7 @@ module savedSearchModule '.bicep/workspaceSavedSearches.bicep' = {
   }
 }
 
+// Monitored AKS cluster deployment
 module monitoredAksModule '.bicep/aks.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}monitoredAKSDeploy'
@@ -114,6 +121,7 @@ module monitoredAksModule '.bicep/aks.bicep' = {
   }
 }
 
+// Monitoring Metrics Publisher Role assignment to Cluster Service principal
 module roleAssignmentModule '.bicep/roleAssignment.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}roleAssignmentDeploy'
@@ -123,6 +131,7 @@ module roleAssignmentModule '.bicep/roleAssignment.bicep' = {
   }
 }
 
+// Non monitored AKS cluster deployment
 module nonMonitoredAksModule '.bicep/aks.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}nonMonitoredAKSDeploy'
