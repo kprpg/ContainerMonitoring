@@ -32,7 +32,7 @@ stages:
     pool: 
       name: ServicesDevOps-contosohotelsdev
       demands:
-       ImageOverride -equals MMS20.04
+       ImageOverride -equals MMS21.04
     
     variables:
     - template: container-monitoring-variables.yml
