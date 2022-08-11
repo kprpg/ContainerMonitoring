@@ -30,7 +30,9 @@ stages:
   - job: Deploy
     displayName: Deploy Container Monitoring
     pool: 
-      vmImage: ubuntu-latest
+      name: ServicesDevOps-contosohotelsdev
+      demands:
+        ImageOverride -eq MMSUbuntu21.04
     
     variables:
     - template: container-monitoring-variables.yml
