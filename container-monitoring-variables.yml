@@ -14,3 +14,6 @@ variables:
   value: $(prefix)-ContosoNonMonitoredCluster$(suffix)
 - name: ContosoSH360ClusterFolder
   value: '$(Build.SourcesDirectory)'
+
+- name: agentVMSize
+  value: Standard_D2s_v3

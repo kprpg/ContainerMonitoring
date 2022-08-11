@@ -67,6 +67,7 @@ stages:
             contosoSH360ClusterSPObjectId = '$(ContosoSH360ClusterSPObjectId)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
+            agentVMSize = '$(agentVMSize)'
           } -Verbose
 
     - task: KubectlInstaller@0
