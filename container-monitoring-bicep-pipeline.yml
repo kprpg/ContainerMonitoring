@@ -29,10 +29,8 @@ stages:
   jobs:
   - job: Deploy
     displayName: Deploy Container Monitoring
-    pool:
-      name: ServicesDevOps-contosohotelsdev
-      demands:
-       ImageOverride -equals MMS22.04
+    pool: 
+      vmImage: ubuntu-latest
     
     variables:
     - template: container-monitoring-variables.yml
