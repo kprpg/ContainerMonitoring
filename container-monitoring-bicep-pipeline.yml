@@ -3,7 +3,7 @@
 
 resources:
   repositories:
-  - repository: Bicep-Modules
+  - repository: bicep
     type: git
     name: ContosoHotels/Bicep-Modules
     ref: Dev
@@ -44,6 +44,7 @@ stages:
     
     steps:
     - checkout: self
+    - checkout: bicep
 
     - task: CopyFiles@2
       displayName: 'Copy bicep modules'
@@ -67,7 +68,7 @@ stages:
         ScriptType: InlineScript
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
-          New-AzSubscriptionDeployment -Name "cmResources_$(Build.BuildNumber)" -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/main.bicep' -TemplateParameterObject @{
+          New-AzSubscriptionDeployment -Name "cmResources_$(Build.BuildNumber)" -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
             prefix = '$(prefix)'
