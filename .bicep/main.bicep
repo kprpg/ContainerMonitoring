@@ -134,61 +134,61 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
   ]
 }
 
-module savedSearchesDeploy 'modules/Microsoft.OperationalInsights/workspaces/savedSearches/deploy.bicep' = [for (savedSearch,s) in savedSearches: {
-  scope: resourceGroup(opsResourceGroupName)
-  name: '${prefix}workspaceDeploy${s}'
-  params: {
-    logAnalyticsWorkspaceName: workspaceModule.outputs.name
-    name: savedSearch.name
-    displayName: savedSearch.displayName
-    category: savedSearch.category
-    query: savedSearch.query
-    location: location
-  }
-}]
+// module savedSearchesDeploy 'modules/Microsoft.OperationalInsights/workspaces/savedSearches/deploy.bicep' = [for (savedSearch,s) in savedSearches: {
+//   scope: resourceGroup(opsResourceGroupName)
+//   name: '${prefix}workspaceDeploy${s}'
+//   params: {
+//     logAnalyticsWorkspaceName: workspaceModule.outputs.name
+//     name: savedSearch.name
+//     displayName: savedSearch.displayName
+//     category: savedSearch.category
+//     query: savedSearch.query
+//     location: location
+//   }
+// }]
 
-// Monitored AKS cluster deployment
-module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
-  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: '${prefix}monitoredAKSDeploy'
-  params: {
-    name: montioredClusterName
-    aksServicePrincipalProfile: servicePrincipalProfile
-    monitoringWorkspaceId: workspaceModule.outputs.resourceId
-    omsAgentEnabled: true
-    primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
-    aadProfileManaged: false
-    location: location
-  }
-  dependsOn: [
-    rgModule
-  ]
-}
+// // Monitored AKS cluster deployment
+// module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+//   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+//   name: '${prefix}monitoredAKSDeploy'
+//   params: {
+//     name: montioredClusterName
+//     aksServicePrincipalProfile: servicePrincipalProfile
+//     monitoringWorkspaceId: workspaceModule.outputs.resourceId
+//     omsAgentEnabled: true
+//     primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
+//     aadProfileManaged: false
+//     location: location
+//   }
+//   dependsOn: [
+//     rgModule
+//   ]
+// }
 
-// Monitoring Metrics Publisher Role assignment to Cluster Service principal
-module roleAssignmentModule 'modules/Microsoft.ContainerService/managedClusters/.bicep/nested_roleAssignments.bicep' = {
-  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: '${prefix}roleAssignmentDeploy'
-  params: {
-    resourceId: monitoredAksModule.outputs.resourceId
-    principalIds: principalIds
-    roleDefinitionIdOrName: roleDefinitionName
-  }
-}
+// // Monitoring Metrics Publisher Role assignment to Cluster Service principal
+// module roleAssignmentModule 'modules/Microsoft.ContainerService/managedClusters/.bicep/nested_roleAssignments.bicep' = {
+//   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+//   name: '${prefix}roleAssignmentDeploy'
+//   params: {
+//     resourceId: monitoredAksModule.outputs.resourceId
+//     principalIds: principalIds
+//     roleDefinitionIdOrName: roleDefinitionName
+//   }
+// }
 
-// Non monitored AKS cluster deployment
-module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
-  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: '${prefix}nonMonitoredAKSDeploy'
-  params: {
-    name: nonMontioredClusterName
-    aksServicePrincipalProfile: servicePrincipalProfile
-    omsAgentEnabled: false
-    primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
-    aadProfileManaged: false
-    location: location
-  }
-  dependsOn: [
-    monitoredAksModule
-  ]
-}
+// // Non monitored AKS cluster deployment
+// module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+//   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+//   name: '${prefix}nonMonitoredAKSDeploy'
+//   params: {
+//     name: nonMontioredClusterName
+//     aksServicePrincipalProfile: servicePrincipalProfile
+//     omsAgentEnabled: false
+//     primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
+//     aadProfileManaged: false
+//     location: location
+//   }
+//   dependsOn: [
+//     monitoredAksModule
+//   ]
+// }
