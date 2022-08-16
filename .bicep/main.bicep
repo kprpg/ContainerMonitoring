@@ -141,6 +141,7 @@ module savedSearchesDeploy 'modules/Microsoft.OperationalInsights/workspaces/sav
     displayName: savedSearch.displayName
     category: savedSearch.category
     query: savedSearch.query
+    forceCmkForQuery: false
   }
 }]
 
