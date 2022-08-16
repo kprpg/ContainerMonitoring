@@ -5,18 +5,54 @@ param prefix string
 param contosoSH360ClusterResourceGroupName string
 param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
-//param montioredClusterName string
+param montioredClusterName string
 //param nonMontioredClusterName string
 //param roleDefinitionName string
 
-//param servicePrincipalClientId string
+param servicePrincipalClientId string
+@secure()
+param servicePrincipalClientSecret string
+param agentVMSize string
+@secure()
+param contosoSH360ClusterSPObjectId string
 param workspaceSkuName string
 
+var servicePrincipalProfile = {
+  clientId: servicePrincipalClientId
+  Secret: servicePrincipalClientSecret
+}
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
   opsResourceGroupName
 ]
-
+var monitoredAKSPrimaryAgentPoolProfile = [
+  {
+    name: 'linux'
+    osDiskSizeGB: 120
+    count: 2
+    vmSize: agentVMSize
+    osType: 'Linux'
+    enableAutoScaling: true
+    type: 'VirtualMachineScaleSets'
+    storageProfile: 'ManagedDisks'
+    minCount: 2
+    maxCount: 2
+    mode: 'System'
+  }
+  {
+    name: 'window'
+    osDiskSizeGB: 120
+    count: 1
+    vmSize: agentVMSize
+    osType: 'Windows'
+    enableAutoScaling: true
+    type: 'VirtualMachineScaleSets'
+    storageProfile: 'ManagedDisks'
+    minCount: 1
+    maxCount: 1
+    maxPods: 30
+  }
+]
 var savedSearches = [
   {
     name: 'CPUUsageByNamespace'

@@ -6,7 +6,7 @@ resources:
   - repository: bicep
     type: git
     name: ContosoHotels/Bicep-Modules
-    ref: Dev
+    ref: bicepModules_aks
 
 trigger:
 - none
@@ -76,6 +76,11 @@ stages:
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
+            montioredClusterName = '$(AKSName)'
+            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
+            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
+            contosoSH360ClusterSPObjectId = '$(ContosoSH360ClusterSPObjectId)'
+            agentVMSize = '$(agentVMSize)'
           } -Verbose
 
     - task: KubectlInstaller@0
