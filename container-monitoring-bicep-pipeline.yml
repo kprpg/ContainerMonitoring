@@ -75,14 +75,7 @@ stages:
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
-            montioredClusterName = '$(AKSName)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
-            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
-            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
-            contosoSH360ClusterSPObjectId = '$(ContosoSH360ClusterSPObjectId)'
-            agentVMSize = '$(agentVMSize)'
             workspaceSkuName = '$(workspaceSkuName)'
-            roleDefinitionName = '$(roleDefinitionName)'
           } -Verbose
 
     - task: KubectlInstaller@0
