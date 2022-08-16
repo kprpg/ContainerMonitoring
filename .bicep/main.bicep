@@ -155,6 +155,7 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/de
     monitoringWorkspaceId: workspaceModule.outputs.resourceId
     omsAgentEnabled: true
     primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
+    aadProfileManaged: false
   }
 }
 
@@ -178,6 +179,7 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
     aksServicePrincipalProfile: servicePrincipalProfile
     omsAgentEnabled: false
     primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
+    aadProfileManaged: false
   }
   dependsOn: [
     monitoredAksModule
