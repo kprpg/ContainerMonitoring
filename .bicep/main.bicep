@@ -6,15 +6,13 @@ param contosoSH360ClusterResourceGroupName string
 param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
 param montioredClusterName string
-//param nonMontioredClusterName string
+param nonMontioredClusterName string
 //param roleDefinitionName string
 
 param servicePrincipalClientId string
 @secure()
 param servicePrincipalClientSecret string
 param agentVMSize string
-@secure()
-param contosoSH360ClusterSPObjectId string
 param workspaceSkuName string
 
 var servicePrincipalProfile = {
@@ -53,6 +51,23 @@ var monitoredAKSPrimaryAgentPoolProfile = [
     maxPods: 30
   }
 ]
+var nonMonitoredAKSPrimaryAgentPoolProfile = [
+  {
+    name: 'linuxpool'
+    osDiskSizeGB: 120
+    count: 3
+    vmSize: agentVMSize
+    osType: 'Linux'
+    enableAutoScaling: true
+    storageProfile: 'ManagedDisks'
+    type: 'VirtualMachineScaleSets'
+    minCount: 2
+    maxCount: 3
+    mode: 'System'
+
+  }
+]
+
 var savedSearches = [
   {
     name: 'CPUUsageByNamespace'
@@ -133,30 +148,19 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
    ]
  }
 
-// // Monitoring Metrics Publisher Role assignment to Cluster Service principal
-// module roleAssignmentModule 'modules/Microsoft.ContainerService/managedClusters/.bicep/nested_roleAssignments.bicep' = {
-//   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-//   name: '${prefix}roleAssignmentDeploy'
-//   params: {
-//     resourceId: monitoredAksModule.outputs.resourceId
-//     principalIds: principalIds
-//     roleDefinitionIdOrName: roleDefinitionName
-//   }
-// }
-
-// // Non monitored AKS cluster deployment
-// module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
-//   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-//   name: '${prefix}nonMonitoredAKSDeploy'
-//   params: {
-//     name: nonMontioredClusterName
-//     aksServicePrincipalProfile: servicePrincipalProfile
-//     omsAgentEnabled: false
-//     primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
-//     aadProfileManaged: false
-//     location: location
-//   }
-//   dependsOn: [
-//     monitoredAksModule
-//   ]
-// }
+ // Non monitored AKS cluster deployment
+ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+   name: '${prefix}nonMonitoredAKSDeploy'
+   params: {
+     name: nonMontioredClusterName
+     aksServicePrincipalProfile: servicePrincipalProfile
+     omsAgentEnabled: false
+     primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
+     aadProfileManaged: false
+     location: location
+   }
+   dependsOn: [
+     monitoredAksModule
+   ]
+ }

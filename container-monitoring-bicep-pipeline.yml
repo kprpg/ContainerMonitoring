@@ -79,7 +79,7 @@ stages:
             montioredClusterName = '$(AKSName)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
-            contosoSH360ClusterSPObjectId = '$(ContosoSH360ClusterSPObjectId)'
+            nonMontioredClusterName = '$(NonMonitoredAKSName)'
             agentVMSize = '$(agentVMSize)'
           } -Verbose
 
