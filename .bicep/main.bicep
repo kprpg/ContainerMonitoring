@@ -127,6 +127,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
     name: logAnalyticsWorkspaceName
     serviceTier: workspaceSkuName
     location: location
+    forceCmkForQuery: false
   }
   dependsOn: [
     rgModule
@@ -142,7 +143,6 @@ module savedSearchesDeploy 'modules/Microsoft.OperationalInsights/workspaces/sav
     displayName: savedSearch.displayName
     category: savedSearch.category
     query: savedSearch.query
-    forceCmkForQuery: false
     location: location
   }
 }]
