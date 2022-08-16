@@ -87,6 +87,7 @@ stages:
             aksClusterNetworkPolicy = '$(aksClusterNetworkPolicy)'
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+            clusterVersion = '$(clusterVersion)'
           } -Verbose
 
     - task: AzureCLI@2
