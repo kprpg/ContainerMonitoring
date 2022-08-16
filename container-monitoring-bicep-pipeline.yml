@@ -88,6 +88,18 @@ stages:
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
           } -Verbose
 
+    - task: AzureCLI@2
+      displayName: 'Enable MDM'
+      #condition: false
+      inputs:
+        azureSubscription: $(azureSubscriptionEndpoint)
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |
+          $cluster = az aks show -g '$(resourceGroupName)' -n '$(AKSName)' --output json
+          $clusterData = $cluster | ConvertFrom-Json
+          az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
+
     - task: KubectlInstaller@0
       displayName: 'Install Kubectl latest'
 
