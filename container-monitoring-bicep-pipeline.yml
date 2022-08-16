@@ -79,7 +79,6 @@ stages:
             montioredClusterName = '$(AKSName)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
             agentVMSize = '$(agentVMSize)'
           } -Verbose
 

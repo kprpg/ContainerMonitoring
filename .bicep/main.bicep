@@ -6,7 +6,11 @@ param contosoSH360ClusterResourceGroupName string
 param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
 param montioredClusterName string
-param nonMontioredClusterName string
+//param nonMontioredClusterName string
+param adminUser string
+@secure()
+param adminPassword string
+
 //param roleDefinitionName string
 
 param servicePrincipalClientId string
@@ -140,27 +144,12 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
      monitoringWorkspaceId: workspaceModule.outputs.resourceId
      omsAgentEnabled: true
      primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
-     aadProfileManaged: false
      location: location
+     adminUser: adminUser
+     adminPassword: adminPassword
    }
    dependsOn: [
      rgModule
    ]
  }
 
- // Non monitored AKS cluster deployment
- module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
-   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-   name: '${prefix}nonMonitoredAKSDeploy'
-   params: {
-     name: nonMontioredClusterName
-     aksServicePrincipalProfile: servicePrincipalProfile
-     omsAgentEnabled: false
-     primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
-     aadProfileManaged: false
-     location: location
-   }
-   dependsOn: [
-     monitoredAksModule
-   ]
- }
