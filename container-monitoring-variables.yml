@@ -29,3 +29,5 @@ variables:
   value: 10.0.0.0/16
 - name: aksClusterDockerBridgeCidr
   value: 172.17.0.1/16
+- name: clusterVersion
+  value: 1.23.5

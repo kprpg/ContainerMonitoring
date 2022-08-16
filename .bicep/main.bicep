@@ -7,6 +7,7 @@ param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
 param montioredClusterName string
 param nonMontioredClusterName string
+param clusterVersion string
 param adminUser string
 @secure()
 param adminPassword string
@@ -144,6 +145,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
    name: '${prefix}monitoredAKSDeploy'
    params: {
      name: montioredClusterName
+     aksClusterKubernetesVersion: clusterVersion
      aksServicePrincipalProfile: servicePrincipalProfile
      monitoringWorkspaceId: workspaceModule.outputs.resourceId
      omsAgentEnabled: true
@@ -167,6 +169,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
   name: '${prefix}NonMonitoredAKSDeploy'
   params: {
     name: nonMontioredClusterName
+    aksClusterKubernetesVersion: clusterVersion
     aksServicePrincipalProfile: servicePrincipalProfile
     monitoringWorkspaceId: workspaceModule.outputs.resourceId
     omsAgentEnabled: false
