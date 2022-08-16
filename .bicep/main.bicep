@@ -177,7 +177,11 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
     location: location
     adminUser: adminUser
     adminPassword: adminPassword
-  }
+    aksClusterNetworkPlugin: aksClusterNetworkPlugin
+    aksClusterNetworkPolicy: aksClusterNetworkPolicy
+    aksClusterServiceCidr: aksClusterServiceCidr
+    aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
+ }
   dependsOn: [
     rgModule
   ]
