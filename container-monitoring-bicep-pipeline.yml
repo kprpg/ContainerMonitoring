@@ -80,10 +80,9 @@ stages:
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             contosoSH360ClusterSPObjectId = '$(ContosoSH360ClusterSPObjectId)'
-            adminUser = '$(chVmAdminUser)'
-            adminPassword = '$(chVmAdminPassword)'
             agentVMSize = '$(agentVMSize)'
             workspaceSkuName = '$(workspaceSkuName)'
+            roleDefinitionName = '$(roleDefinitionName)'
           } -Verbose
 
     - task: KubectlInstaller@0
