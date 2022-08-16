@@ -77,6 +77,8 @@ stages:
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
             montioredClusterName = '$(AKSName)'
+            adminUser = '$(chVmAdminUser)'
+            adminPassword = '$(chVmAdminPassword)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
