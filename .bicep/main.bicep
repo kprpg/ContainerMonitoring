@@ -126,6 +126,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
   params: {
     name: logAnalyticsWorkspaceName
     serviceTier: workspaceSkuName
+    location: location
   }
   dependsOn: [
     rgModule
@@ -142,6 +143,7 @@ module savedSearchesDeploy 'modules/Microsoft.OperationalInsights/workspaces/sav
     category: savedSearch.category
     query: savedSearch.query
     forceCmkForQuery: false
+    location: location
   }
 }]
 
@@ -156,7 +158,11 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/de
     omsAgentEnabled: true
     primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
     aadProfileManaged: false
+    location: location
   }
+  dependsOn: [
+    rgModule
+  ]
 }
 
 // Monitoring Metrics Publisher Role assignment to Cluster Service principal
@@ -180,6 +186,7 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
     omsAgentEnabled: false
     primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
     aadProfileManaged: false
+    location: location
   }
   dependsOn: [
     monitoredAksModule
