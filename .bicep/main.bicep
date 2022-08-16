@@ -134,18 +134,18 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
   ]
 }
 
-// module savedSearchesDeploy 'modules/Microsoft.OperationalInsights/workspaces/savedSearches/deploy.bicep' = [for (savedSearch,s) in savedSearches: {
-//   scope: resourceGroup(opsResourceGroupName)
-//   name: '${prefix}workspaceDeploy${s}'
-//   params: {
-//     logAnalyticsWorkspaceName: workspaceModule.outputs.name
-//     name: savedSearch.name
-//     displayName: savedSearch.displayName
-//     category: savedSearch.category
-//     query: savedSearch.query
-//     location: location
-//   }
-// }]
+ module savedSearchesDeploy 'modules/Microsoft.OperationalInsights/workspaces/savedSearches/deploy.bicep' = [for (savedSearch,s) in savedSearches: {
+   scope: resourceGroup(opsResourceGroupName)
+   name: '${prefix}SavedSearchDeploy${s}'
+   params: {
+     logAnalyticsWorkspaceName: workspaceModule.outputs.name
+     name: savedSearch.name
+     displayName: savedSearch.displayName
+     category: savedSearch.category
+     query: savedSearch.query
+     location: location
+   }
+ }]
 
 // // Monitored AKS cluster deployment
 // module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
