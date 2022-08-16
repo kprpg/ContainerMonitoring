@@ -10,6 +10,10 @@ param montioredClusterName string
 param adminUser string
 @secure()
 param adminPassword string
+param aksClusterNetworkPlugin string
+param aksClusterNetworkPolicy string
+param aksClusterServiceCidr string
+param aksClusterDockerBridgeCidr string
 
 //param roleDefinitionName string
 
@@ -147,6 +151,10 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
      location: location
      adminUser: adminUser
      adminPassword: adminPassword
+     aksClusterNetworkPlugin: aksClusterNetworkPlugin
+     aksClusterNetworkPolicy: aksClusterNetworkPolicy
+     aksClusterServiceCidr: aksClusterServiceCidr
+     aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
    }
    dependsOn: [
      rgModule

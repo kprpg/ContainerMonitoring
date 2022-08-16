@@ -21,3 +21,11 @@ variables:
   value: Standalone
 - name: roleDefinitionName
   value: Monitoring Metrics Publisher
+- name: aksClusterNetworkPlugin
+  value: azure
+- name: aksClusterNetworkPolicy
+  value: azure
+- name: aksClusterServiceCidr
+  value: 10.0.0.0/16
+- name: aksClusterDockerBridgeCidr
+  value: 172.17.0.1/16

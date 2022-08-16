@@ -82,6 +82,10 @@ stages:
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
+            aksClusterNetworkPlugin = '$(aksClusterNetworkPlugin)'
+            aksClusterNetworkPolicy = '$(aksClusterNetworkPolicy)'
+            aksClusterServiceCidr = '$(aksClusterServiceCidr)'
+            aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
           } -Verbose
 
     - task: KubectlInstaller@0
