@@ -15,7 +15,6 @@ param aksClusterNetworkPlugin string
 param aksClusterNetworkPolicy string
 param aksClusterServiceCidr string
 param aksClusterDockerBridgeCidr string
-param aadProfileEnableAzureRBAC bool = false
 
 
 //param roleDefinitionName string
@@ -159,7 +158,6 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
      aksClusterNetworkPolicy: aksClusterNetworkPolicy
      aksClusterServiceCidr: aksClusterServiceCidr
      aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
-     aadProfileEnableAzureRBAC: aadProfileEnableAzureRBAC
    }
    dependsOn: [
      rgModule
@@ -184,7 +182,6 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
     aksClusterNetworkPolicy: aksClusterNetworkPolicy
     aksClusterServiceCidr: aksClusterServiceCidr
     aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
-    aadProfileEnableAzureRBAC: aadProfileEnableAzureRBAC
  }
   dependsOn: [
     rgModule
