@@ -15,8 +15,6 @@ param aksClusterNetworkPlugin string
 param aksClusterNetworkPolicy string
 param aksClusterServiceCidr string
 param aksClusterDockerBridgeCidr string
-param aadProfileEnableAzureRBAC bool = false
-param aadProfileManaged bool = false
 
 //param roleDefinitionName string
 
