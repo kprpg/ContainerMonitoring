@@ -1,6 +1,6 @@
 variables:
 - name: prefix
-  value: JR6
+  value: JR7
 - name: suffix
   value: '-Play'
 - name: azureSubscriptionEndpoint
