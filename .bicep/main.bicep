@@ -15,6 +15,7 @@ param aksClusterNetworkPlugin string
 param aksClusterNetworkPolicy string
 param aksClusterServiceCidr string
 param aksClusterDockerBridgeCidr string
+param disableLocalAccounts bool = true
 
 //param roleDefinitionName string
 
@@ -157,6 +158,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
      aksClusterNetworkPolicy: aksClusterNetworkPolicy
      aksClusterServiceCidr: aksClusterServiceCidr
      aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
+     disableLocalAccounts: disableLocalAccounts
    }
    dependsOn: [
      rgModule
@@ -181,6 +183,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
     aksClusterNetworkPolicy: aksClusterNetworkPolicy
     aksClusterServiceCidr: aksClusterServiceCidr
     aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
+    disableLocalAccounts: disableLocalAccounts
  }
   dependsOn: [
     rgModule
