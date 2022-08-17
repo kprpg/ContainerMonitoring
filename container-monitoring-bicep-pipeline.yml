@@ -29,15 +29,6 @@ variables:
 - ${{ if eq(parameters.environment, 'PreProd') }}:
   - template: container-monitoring-preprod.variables.yml
 
-
-stages:
-- stage: Lint
-  jobs: 
-  - job: Lint
-    steps:
-      - script: |
-          az bicep build --file $(Build.SourcesDirectory)/.bicep/main.bicep
-
 - stage: Deploy
   displayName: Deploy
   jobs:
@@ -59,6 +50,11 @@ stages:
         SourceFolder: '$(Build.SourcesDirectory)/Bicep-Modules'
         Contents: '**/modules/**'
         TargetFolder: '$(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep'
+
+    - script: |
+        az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep/main.bicep
+      displayName: 'Lint'
+
 
     - task: AzureKeyVault@1
       displayName: Load Secrets
