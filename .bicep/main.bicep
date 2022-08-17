@@ -157,8 +157,6 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
      aksClusterNetworkPolicy: aksClusterNetworkPolicy
      aksClusterServiceCidr: aksClusterServiceCidr
      aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
-     aadProfileEnableAzureRBAC: aadProfileEnableAzureRBAC
-     aadProfileManaged: aadProfileManaged
    }
    dependsOn: [
      rgModule
@@ -183,8 +181,6 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
     aksClusterNetworkPolicy: aksClusterNetworkPolicy
     aksClusterServiceCidr: aksClusterServiceCidr
     aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
-    aadProfileEnableAzureRBAC: aadProfileEnableAzureRBAC
-    aadProfileManaged: aadProfileManaged
  }
   dependsOn: [
     rgModule
