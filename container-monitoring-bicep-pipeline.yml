@@ -31,6 +31,13 @@ variables:
 
 
 stages:
+- stage: Lint
+  jobs: 
+  - job: Lint
+    steps:
+      - script: |
+          az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep/main.bicep
+
 - stage: Deploy
   displayName: Deploy
   jobs:
