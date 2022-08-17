@@ -36,7 +36,7 @@ stages:
   - job: Lint
     steps:
       - script: |
-          az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep/main.bicep
+          az bicep build --file $(Build.SourcesDirectory)/.bicep/main.bicep
 
 - stage: Deploy
   displayName: Deploy
