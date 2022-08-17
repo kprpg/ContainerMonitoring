@@ -57,13 +57,43 @@ stages:
         az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep/main.bicep
       displayName: 'Lint'
 
-
     - task: AzureKeyVault@1
       displayName: Load Secrets
       inputs:
         azureSubscription: '$(stagingSubscriptionEndpoint)'
         KeyVaultName: '$(stagingKeyVaultName)'
         SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
+
+    - task: AzurePowerShell@4
+      name: RunWhatIf
+      displayName: Run what-if
+      inputs:
+        azurePowerShellVersion: LatestVersion
+        azureSubscription:  $(azureSubscriptionEndpoint)
+        ScriptType: InlineScript
+        Inline: |
+          $subscriptionId = (Get-AzContext).Subscription.Id
+          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep/main.bicep' -TemplateParameterObject @{
+            subscriptionId = $subscriptionId
+            location = '$(location)'
+            prefix = '$(prefix)'
+            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+            opsResourceGroupName = '$(workspaceResourceGroupName)'
+            logAnalyticsWorkspaceName = '$(workspaceName)'
+            workspaceSkuName = '$(workspaceSkuName)'
+            montioredClusterName = '$(AKSName)'
+            nonMontioredClusterName = '$(NonMonitoredAKSName)'
+            adminUser = '$(chVmAdminUser)'
+            adminPassword = '$(chVmAdminPassword)'
+            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
+            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
+            agentVMSize = '$(agentVMSize)'
+            aksClusterNetworkPlugin = '$(aksClusterNetworkPlugin)'
+            aksClusterNetworkPolicy = '$(aksClusterNetworkPolicy)'
+            aksClusterServiceCidr = '$(aksClusterServiceCidr)'
+            aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+            clusterVersion = '$(clusterVersion)'
+          } -Verbose
 
     - task: AzurePowerShell@4
       displayName: 'Create resources'
