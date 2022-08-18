@@ -15,9 +15,6 @@ param aksClusterNetworkPlugin string
 param aksClusterNetworkPolicy string
 param aksClusterServiceCidr string
 param aksClusterDockerBridgeCidr string
-
-//param roleDefinitionName string
-
 param servicePrincipalClientId string
 @secure()
 param servicePrincipalClientSecret string
@@ -28,10 +25,12 @@ var servicePrincipalProfile = {
   clientId: servicePrincipalClientId
   Secret: servicePrincipalClientSecret
 }
+
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
   opsResourceGroupName
 ]
+
 var monitoredAKSPrimaryAgentPoolProfile = [
   {
     name: 'linux'
@@ -110,7 +109,6 @@ var savedSearches = [
   }
 ]
 
-
 targetScope = 'subscription'
 
 // AKS cluster Resource group and workspace Resource group deployment 
@@ -139,32 +137,32 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
   ]
 }
 
- // Monitored AKS cluster deployment
- module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
-   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-   name: '${prefix}monitoredAKSDeploy'
-   params: {
-     name: montioredClusterName
-     aksClusterKubernetesVersion: clusterVersion
-     aksServicePrincipalProfile: servicePrincipalProfile
-     monitoringWorkspaceId: workspaceModule.outputs.resourceId
-     omsAgentEnabled: true
-     primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
-     location: location
-     adminUser: adminUser
-     adminPassword: adminPassword
-     aksClusterNetworkPlugin: aksClusterNetworkPlugin
-     aksClusterNetworkPolicy: aksClusterNetworkPolicy
-     aksClusterServiceCidr: aksClusterServiceCidr
-     aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
-   }
-   dependsOn: [
-     rgModule
-   ]
- }
+// Monitored AKS cluster deployment
+module monitoredAksModule 'Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+  name: '${prefix}monitoredAKSDeploy'
+  params: {
+    name: montioredClusterName
+    aksClusterKubernetesVersion: clusterVersion
+    aksServicePrincipalProfile: servicePrincipalProfile
+    monitoringWorkspaceId: workspaceModule.outputs.resourceId
+    omsAgentEnabled: true
+    primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
+    location: location
+    adminUser: adminUser
+    adminPassword: adminPassword
+    aksClusterNetworkPlugin: aksClusterNetworkPlugin
+    aksClusterNetworkPolicy: aksClusterNetworkPolicy
+    aksClusterServiceCidr: aksClusterServiceCidr
+    aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
+  }
+  dependsOn: [
+    rgModule
+  ]
+}
 
- // Non-Monitored AKS cluster deployment
- module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+// Non-Monitored AKS cluster deployment
+module nonMonitoredAksModule 'Microsoft.ContainerService/managedClusters/deploy.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}NonMonitoredAKSDeploy'
   params: {
@@ -181,10 +179,8 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
     aksClusterNetworkPolicy: aksClusterNetworkPolicy
     aksClusterServiceCidr: aksClusterServiceCidr
     aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
- }
+  }
   dependsOn: [
     rgModule
   ]
 }
-
-
