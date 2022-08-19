@@ -6,7 +6,7 @@ resources:
   - repository: bicep
     type: git
     name: ContosoHotels/Bicep-Modules
-    ref: bicepModules_aks
+    ref: Dev
 
 trigger:
 - none
@@ -28,7 +28,6 @@ variables:
   - template: container-monitoring-production.variables.yml
 - ${{ if eq(parameters.environment, 'PreProd') }}:
   - template: container-monitoring-preprod.variables.yml
-
 
 stages:
 - stage: Deploy
