@@ -6,7 +6,7 @@ resources:
   - repository: bicep
     type: git
     name: ContosoHotels/Bicep-Modules
-    ref: Dev
+    ref: bicepConversion
 
 trigger:
 - none
@@ -50,10 +50,10 @@ stages:
       inputs:
         SourceFolder: '$(Build.SourcesDirectory)/Bicep-Modules'
         Contents: '**/modules/**'
-        TargetFolder: '$(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep'
+        TargetFolder: '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep'
 
     - script: |
-        az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep/main.bicep
+        az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep
       displayName: 'Lint'
 
     - task: AzureKeyVault@1
@@ -72,7 +72,7 @@ stages:
         ScriptType: InlineScript
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
-          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep/main.bicep' -TemplateParameterObject @{
+          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
             prefix = '$(prefix)'
@@ -102,7 +102,7 @@ stages:
         ScriptType: InlineScript
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
-          New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/.bicep/main.bicep' -TemplateParameterObject @{
+          New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
             prefix = '$(prefix)'
@@ -147,7 +147,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/yaml/invalidimage.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/invalidimage.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply ngnix-app'
@@ -157,7 +157,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/yaml/ngnix-app.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/ngnix-app.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply minecraft-namespace'
@@ -167,7 +167,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/yaml/minecraft-namespace.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/minecraft-namespace.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply minecraft3'
@@ -177,7 +177,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/yaml/minecraft3.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/minecraft3.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply minecraft3'
@@ -187,7 +187,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/yaml/ngnix-app.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/ngnix-app.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply prometheus'
@@ -197,7 +197,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/yaml/prometheus.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/prometheus.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply windows-service'
@@ -207,7 +207,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/yaml/windows-service.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/windows-service.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply prometheus-bundle'
@@ -217,4 +217,4 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/yaml/prometheus-bundle.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/prometheus-bundle.yaml'

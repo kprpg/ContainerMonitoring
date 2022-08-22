@@ -138,11 +138,12 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
 }
 
 // Monitored AKS cluster deployment
-module monitoredAksModule 'Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}monitoredAKSDeploy'
   params: {
     name: montioredClusterName
+    aadclusterName: '${nonMontioredClusterName}aad'
     aksClusterKubernetesVersion: clusterVersion
     aksServicePrincipalProfile: servicePrincipalProfile
     monitoringWorkspaceId: workspaceModule.outputs.resourceId
@@ -162,11 +163,12 @@ module monitoredAksModule 'Microsoft.ContainerService/managedClusters/deploy.bic
 }
 
 // Non-Monitored AKS cluster deployment
-module nonMonitoredAksModule 'Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}NonMonitoredAKSDeploy'
   params: {
     name: nonMontioredClusterName
+    aadclusterName: '${nonMontioredClusterName}aad'
     aksClusterKubernetesVersion: clusterVersion
     aksServicePrincipalProfile: servicePrincipalProfile
     monitoringWorkspaceId: workspaceModule.outputs.resourceId
