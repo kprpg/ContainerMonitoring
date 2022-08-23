@@ -26,13 +26,17 @@ parameters:
   type: boolean
   default: false
 
+
 variables:
+-  aadprofile: ${{parameters.enableAADProfile}}
+
 - ${{ if eq(parameters.environment, 'Integration') }}:
   - template: container-monitoring-integration.variables.yml
 - ${{ if eq(parameters.environment, 'Production') }}:
   - template: container-monitoring-production.variables.yml
 - ${{ if eq(parameters.environment, 'PreProd') }}:
   - template: container-monitoring-preprod.variables.yml
+
 
 stages:
 - stage: Deploy
@@ -77,7 +81,6 @@ stages:
         ScriptType: InlineScript
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
-          $aadProfileAks = parameters.enableAADProfile.value
           New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
@@ -98,7 +101,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = $aadProfileAks
+            aadProfile = $(aadprofile)
           } -Verbose
 
     - task: AzurePowerShell@4
@@ -109,7 +112,6 @@ stages:
         ScriptType: InlineScript
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
-          $aadProfileAks = parameters.enableAADProfile.value
           New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
@@ -130,7 +132,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = $aadProfileAks
+            aadProfile = $(aadprofile)
           } -Verbose
 
     - task: AzureCLI@2
