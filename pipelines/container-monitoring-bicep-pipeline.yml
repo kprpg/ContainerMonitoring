@@ -77,7 +77,7 @@ stages:
         ScriptType: InlineScript
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
-          $aadProfileAks = parameters.enableAADProfile
+          $aadProfileAks = parameters.enableAADProfile.value
           New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
@@ -109,7 +109,7 @@ stages:
         ScriptType: InlineScript
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
-          $aadProfileAks = parameters.enableAADProfile
+          $aadProfileAks = parameters.enableAADProfile.value
           New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
