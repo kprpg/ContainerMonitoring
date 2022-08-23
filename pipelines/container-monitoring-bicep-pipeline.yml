@@ -21,6 +21,11 @@ parameters:
   - Production
   - PreProd
 
+- name: enableAADProfile
+  displayName: 'Enable AAD profile for AKS cluster'
+  type: boolean
+  default: false
+
 variables:
 - ${{ if eq(parameters.environment, 'Integration') }}:
   - template: container-monitoring-integration.variables.yml
@@ -92,6 +97,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
+            aadProfile = ${{ parameters.enableAADProfile }} 
           } -Verbose
 
     - task: AzurePowerShell@4
@@ -122,6 +128,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
+            aadProfile = ${{ parameters.enableAADProfile }} 
           } -Verbose
 
     - task: AzureCLI@2

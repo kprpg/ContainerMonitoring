@@ -20,6 +20,7 @@ param servicePrincipalClientId string
 param servicePrincipalClientSecret string
 param agentVMSize string
 param workspaceSkuName string
+param aadProfile bool
 
 var servicePrincipalProfile = {
   clientId: servicePrincipalClientId
@@ -156,6 +157,7 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/de
     aksClusterNetworkPolicy: aksClusterNetworkPolicy
     aksClusterServiceCidr: aksClusterServiceCidr
     aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
+    aadProfile: aadProfile
   }
   dependsOn: [
     rgModule
@@ -181,6 +183,7 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
     aksClusterNetworkPolicy: aksClusterNetworkPolicy
     aksClusterServiceCidr: aksClusterServiceCidr
     aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
+    aadProfile: aadProfile
   }
   dependsOn: [
     rgModule
