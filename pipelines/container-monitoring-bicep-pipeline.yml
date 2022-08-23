@@ -26,6 +26,7 @@ parameters:
   type: boolean
   default: false
 
+variables:
 - ${{ if eq(parameters.environment, 'Integration') }}:
   - template: container-monitoring-integration.variables.yml
 - ${{ if eq(parameters.environment, 'Production') }}:
