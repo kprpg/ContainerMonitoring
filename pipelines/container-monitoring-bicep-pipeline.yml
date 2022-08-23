@@ -28,7 +28,8 @@ parameters:
 
 
 variables:
--  aadprofile: ${{parameters.enableAADProfile}}
+- name: aadprofile
+  value: ${{parameters.enableAADProfile}}
 
 - ${{ if eq(parameters.environment, 'Integration') }}:
   - template: container-monitoring-integration.variables.yml
