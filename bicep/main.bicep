@@ -20,7 +20,7 @@ param servicePrincipalClientId string
 param servicePrincipalClientSecret string
 param agentVMSize string
 param workspaceSkuName string
-param aadProfile bool
+param aadProfile string
 
 var servicePrincipalProfile = {
   clientId: servicePrincipalClientId

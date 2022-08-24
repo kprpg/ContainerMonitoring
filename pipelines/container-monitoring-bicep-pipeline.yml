@@ -26,8 +26,9 @@ parameters:
   type: string
   default: false
   values:
-  - true
   - false
+  - true
+
 
 variables:
 - ${{ if eq(parameters.environment, 'Integration') }}:
@@ -106,7 +107,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = $variables.aadProfile
+            aadProfile = '${{ variables.aadProfile }}'
           } -Verbose
 
     - task: AzurePowerShell@4
@@ -138,7 +139,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = ${{ variables.aadProfile }}
+            aadProfile = '${{ variables.aadProfile }}'
           } -Verbose
 
     - task: AzureCLI@2
