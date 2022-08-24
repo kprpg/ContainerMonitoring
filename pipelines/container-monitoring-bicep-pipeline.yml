@@ -23,7 +23,7 @@ parameters:
 
 - name: enableAADProfile
   displayName: 'Enable AAD profile for AKS cluster'
-  type: boolean
+  type: string
   default: false
   values:
   - true
@@ -106,7 +106,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = ${{ variables.aadProfile }}
+            aadProfile = '$(variables.aadProfile)'
           } -Verbose
 
     - task: AzurePowerShell@4
