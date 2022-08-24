@@ -34,6 +34,13 @@ variables:
 - ${{ if eq(parameters.environment, 'PreProd') }}:
   - template: container-monitoring-preprod.variables.yml
 
+
+- ${{ if eq(parameters.enableAADProfile, true) }}:
+  - aadProfile: true
+
+- ${{ if eq(parameters.enableAADProfile, false) }}:
+  - aadProfile: false
+
 stages:
 - stage: Deploy
   displayName: Deploy
@@ -97,7 +104,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = false
+            aadProfile = ${{ variables.aadProfile }}
           } -Verbose
 
     - task: AzurePowerShell@4
@@ -129,39 +136,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = false
-          } -Verbose
-
-    - task: AzurePowerShell@4
-      displayName: 'Create resources'
-      condition: ${{ parameters.enableAADProfile }}
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |
-          $subscriptionId = (Get-AzContext).Subscription.Id
-          New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
-            subscriptionId = $subscriptionId
-            location = '$(location)'
-            prefix = '$(prefix)'
-            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-            opsResourceGroupName = '$(workspaceResourceGroupName)'
-            logAnalyticsWorkspaceName = '$(workspaceName)'
-            workspaceSkuName = '$(workspaceSkuName)'
-            montioredClusterName = '$(AKSName)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
-            adminUser = '$(chVmAdminUser)'
-            adminPassword = '$(chVmAdminPassword)'
-            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
-            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
-            agentVMSize = '$(agentVMSize)'
-            aksClusterNetworkPlugin = '$(aksClusterNetworkPlugin)'
-            aksClusterNetworkPolicy = '$(aksClusterNetworkPolicy)'
-            aksClusterServiceCidr = '$(aksClusterServiceCidr)'
-            aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
-            clusterVersion = '$(clusterVersion)'
-            aadProfile = true
+            aadProfile = ${{ variables.aadProfile }}
           } -Verbose
 
     - task: AzureCLI@2
