@@ -25,6 +25,9 @@ parameters:
   displayName: 'Enable AAD profile for AKS cluster'
   type: boolean
   default: false
+  values:
+  - true
+  - false
 
 variables:
 - ${{ if eq(parameters.environment, 'Integration') }}:
@@ -34,12 +37,11 @@ variables:
 - ${{ if eq(parameters.environment, 'PreProd') }}:
   - template: container-monitoring-preprod.variables.yml
 
-
-- ${{ if eq(parameters.enableAADProfile, true) }}:
-  - aadProfile: ${{parameters.enableAADProfile}}
-
-- ${{ if eq(parameters.enableAADProfile, false) }}:
-  - aadProfile: ${{parameters.enableAADProfile}}
+  - name: aadProfile
+    ${{ if eq( parameters['enableAADProfile'], 'true') }}:
+      value: "true"
+    ${{ if eq( parameters['enableAADProfile'], 'false') }}:
+      value: "false"
 
 stages:
 - stage: Deploy
