@@ -39,9 +39,9 @@ variables:
 
   - name: aadProfile
     ${{ if eq( parameters['enableAADProfile'], 'true') }}:
-      value: "true"
+      value: true
     ${{ if eq( parameters['enableAADProfile'], 'false') }}:
-      value: "false"
+      value: false
 
 stages:
 - stage: Deploy
