@@ -144,7 +144,7 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/de
   name: '${prefix}monitoredAKSDeploy'
   params: {
     name: montioredClusterName
-    aadclusterName: '${nonMontioredClusterName}aad'
+    aadclusterName: '${montioredClusterName}aad'
     aksClusterKubernetesVersion: clusterVersion
     aksServicePrincipalProfile: servicePrincipalProfile
     monitoringWorkspaceId: workspaceModule.outputs.resourceId
@@ -186,6 +186,6 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
     aadProfile: aadProfile
   }
   dependsOn: [
-    rgModule
+    monitoredAksModule
   ]
 }
