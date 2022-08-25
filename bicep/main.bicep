@@ -160,12 +160,12 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/de
     aadProfile: aadProfile
   }
   dependsOn: [
-    rgModule
+    workspaceModule
   ]
 }
 
 // Non-Monitored AKS cluster deployment
-module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+/*module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}NonMonitoredAKSDeploy'
   params: {
@@ -188,4 +188,4 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
   dependsOn: [
     monitoredAksModule
   ]
-}
+}*/
