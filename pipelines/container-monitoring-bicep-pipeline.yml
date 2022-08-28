@@ -40,9 +40,9 @@ variables:
 
   - name: aadProfile
     ${{ if eq( parameters['enableAADProfile'], 'true') }}:
-      value: true
+      value: 'true'
     ${{ if eq( parameters['enableAADProfile'], 'false') }}:
-      value: false
+      value: 'false'
 
 stages:
 - stage: Deploy
@@ -118,6 +118,7 @@ stages:
         azureSubscription:  $(azureSubscriptionEndpoint)
         ScriptType: InlineScript
         Inline: |
+          $aadProfile : 
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
@@ -139,7 +140,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = '${{ variables.aadProfile.value }}'
+            aadProfile = '${{ variables.aadProfile }}'
           } -Verbose
 
     - task: AzureCLI@2
