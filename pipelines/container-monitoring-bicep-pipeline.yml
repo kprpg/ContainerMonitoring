@@ -118,7 +118,6 @@ stages:
         azureSubscription:  $(azureSubscriptionEndpoint)
         ScriptType: InlineScript
         Inline: |
-          $aadProfile : 
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
