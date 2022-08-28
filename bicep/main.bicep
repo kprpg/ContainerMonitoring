@@ -139,7 +139,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
 }
 
 // Monitored AKS cluster deployment
-/*module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}monitoredAKSDeploy'
   params: {
@@ -162,7 +162,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
   dependsOn: [
     workspaceModule
   ]
-}*/
+}
 
 // Non-Monitored AKS cluster deployment
 module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
