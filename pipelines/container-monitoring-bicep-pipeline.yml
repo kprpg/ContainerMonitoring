@@ -39,9 +39,9 @@ variables:
   - template: container-monitoring-preprod.variables.yml
 
   - name: aadProfile
-    ${{ if eq( parameters['enableAADProfile'], 'true') }}:
+    ${{ if eq( parameters.enableAADProfile, 'true') }}:
       value: 'true'
-    ${{ if eq( parameters['enableAADProfile'], 'false') }}:
+    ${{ if eq( parameters.enableAADProfile, 'false') }}:
       value: 'false'
 
 stages:
@@ -139,7 +139,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = $(aadProfile.value)
+            aadProfile = '${{ variables.aadProfile }}'
           } -Verbose
 
     - task: AzureCLI@2
