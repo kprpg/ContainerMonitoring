@@ -139,7 +139,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = '$(variables.aadProfile.value)'
+            aadProfile = $[variables.aadProfile]
           } -Verbose
 
     - task: AzureCLI@2
