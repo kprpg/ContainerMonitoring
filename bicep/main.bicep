@@ -182,7 +182,7 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
     aksClusterNetworkPolicy: aksClusterNetworkPolicy
     aksClusterServiceCidr: aksClusterServiceCidr
     aksClusterDockerBridgeCidr: aksClusterDockerBridgeCidr
-    aadProfile: aadProfile
+    aadProfile: 'false'
   }
   dependsOn: [
     rgModule
