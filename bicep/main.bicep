@@ -139,12 +139,12 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/deploy.
 }
 
 // Monitored AKS cluster deployment
-module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+/*module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}monitoredAKSDeploy'
   params: {
     name: montioredClusterName
-    aadclusterName: 'xyzaad'
+    aadclusterName: '${montioredClusterName}aad'
     aksClusterKubernetesVersion: clusterVersion
     aksServicePrincipalProfile: servicePrincipalProfile
     monitoringWorkspaceId: workspaceModule.outputs.resourceId
@@ -162,10 +162,10 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/de
   dependsOn: [
     workspaceModule
   ]
-}
+}*/
 
 // Non-Monitored AKS cluster deployment
-/*module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
+module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/deploy.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}NonMonitoredAKSDeploy'
   params: {
@@ -173,7 +173,6 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/de
     aadclusterName: '${nonMontioredClusterName}aad'
     aksClusterKubernetesVersion: clusterVersion
     aksServicePrincipalProfile: servicePrincipalProfile
-    monitoringWorkspaceId: workspaceModule.outputs.resourceId
     omsAgentEnabled: false
     primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
     location: location
@@ -186,6 +185,6 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/de
     aadProfile: aadProfile
   }
   dependsOn: [
-    monitoredAksModule
+    rgModule
   ]
-}*/
+}
