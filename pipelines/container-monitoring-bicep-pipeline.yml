@@ -107,7 +107,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = '${{ variables.aadProfile }}'
+            aadProfile = '${{ parameters.enableAADProfile }}'
           } -Verbose
 
     - task: AzurePowerShell@4
@@ -139,7 +139,7 @@ stages:
             aksClusterServiceCidr = '$(aksClusterServiceCidr)'
             aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             clusterVersion = '$(clusterVersion)'
-            aadProfile = $env:aadProfile
+            aadProfile = '${{ parameters.enableAADProfile }}'
           } -Verbose
 
     - task: AzureCLI@2
