@@ -41,6 +41,9 @@ variables:
 - ${{ if eq(parameters.environment, 'PreProd') }}:
   - template: container-monitoring-preprod.variables.yml
 
+- name: prefix
+  value: ${{ parameters.prefix }}
+
 stages:
 - stage: Deploy
   displayName: Deploy
