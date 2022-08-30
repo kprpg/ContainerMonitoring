@@ -29,6 +29,9 @@ parameters:
   - false
   - true
 
+- name: prefix
+  displayName: 'Prefix'
+  type: string
 
 variables:
 - ${{ if eq(parameters.environment, 'Integration') }}:
@@ -84,7 +87,7 @@ stages:
           New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
-            prefix = '$(prefix)'
+            prefix = '${{ parameters.prefix }}'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
@@ -116,7 +119,7 @@ stages:
           New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
-            prefix = '$(prefix)'
+            prefix = '${{ parameters.prefix }}'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
