@@ -114,6 +114,20 @@ stages:
         templateLocation: 'Linked artifact'
         csmFile: '$(Build.SourcesDirectory)/bicep/main.bicep'
         deploymentMode: 'Validation'
+        overrideParameters: >
+          -location '$(location)'
+          -prefix '${{ parameters.prefix }}'
+          -contosoSH360ClusterResourceGroupName '$(resourceGroupName)'
+          -opsResourceGroupName '$(workspaceResourceGroupName)'
+          -logAnalyticsWorkspaceName '$(workspaceName)'
+          -workspaceSkuName '$(workspaceSkuName)'
+          -montioredClusterName '$(AKSName)'
+          -nonMontioredClusterName '$(NonMonitoredAKSName)'
+          -adminUser '$(chVmAdminUser)'
+          -adminPassword '$(chVmAdminPassword)'
+          -servicePrincipalClientId '$(ContosoSH360ClusterSPClientId)'
+          -servicePrincipalClientSecret '$(ContosoSH360ClusterSPClientSecret)'
+          -agentVMSize '$(agentVMSize)'
 
 - stage: Preview
   jobs: 
