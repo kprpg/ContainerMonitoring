@@ -1,13 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
-resources:
-  repositories:
-  - repository: bicep
-    type: git
-    name: ContosoHotels/Bicep-Modules
-    ref: bicepModules_aks
-
 trigger:
 - none
 
@@ -18,8 +11,8 @@ parameters:
   default: Integration
   values:
   - Integration
-  - Production
   - PreProd
+  - Production
 
 - name: enableAADProfile
   displayName: 'Enable AAD profile for AKS cluster'
@@ -45,6 +38,56 @@ variables:
   value: ${{ parameters.prefix }}
 
 stages:
+- stage: Lint
+  displayName: LintCode
+  jobs:
+  - job: LintCode
+    displayName: Lint Code
+    pool: 
+      vmImage: ubuntu-latest
+    
+    variables:
+    - template: container-monitoring-variables.yml
+    
+    steps:
+    - checkout: self
+    - task: AntiMalware@3
+      inputs:
+        FileDirPath: '$(Build.SourcesDirectory)'
+        EnableServices: true
+
+    - task: CredScan@3
+      inputs:
+        toolMajorVersion: Latest
+        scanFolder: '$(Build.SourcesDirectory)'
+
+    - task: Armory@2
+      inputs:
+        targetDirectory: '$(Build.SourcesDirectory)'
+        targetFiles: 'f|**\*.json;-|.gdn\**;'
+
+    - task: SdtReport@2
+      inputs:
+        GdnExportSarifFile: false
+        GdnExportHtmlFile: true
+        GdnExportAllTools: true
+
+    - task: PublishSecurityAnalysisLogs@3
+      inputs:
+        ArtifactName: 'CodeAnalysisLogs'
+        ArtifactType: 'Container'
+        AllTools: true
+        ToolLogsNotFoundAction: 'Standard'
+
+    - task: PostAnalysis@2
+      displayName: 'Post Analysis'
+      inputs:
+        GdnBreakAllTools: true
+        
+    - script: |
+        az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep
+      displayName: 'Run Bicep linter'
+
 - stage: Deploy
   displayName: Deploy
   jobs:
@@ -58,18 +101,6 @@ stages:
     
     steps:
     - checkout: self
-    - checkout: bicep
-
-    - task: CopyFiles@2
-      displayName: 'Copy bicep modules'
-      inputs:
-        SourceFolder: '$(Build.SourcesDirectory)/Bicep-Modules'
-        Contents: '**/modules/**'
-        TargetFolder: '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep'
-
-    - script: |
-        az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep
-      displayName: 'Lint'
 
     - task: AzureKeyVault@1
       displayName: Load Secrets
