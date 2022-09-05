@@ -110,9 +110,9 @@ var savedSearches = [
   }
 ]
 
+targetScope = 'subscription'
 // AKS cluster Resource group and workspace Resource group deployment 
 module rgModule 'modules/Microsoft.Resources/resourceGroups/deploy.bicep' = [for resourceGroup in resourceGroups: {
-  scope: subscription(subscriptionId)
   name: 'rgDeploy${resourceGroup}'
   params: {
     name: resourceGroup

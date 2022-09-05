@@ -99,15 +99,42 @@ stages:
   - job: ValidateBicepCode
     displayName: Validate Bicep code
     steps:
-      - task: AzureResourceManagerTemplateDeployment@3
-        name: RunPreflightValidation
-        displayName: Run preflight validation
-        inputs:
-          connectedServiceName: $(azureSubscriptionEndpoint)
-          location: $(location)
-          deploymentMode: Validation
-          resourceGroupName: $(resourceGroupName)
-          csmFile: $(Build.SourcesDirectory)/bicep/main.bicep
+    - task: AzureKeyVault@1
+      displayName: Load Secrets
+      inputs:
+        azureSubscription: '$(stagingSubscriptionEndpoint)'
+        KeyVaultName: '$(stagingKeyVaultName)'
+        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
+
+    - task: AzureResourceManagerTemplateDeployment@3
+      name: RunPreflightValidation
+      displayName: Run preflight validation
+      inputs:
+        connectedServiceName: $(azureSubscriptionEndpoint)
+        location: $(location)
+        deploymentMode: Validation
+        resourceGroupName: $(resourceGroupName)
+        csmFile: $(Build.SourcesDirectory)/bicep/main.bicep
+        overrideParameters: >
+          -location '$(location)'
+          -prefix '${{ parameters.prefix }}'
+          -contosoSH360ClusterResourceGroupName '$(resourceGroupName)'
+          -opsResourceGroupName '$(workspaceResourceGroupName)'
+          -logAnalyticsWorkspaceName '$(workspaceName)'
+          -workspaceSkuName '$(workspaceSkuName)'
+          -montioredClusterName '$(AKSName)'
+          -nonMontioredClusterName '$(NonMonitoredAKSName)'
+          -adminUser '$(chVmAdminUser)'
+          -adminPassword '$(chVmAdminPassword)'
+          -servicePrincipalClientId '$(ContosoSH360ClusterSPClientId)'
+          -servicePrincipalClientSecret '$(ContosoSH360ClusterSPClientSecret)'
+          -agentVMSize '$(agentVMSize)'
+          -aksClusterNetworkPlugin '$(aksClusterNetworkPlugin)'
+          -aksClusterNetworkPolicy '$(aksClusterNetworkPolicy)'
+          -aksClusterServiceCidr '$(aksClusterServiceCidr)'
+          -aksClusterDockerBridgeCidr '$(aksClusterDockerBridgeCidr)'
+          -clusterVersion '$(clusterVersion)'
+          -aadProfile '${{ parameters.enableAADProfile }}'
 
 - stage: Preview
   jobs: 
@@ -131,7 +158,6 @@ stages:
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
-            subscriptionId = $subscriptionId
             location = '$(location)'
             prefix = '${{ parameters.prefix }}'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
@@ -184,7 +210,6 @@ stages:
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
-            subscriptionId = $subscriptionId
             location = '$(location)'
             prefix = '${{ parameters.prefix }}'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
