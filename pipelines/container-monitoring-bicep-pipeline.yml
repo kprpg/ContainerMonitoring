@@ -107,28 +107,13 @@ stages:
         SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
 
     - task: AzureResourceManagerTemplateDeployment@3
-      name: RunPreflightValidation
-      displayName: Run preflight validation
       inputs:
-        connectedServiceName: $(azureSubscriptionEndpoint)
-        location: $(location)
-        deploymentMode: Validation
-        resourceGroupName: $(resourceGroupName)
-        csmFile: $(Build.SourcesDirectory)/bicep/main.bicep
-        overrideParameters: >
-          -location '$(location)'
-          -prefix '${{ parameters.prefix }}'
-          -contosoSH360ClusterResourceGroupName '$(resourceGroupName)'
-          -opsResourceGroupName '$(workspaceResourceGroupName)'
-          -logAnalyticsWorkspaceName '$(workspaceName)'
-          -workspaceSkuName '$(workspaceSkuName)'
-          -montioredClusterName '$(AKSName)'
-          -nonMontioredClusterName '$(NonMonitoredAKSName)'
-          -adminUser '$(chVmAdminUser)'
-          -adminPassword '$(chVmAdminPassword)'
-          -servicePrincipalClientId '$(ContosoSH360ClusterSPClientId)'
-          -servicePrincipalClientSecret '$(ContosoSH360ClusterSPClientSecret)'
-          -agentVMSize '$(agentVMSize)'
+        deploymentScope: 'Subscription'
+        azureResourceManagerConnection: '$(azureSubscriptionEndpoint)'
+        location: 'Canada East'
+        templateLocation: 'Linked artifact'
+        csmFile: '$(Build.SourcesDirectory)/bicep/main.bicep'
+        deploymentMode: 'Validation'
 
 - stage: Preview
   jobs: 
