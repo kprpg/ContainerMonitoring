@@ -110,7 +110,7 @@ stages:
       inputs:
         deploymentScope: 'Subscription'
         azureResourceManagerConnection: '$(azureSubscriptionEndpoint)'
-        location: 'Canada East'
+        location: '$(location)'
         templateLocation: 'Linked artifact'
         csmFile: '$(Build.SourcesDirectory)/bicep/main.bicep'
         deploymentMode: 'Validation'
