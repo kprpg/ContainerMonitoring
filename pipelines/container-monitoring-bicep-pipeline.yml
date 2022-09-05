@@ -129,12 +129,6 @@ stages:
           -servicePrincipalClientId '$(ContosoSH360ClusterSPClientId)'
           -servicePrincipalClientSecret '$(ContosoSH360ClusterSPClientSecret)'
           -agentVMSize '$(agentVMSize)'
-          -aksClusterNetworkPlugin '$(aksClusterNetworkPlugin)'
-          -aksClusterNetworkPolicy '$(aksClusterNetworkPolicy)'
-          -aksClusterServiceCidr '$(aksClusterServiceCidr)'
-          -aksClusterDockerBridgeCidr '$(aksClusterDockerBridgeCidr)'
-          -clusterVersion '$(clusterVersion)'
-          -aadProfile '${{ parameters.enableAADProfile }}'
 
 - stage: Preview
   jobs: 
@@ -171,12 +165,6 @@ stages:
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
-            aksClusterNetworkPlugin = '$(aksClusterNetworkPlugin)'
-            aksClusterNetworkPolicy = '$(aksClusterNetworkPolicy)'
-            aksClusterServiceCidr = '$(aksClusterServiceCidr)'
-            aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
-            clusterVersion = '$(clusterVersion)'
-            aadProfile = '${{ parameters.enableAADProfile }}'
           } -Verbose
 
 - stage: Deploy
@@ -223,12 +211,6 @@ stages:
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
-            aksClusterNetworkPlugin = '$(aksClusterNetworkPlugin)'
-            aksClusterNetworkPolicy = '$(aksClusterNetworkPolicy)'
-            aksClusterServiceCidr = '$(aksClusterServiceCidr)'
-            aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
-            clusterVersion = '$(clusterVersion)'
-            aadProfile = '${{ parameters.enableAADProfile }}'
           } -Verbose
 
     - task: AzureCLI@2
