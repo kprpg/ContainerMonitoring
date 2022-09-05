@@ -43,14 +43,22 @@ stages:
   jobs:
   - job: LintCode
     displayName: Lint Code
+
+  - script: |
+        az bicep build --file $(Build.SourcesDirectory)/bicep/main.bicep
+    displayName: 'Run Bicep linter'
+
+- stage: Test
+  displayName: Run Security Code Analysis scan
+  jobs:
+  - job: SecurityCodeAnalysisScans
+    displayName:  Run Security Code Analysis Scans
     pool:
       vmImage: windows-latest
     
-    variables:
-    - template: container-monitoring-variables.yml
-    
     steps:
     - checkout: self
+
     - task: AntiMalware@3
       inputs:
         FileDirPath: '$(Build.SourcesDirectory)'
@@ -84,9 +92,64 @@ stages:
       inputs:
         GdnBreakAllTools: true
 
-    - script: |
-        az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep
-      displayName: 'Run Bicep linter'
+- stage: Validate
+  jobs:
+  - job: ValidateBicepCode
+    displayName: Validate Bicep code
+    steps:
+      - task: AzureResourceManagerTemplateDeployment@3
+        name: RunPreflightValidation
+        displayName: Run preflight validation
+        inputs:
+          connectedServiceName: $(azureSubscriptionEndpoint)
+          location: $(location)
+          deploymentMode: Validation
+          resourceGroupName: $(resourceGroupName)
+          csmFile: $(Build.SourcesDirectory)/bicep/main.bicep
+
+- stage: Preview
+  jobs: 
+  - job: PreviewAzureChanges
+    displayName: Preview Azure changes
+    steps:
+    - task: AzureKeyVault@1
+      displayName: Load Secrets
+      inputs:
+        azureSubscription: '$(stagingSubscriptionEndpoint)'
+        KeyVaultName: '$(stagingKeyVaultName)'
+        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
+
+    - task: AzurePowerShell@4
+      name: RunWhatIf
+      displayName: Run what-if
+      inputs:
+        azurePowerShellVersion: LatestVersion
+        azureSubscription:  $(azureSubscriptionEndpoint)
+        ScriptType: InlineScript
+        Inline: |
+          $subscriptionId = (Get-AzContext).Subscription.Id
+          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
+            subscriptionId = $subscriptionId
+            location = '$(location)'
+            prefix = '${{ parameters.prefix }}'
+            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+            opsResourceGroupName = '$(workspaceResourceGroupName)'
+            logAnalyticsWorkspaceName = '$(workspaceName)'
+            workspaceSkuName = '$(workspaceSkuName)'
+            montioredClusterName = '$(AKSName)'
+            nonMontioredClusterName = '$(NonMonitoredAKSName)'
+            adminUser = '$(chVmAdminUser)'
+            adminPassword = '$(chVmAdminPassword)'
+            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
+            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
+            agentVMSize = '$(agentVMSize)'
+            aksClusterNetworkPlugin = '$(aksClusterNetworkPlugin)'
+            aksClusterNetworkPolicy = '$(aksClusterNetworkPolicy)'
+            aksClusterServiceCidr = '$(aksClusterServiceCidr)'
+            aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+            clusterVersion = '$(clusterVersion)'
+            aadProfile = '${{ parameters.enableAADProfile }}'
+          } -Verbose
 
 - stage: Deploy
   displayName: Deploy
@@ -110,38 +173,6 @@ stages:
         SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
 
     - task: AzurePowerShell@4
-      name: RunWhatIf
-      displayName: Run what-if
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |
-          $subscriptionId = (Get-AzContext).Subscription.Id
-          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
-            subscriptionId = $subscriptionId
-            location = '$(location)'
-            prefix = '${{ parameters.prefix }}'
-            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-            opsResourceGroupName = '$(workspaceResourceGroupName)'
-            logAnalyticsWorkspaceName = '$(workspaceName)'
-            workspaceSkuName = '$(workspaceSkuName)'
-            montioredClusterName = '$(AKSName)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
-            adminUser = '$(chVmAdminUser)'
-            adminPassword = '$(chVmAdminPassword)'
-            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
-            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
-            agentVMSize = '$(agentVMSize)'
-            aksClusterNetworkPlugin = '$(aksClusterNetworkPlugin)'
-            aksClusterNetworkPolicy = '$(aksClusterNetworkPolicy)'
-            aksClusterServiceCidr = '$(aksClusterServiceCidr)'
-            aksClusterDockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
-            clusterVersion = '$(clusterVersion)'
-            aadProfile = '${{ parameters.enableAADProfile }}'
-          } -Verbose
-
-    - task: AzurePowerShell@4
       displayName: 'Create resources'
       condition: not(${{ parameters.enableAADProfile }})
       inputs:
@@ -150,7 +181,7 @@ stages:
         ScriptType: InlineScript
         Inline: |
           $subscriptionId = (Get-AzContext).Subscription.Id
-          New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep' -TemplateParameterObject @{
+          New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
             subscriptionId = $subscriptionId
             location = '$(location)'
             prefix = '${{ parameters.prefix }}'
@@ -196,7 +227,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/invalidimage.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/invalidimage.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply ngnix-app'
@@ -206,7 +237,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/ngnix-app.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply minecraft-namespace'
@@ -216,7 +247,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/minecraft-namespace.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft-namespace.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply minecraft3'
@@ -226,7 +257,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/minecraft3.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft3.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply minecraft3'
@@ -236,7 +267,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/ngnix-app.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply prometheus'
@@ -246,7 +277,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/prometheus.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply windows-service'
@@ -256,7 +287,7 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/windows-service.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/windows-service.yaml'
 
     - task: Kubernetes@1
       displayName: 'kubectl apply prometheus-bundle'
@@ -266,4 +297,4 @@ stages:
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/$(Build.Repository.Name)/kubernetes-manifests/prometheus-bundle.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus-bundle.yaml'
