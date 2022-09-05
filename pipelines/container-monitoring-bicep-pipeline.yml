@@ -43,8 +43,8 @@ stages:
   jobs:
   - job: LintCode
     displayName: Lint Code
-    pool: 
-      vmImage: ubuntu-latest
+    pool:
+      vmImage: windows-latest
     
     variables:
     - template: container-monitoring-variables.yml
@@ -83,7 +83,7 @@ stages:
       displayName: 'Post Analysis'
       inputs:
         GdnBreakAllTools: true
-        
+
     - script: |
         az bicep build --file $(Build.SourcesDirectory)/$(Build.Repository.Name)/bicep/main.bicep
       displayName: 'Run Bicep linter'
