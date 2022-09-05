@@ -1,4 +1,3 @@
-param subscriptionId string
 param location string
 param prefix string
 param adminUser string
@@ -103,7 +102,6 @@ targetScope = 'subscription'
 
 // AKS cluster Resource group and workspace Resource group deployment 
 module rgModule 'modules/resourceGroup.bicep' = [for resourceGroup in resourceGroups: {
-  scope: subscription(subscriptionId)
   name: 'rgDeploy${resourceGroup}'
   params: {
     resourceGroupName: resourceGroup
