@@ -126,15 +126,15 @@ module workspaceModule 'modules/logAnalyticsWorkspace.bicep' = {
 }
 
 // Saved Searches Deployment
-module savedSearchModule 'modules/workspaceSavedSearches.bicep' = [for item in savedSearches:{
+module savedSearchModule 'modules/workspaceSavedSearches.bicep' = [for (savedSearch, index) in savedSearches: {
   scope: resourceGroup(opsResourceGroupName)
-  name: '${item.name}savedSearchesDeploy'
+  name: '${uniqueString(deployment().name, location)}-LAW-SavedSearch-${index}'
   params: {
     workspaceName: workspaceModule.outputs.workspaceName
-    name: item.name
-    displayName: item.displayName
-    category: item.category
-    query: item.query
+    name: '${savedSearch.name}${uniqueString(deployment().name)}'
+    displayName: savedSearch.displayName
+    category: savedSearch.category
+    query: savedSearch.query
   }
   dependsOn: [
     workspaceModule
