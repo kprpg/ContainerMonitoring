@@ -43,10 +43,10 @@ stages:
   jobs:
   - job: LintCode
     displayName: Lint Code
-
-  - script: |
-        az bicep build --file $(Build.SourcesDirectory)/bicep/main.bicep
-    displayName: 'Run Bicep linter'
+    steps:
+    - script: |
+          az bicep build --file $(Build.SourcesDirectory)/bicep/main.bicep
+      displayName: 'Run Bicep linter'
 
 - stage: Test
   displayName: Run Security Code Analysis scan
