@@ -126,20 +126,6 @@ module workspaceModule 'modules/logAnalyticsWorkspace.bicep' = {
 }
 
 // Saved Searches Deployment
-/*module savedSearchModule 'modules/workspaceSavedSearches.bicep' = [for (savedSearch, index) in savedSearches: {
-  scope: resourceGroup(opsResourceGroupName)
-  name: '${uniqueString(deployment().name, location)}-LAW-SavedSearch-${index}'
-  params: {
-    workspaceName: workspaceModule.outputs.workspaceName
-    name: '${savedSearch.name}${uniqueString(deployment().name)}'
-    displayName: savedSearch.displayName
-    category: savedSearch.category
-    query: savedSearch.query
-  }
-  dependsOn: [
-    workspaceModule
-  ]
-}]*/
 module logAnalyticsWorkspaceSavedSearches 'modules/workspaceSavedSearches.bicep' = [for (savedSearch, index) in savedSearches: {
   scope: resourceGroup(opsResourceGroupName)
   name: '${uniqueString(deployment().name, location)}-LAW-SavedSearch-${index}'
@@ -152,7 +138,6 @@ module logAnalyticsWorkspaceSavedSearches 'modules/workspaceSavedSearches.bicep'
     query: savedSearch.query
   }
 }]
-
 
 // Monitored AKS cluster deployment
 module monitoredAksModule 'modules/aks.bicep' = {
