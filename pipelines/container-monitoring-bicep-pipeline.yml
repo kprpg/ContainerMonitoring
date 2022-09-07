@@ -108,7 +108,7 @@ stages:
         deploymentMode: 'Validation'
         overrideParameters: >
           -location $(location)
-          -prefix ${prefix}
+          -prefix $(prefix)
           -contosoSH360ClusterResourceGroupName $(resourceGroupName)
           -opsResourceGroupName $(workspaceResourceGroupName)
           -logAnalyticsWorkspaceName $(workspaceName)
@@ -146,7 +146,7 @@ stages:
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
             location = '$(location)'
-            prefix = '${prefix}'
+            prefix = '$(prefix)'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
@@ -193,7 +193,7 @@ stages:
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
             location = '$(location)'
-            prefix = '${prefix}'
+            prefix = '$(prefix)'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
