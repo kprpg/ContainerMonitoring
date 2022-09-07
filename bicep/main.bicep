@@ -7,6 +7,8 @@ param servicePrincipalClientId string
 @secure()
 param servicePrincipalClientSecret string
 param agentVMSize string
+param dockerBridgeCidr string
+param serviceCidr string
 
 param workspaceSkuName string
 param contosoSH360ClusterResourceGroupName string
@@ -126,9 +128,9 @@ module workspaceModule 'modules/logAnalyticsWorkspace.bicep' = {
 }
 
 // Saved Searches Deployment
-module logAnalyticsWorkspaceSavedSearches 'modules/workspaceSavedSearches.bicep' = [for (savedSearch, index) in savedSearches: {
+module logAnalyticsWorkspaceSavedSearches 'modules/workspaceSavedSearch.bicep' = [for (savedSearch, index) in savedSearches: {
   scope: resourceGroup(opsResourceGroupName)
-  name: '${uniqueString(deployment().name, location)}-LAW-SavedSearch-${index}'
+  name: '${uniqueString(deployment().name)}-LAW-SavedSearch-${index}'
   params: {
     workspaceName: workspaceModule.outputs.workspaceName
     name: '${savedSearch.name}${uniqueString(deployment().name)}'
@@ -153,6 +155,8 @@ module monitoredAksModule 'modules/aks.bicep' = {
     primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
     adminUser: adminUser
     adminPassword: adminPassword
+    serviceCidr: serviceCidr
+    dockerBridgeCidr: dockerBridgeCidr
   }
 }
 
@@ -169,6 +173,8 @@ module nonMonitoredAksModule 'modules/aks.bicep' = {
     primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
     adminUser: adminUser
     adminPassword: adminPassword
+    serviceCidr: serviceCidr
+    dockerBridgeCidr: dockerBridgeCidr
   }
   dependsOn: [
     monitoredAksModule

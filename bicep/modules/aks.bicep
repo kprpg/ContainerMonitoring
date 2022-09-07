@@ -9,6 +9,8 @@ param omsAgentEnabled bool = true
 param adminUser string
 @secure()
 param adminPassword string
+param dockerBridgeCidr string
+param serviceCidr string
 
 var dnsPrefix = '${clusterName}-dns'
 
@@ -31,8 +33,8 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-01-01'
     networkProfile: {
       networkPlugin: 'azure'
       networkPolicy: 'azure'
-      serviceCidr: '10.0.0.0/16'
-      dockerBridgeCidr: '172.17.0.1/16'
+      serviceCidr: serviceCidr
+      dockerBridgeCidr: dockerBridgeCidr
     }
     addonProfiles: {
       omsagent: {

@@ -14,14 +14,6 @@ parameters:
   - PreProd
   - Production
 
-- name: enableAADProfile
-  displayName: 'Enable AAD profile for AKS cluster'
-  type: string
-  default: false
-  values:
-  - false
-  - true
-
 - name: prefix
   displayName: 'Prefix'
   type: string
@@ -50,7 +42,7 @@ stages:
           az bicep build --file $(Build.SourcesDirectory)/bicep/main.bicep
       displayName: 'Run Bicep linter'
 
-- stage: Test
+- stage: SecurityTest
   displayName: Run Security Code Analysis scan
   jobs:
   - job: SecurityCodeAnalysisScans
@@ -116,7 +108,7 @@ stages:
         deploymentMode: 'Validation'
         overrideParameters: >
           -location $(location)
-          -prefix ${prefix }
+          -prefix ${prefix}
           -contosoSH360ClusterResourceGroupName $(resourceGroupName)
           -opsResourceGroupName $(workspaceResourceGroupName)
           -logAnalyticsWorkspaceName $(workspaceName)
@@ -128,6 +120,8 @@ stages:
           -servicePrincipalClientId $(ContosoSH360ClusterSPClientId)
           -servicePrincipalClientSecret $(ContosoSH360ClusterSPClientSecret)
           -agentVMSize $(agentVMSize)
+          -serviceCidr $(aksClusterServiceCidr)
+          -dockerBridgeCidr $(aksClusterDockerBridgeCidr)
 
 - stage: Preview
   jobs: 
@@ -152,7 +146,7 @@ stages:
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
             location = '$(location)'
-            prefix = '${parameters.prefix}'
+            prefix = '${prefix}'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
@@ -164,6 +158,8 @@ stages:
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
+            serviceCidr = '$(aksClusterServiceCidr)'
+            dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
           } -Verbose
 
 - stage: IaCDeploy
@@ -189,7 +185,6 @@ stages:
 
     - task: AzurePowerShell@4
       displayName: 'Create resources'
-      condition: not(${{ parameters.enableAADProfile }})
       inputs:
         azurePowerShellVersion: LatestVersion
         azureSubscription:  $(azureSubscriptionEndpoint)
@@ -198,7 +193,7 @@ stages:
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
             location = '$(location)'
-            prefix = '${parameters.prefix}'
+            prefix = '${prefix}'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
@@ -210,6 +205,8 @@ stages:
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
+            serviceCidr = '$(aksClusterServiceCidr)'
+            dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
           } -Verbose
 
     - task: AzureCLI@2
