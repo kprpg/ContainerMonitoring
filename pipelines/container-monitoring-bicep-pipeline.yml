@@ -163,7 +163,7 @@ stages:
           } -Verbose
 
 - stage: IaCDeploy
-  displayName: Deploy
+  displayName: Deploy Infrastructure
   jobs:
   - job: Deploy
     displayName: Deploy Container Monitoring
@@ -222,7 +222,7 @@ stages:
           az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
 
 - stage: ApplicationDeployment
-  displayName: Deploy
+  displayName: Deploy Application
   jobs:
   - job: Deploy
     displayName: Deploy Manifests to Container Monitoring
