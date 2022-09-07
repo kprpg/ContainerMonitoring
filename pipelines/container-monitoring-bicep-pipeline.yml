@@ -116,7 +116,7 @@ stages:
         deploymentMode: 'Validation'
         overrideParameters: >
           -location $(location)
-          -prefix ${{ parameters.prefix }}
+          -prefix ${prefix }
           -contosoSH360ClusterResourceGroupName $(resourceGroupName)
           -opsResourceGroupName $(workspaceResourceGroupName)
           -logAnalyticsWorkspaceName $(workspaceName)
@@ -152,7 +152,7 @@ stages:
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
             location = '$(location)'
-            prefix = '${{ parameters.prefix }}'
+            prefix = '${parameters.prefix}'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
@@ -166,7 +166,7 @@ stages:
             agentVMSize = '$(agentVMSize)'
           } -Verbose
 
-- stage: Deploy
+- stage: IaCDeploy
   displayName: Deploy
   jobs:
   - job: Deploy
@@ -198,7 +198,7 @@ stages:
           $subscriptionId = (Get-AzContext).Subscription.Id
           New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
             location = '$(location)'
-            prefix = '${{ parameters.prefix }}'
+            prefix = '${parameters.prefix}'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
@@ -224,6 +224,19 @@ stages:
           $clusterData = $cluster | ConvertFrom-Json
           az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
 
+- stage: ApplicationDeployment
+  displayName: Deploy
+  jobs:
+  - job: Deploy
+    displayName: Deploy Manifests to Container Monitoring
+    pool: 
+      vmImage: ubuntu-latest
+    
+    variables:
+    - template: container-monitoring-variables.yml
+    
+    steps:
+    - checkout: self
     - task: KubectlInstaller@0
       displayName: 'Install Kubectl latest'
 
