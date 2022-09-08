@@ -1,0 +1,318 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
+trigger:
+- none
+
+parameters:
+- name: environment
+  displayName: 'Environment to deploy'
+  type: string
+  default: Integration
+  values:
+  - Integration
+  - PreProd
+  - Production
+
+- name: prefix
+  displayName: 'Prefix'
+  type: string
+
+variables:
+- ${{ if eq(parameters.environment, 'Integration') }}:
+  - template: container-monitoring-integration.variables.yml
+- ${{ if eq(parameters.environment, 'Production') }}:
+  - template: container-monitoring-production.variables.yml
+- ${{ if eq(parameters.environment, 'PreProd') }}:
+  - template: container-monitoring-preprod.variables.yml
+
+- template: container-monitoring-variables.yml
+
+- name: prefix
+  value: ${{ parameters.prefix }}
+
+stages:
+- stage: Lint
+  displayName: LintCode
+  jobs:
+  - job: LintCode
+    displayName: Lint Code
+    steps:
+    - script: |
+          az bicep build --file $(Build.SourcesDirectory)/bicep/main.bicep
+      displayName: 'Run Bicep linter'
+
+- stage: SecurityTest
+  displayName: Run Security Code Analysis scan
+  jobs:
+  - job: SecurityCodeAnalysisScans
+    displayName:  Run Security Code Analysis Scans
+    pool:
+      vmImage: windows-latest
+    
+    steps:
+    - checkout: self
+
+    - task: AntiMalware@3
+      inputs:
+        FileDirPath: '$(Build.SourcesDirectory)'
+        EnableServices: true
+
+    - task: CredScan@3
+      inputs:
+        toolMajorVersion: Latest
+        scanFolder: '$(Build.SourcesDirectory)'
+
+    - task: Armory@2
+      inputs:
+        targetDirectory: '$(Build.SourcesDirectory)'
+        targetFiles: 'f|**\*.json;-|.gdn\**;'
+
+    - task: SdtReport@2
+      inputs:
+        GdnExportSarifFile: false
+        GdnExportHtmlFile: true
+        GdnExportAllTools: true
+
+    - task: PublishSecurityAnalysisLogs@3
+      inputs:
+        ArtifactName: 'CodeAnalysisLogs'
+        ArtifactType: 'Container'
+        AllTools: true
+        ToolLogsNotFoundAction: 'Standard'
+
+    - task: PostAnalysis@2
+      displayName: 'Post Analysis'
+      inputs:
+        GdnBreakAllTools: true
+
+- stage: Validate
+  jobs:
+  - job: ValidateBicepCode
+    displayName: Validate Bicep code
+    steps:
+    - task: AzureKeyVault@1
+      displayName: Load Secrets
+      inputs:
+        azureSubscription: '$(stagingSubscriptionEndpoint)'
+        KeyVaultName: '$(stagingKeyVaultName)'
+        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
+
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Subscription'
+        azureResourceManagerConnection: '$(azureSubscriptionEndpoint)'
+        location: '$(location)'
+        templateLocation: 'Linked artifact'
+        csmFile: '$(Build.SourcesDirectory)/bicep/main.bicep'
+        deploymentMode: 'Validation'
+        overrideParameters: >
+          -location $(location)
+          -prefix $(prefix)
+          -contosoSH360ClusterResourceGroupName $(resourceGroupName)
+          -opsResourceGroupName $(workspaceResourceGroupName)
+          -logAnalyticsWorkspaceName $(workspaceName)
+          -workspaceSkuName $(workspaceSkuName)
+          -montioredClusterName $(AKSName)
+          -nonMontioredClusterName $(NonMonitoredAKSName)
+          -adminUser $(chVmAdminUser)
+          -adminPassword $(chVmAdminPassword)
+          -servicePrincipalClientId $(ContosoSH360ClusterSPClientId)
+          -servicePrincipalClientSecret $(ContosoSH360ClusterSPClientSecret)
+          -agentVMSize $(agentVMSize)
+          -serviceCidr $(aksClusterServiceCidr)
+          -dockerBridgeCidr $(aksClusterDockerBridgeCidr)
+
+- stage: Preview
+  jobs: 
+  - job: PreviewAzureChanges
+    displayName: Preview Azure changes
+    steps:
+    - task: AzureKeyVault@1
+      displayName: Load Secrets
+      inputs:
+        azureSubscription: '$(stagingSubscriptionEndpoint)'
+        KeyVaultName: '$(stagingKeyVaultName)'
+        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
+
+    - task: AzurePowerShell@4
+      name: RunWhatIf
+      displayName: Run what-if
+      inputs:
+        azurePowerShellVersion: LatestVersion
+        azureSubscription:  $(azureSubscriptionEndpoint)
+        ScriptType: InlineScript
+        Inline: |
+          $subscriptionId = (Get-AzContext).Subscription.Id
+          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
+            location = '$(location)'
+            prefix = '$(prefix)'
+            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+            opsResourceGroupName = '$(workspaceResourceGroupName)'
+            logAnalyticsWorkspaceName = '$(workspaceName)'
+            workspaceSkuName = '$(workspaceSkuName)'
+            montioredClusterName = '$(AKSName)'
+            nonMontioredClusterName = '$(NonMonitoredAKSName)'
+            adminUser = '$(chVmAdminUser)'
+            adminPassword = '$(chVmAdminPassword)'
+            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
+            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
+            agentVMSize = '$(agentVMSize)'
+            serviceCidr = '$(aksClusterServiceCidr)'
+            dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+          } -Verbose
+
+- stage: IaCDeploy
+  displayName: Deploy Infrastructure
+  jobs:
+  - job: Deploy
+    displayName: Deploy Container Monitoring
+    pool: 
+      vmImage: ubuntu-latest
+    
+    variables:
+    - template: container-monitoring-variables.yml
+    
+    steps:
+    - checkout: self
+
+    - task: AzureKeyVault@1
+      displayName: Load Secrets
+      inputs:
+        azureSubscription: '$(stagingSubscriptionEndpoint)'
+        KeyVaultName: '$(stagingKeyVaultName)'
+        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
+
+    - task: AzurePowerShell@4
+      displayName: 'Create resources'
+      inputs:
+        azurePowerShellVersion: LatestVersion
+        azureSubscription:  $(azureSubscriptionEndpoint)
+        ScriptType: InlineScript
+        Inline: |
+          $subscriptionId = (Get-AzContext).Subscription.Id
+          New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
+            location = '$(location)'
+            prefix = '$(prefix)'
+            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+            opsResourceGroupName = '$(workspaceResourceGroupName)'
+            logAnalyticsWorkspaceName = '$(workspaceName)'
+            workspaceSkuName = '$(workspaceSkuName)'
+            montioredClusterName = '$(AKSName)'
+            nonMontioredClusterName = '$(NonMonitoredAKSName)'
+            adminUser = '$(chVmAdminUser)'
+            adminPassword = '$(chVmAdminPassword)'
+            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
+            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
+            agentVMSize = '$(agentVMSize)'
+            serviceCidr = '$(aksClusterServiceCidr)'
+            dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+          } -Verbose
+
+    - task: AzureCLI@2
+      displayName: 'Enable MDM'
+      #condition: false
+      inputs:
+        azureSubscription: $(azureSubscriptionEndpoint)
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |
+          $cluster = az aks show -g '$(resourceGroupName)' -n '$(AKSName)' --output json
+          $clusterData = $cluster | ConvertFrom-Json
+          az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
+
+- stage: ApplicationDeployment
+  displayName: Deploy Application
+  jobs:
+  - job: Deploy
+    displayName: Deploy Manifests to Container Monitoring
+    pool: 
+      vmImage: ubuntu-latest
+    
+    variables:
+    - template: container-monitoring-variables.yml
+    
+    steps:
+    - checkout: self
+    - task: KubectlInstaller@0
+      displayName: 'Install Kubectl latest'
+
+    - task: Kubernetes@1
+      displayName: 'kubectl apply invalidimage'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        command: apply
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/invalidimage.yaml'
+
+    - task: Kubernetes@1
+      displayName: 'kubectl apply ngnix-app'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        command: apply
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
+
+    - task: Kubernetes@1
+      displayName: 'kubectl apply minecraft-namespace'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        command: apply
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft-namespace.yaml'
+
+    - task: Kubernetes@1
+      displayName: 'kubectl apply minecraft3'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        command: apply
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft3.yaml'
+
+    - task: Kubernetes@1
+      displayName: 'kubectl apply minecraft3'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        command: apply
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
+
+    - task: Kubernetes@1
+      displayName: 'kubectl apply prometheus'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        command: apply
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus.yaml'
+
+    - task: Kubernetes@1
+      displayName: 'kubectl apply windows-service'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        command: apply
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/windows-service.yaml'
+
+    - task: Kubernetes@1
+      displayName: 'kubectl apply prometheus-bundle'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        command: apply
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus-bundle.yaml'

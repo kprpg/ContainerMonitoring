@@ -14,3 +14,20 @@ variables:
   value: $(prefix)-ContosoNonMonitoredCluster$(suffix)
 - name: ContosoSH360ClusterFolder
   value: '$(Build.SourcesDirectory)'
+
+- name: agentVMSize
+  value: Standard_D2s_v3
+- name: workspaceSkuName
+  value: Standalone
+- name: roleDefinitionName
+  value: Monitoring Metrics Publisher
+- name: aksClusterNetworkPlugin
+  value: azure
+- name: aksClusterNetworkPolicy
+  value: azure
+- name: aksClusterServiceCidr
+  value: 10.0.0.0/16
+- name: aksClusterDockerBridgeCidr
+  value: 172.17.0.1/16
+- name: clusterVersion
+  value: 1.23.5

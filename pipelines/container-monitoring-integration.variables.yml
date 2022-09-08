@@ -1,0 +1,15 @@
+variables:
+- name: prefix
+  value: CH1
+- name: suffix
+  value: '-Play'
+- name: azureSubscriptionEndpoint
+  value: 'Contoso Hotels Tenant - Integration'
+
+- name: stagingSubscriptionEndpoint
+  value: 'Contoso Hotels Tenant - PREPROD (DEV)'
+- name: stagingKeyVaultName
+  value: CH-StagingKV-Dev
+
+- name: location
+  value: eastus
