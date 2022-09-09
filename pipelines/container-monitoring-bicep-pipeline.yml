@@ -91,13 +91,6 @@ stages:
   - job: ValidateBicepCode
     displayName: Validate Bicep code
     steps:
-    - task: AzureKeyVault@1
-      displayName: Load Secrets
-      inputs:
-        azureSubscription: '$(stagingSubscriptionEndpoint)'
-        KeyVaultName: '$(stagingKeyVaultName)'
-        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
-
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
         deploymentScope: 'Subscription'
@@ -128,13 +121,6 @@ stages:
   - job: PreviewAzureChanges
     displayName: Preview Azure changes
     steps:
-    - task: AzureKeyVault@1
-      displayName: Load Secrets
-      inputs:
-        azureSubscription: '$(stagingSubscriptionEndpoint)'
-        KeyVaultName: '$(stagingKeyVaultName)'
-        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
-
     - task: AzurePowerShell@4
       name: RunWhatIf
       displayName: Run what-if
@@ -162,7 +148,7 @@ stages:
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
           } -Verbose
 
-- stage: IaCDeploy
+- stage: BicepDeploy
   displayName: Deploy Infrastructure
   jobs:
   - job: Deploy
@@ -175,13 +161,6 @@ stages:
     
     steps:
     - checkout: self
-
-    - task: AzureKeyVault@1
-      displayName: Load Secrets
-      inputs:
-        azureSubscription: '$(stagingSubscriptionEndpoint)'
-        KeyVaultName: '$(stagingKeyVaultName)'
-        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
 
     - task: AzurePowerShell@4
       displayName: 'Create resources'
@@ -210,7 +189,7 @@ stages:
           } -Verbose
 
     - task: AzureCLI@2
-      displayName: 'Enable MDM'
+      displayName: 'Cluster role assignment'
       #condition: false
       inputs:
         azureSubscription: $(azureSubscriptionEndpoint)
