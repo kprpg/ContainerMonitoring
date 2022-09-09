@@ -57,9 +57,11 @@ Use Get-AzADServicePrincipal to get ObjectId
         (Get-AzADServicePrincipal -DisplayName '<Service Principal Name>').Id
 ```
 1. Enter below variables as pipeline secret variables  
-- ContosoSH360ClusterSPClientId
-- ContosoSH360ClusterSPObjectId
-- ContosoSH360ClusterSPClientSecret  
+- ContosoSH360ClusterSPClientId - This contains client id which will be used in service profile
+- ContosoSH360ClusterSPObjectId - This contain object id of above client id
+- ContosoSH360ClusterSPClientSecret  - This contain client secret for above id
+- chVmAdminPassword - This include windows profile password
+- chVmAdminUser - This include windows profile username
 
 1.  Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
 1.  Update the container-monitoring-pipeline.yml pipeline to use your environment variables file
