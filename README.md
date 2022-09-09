@@ -47,23 +47,23 @@ This solution deployes resources for the Azure Monitor for containers demo scena
 
 ## Setup
 
-1.	Clone the repository to your Azure DevOps project
-1.	Create a service connection
-1.	Ensure that the Owner role is assigned to the service connection's service principal
-1.	If you don't have a key vault, create one
+1.	Clone/Fork the repository to your Azure DevOps project
+1.	Create a service connection as part of azure authentication from pipeline
+1.	Ensure that the Owner role is assigned to the service connection's service principal. This is required for role assignment within resource provisioning
 1.  Create a service principal for the Kubernetes cluster
-1.  Add service principal's application ID, object ID and secret to the key vault as ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPObjectId and ContosoSH360ClusterSPClientSecret secrets
-
-    Use Get-AzADServicePrincipal to get ObjectId
+```
+Use Get-AzADServicePrincipal to get ObjectId
 
         (Get-AzADServicePrincipal -DisplayName '<Service Principal Name>').Id
+```
+1. Enter below variables as pipeline secret variables  
+- ContosoSH360ClusterSPClientId
+- ContosoSH360ClusterSPObjectId
+- ContosoSH360ClusterSPClientSecret  
 
-
-1.  Create a Key Vault access policy to allow the service connection's service principal to read secrets
-1.  Copy the container-monitoring-environment.variables.yml variables file and rename it to match your environment
-1.  Update the environment variables file with correponding values
+1.  Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
 1.  Update the container-monitoring-pipeline.yml pipeline to use your environment variables file
-1.  Import the container-monitoring-pipeline.yml pipeline to your Azure DevOps project
+1.  Container-monitoring-pipeline.yml pipeline to your Azure DevOps project
 
 ## Runnning the sample
 
