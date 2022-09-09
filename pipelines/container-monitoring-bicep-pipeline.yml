@@ -31,6 +31,12 @@ variables:
 - name: prefix
   value: ${{ parameters.prefix }}
 
+- name: ContosoSH360ClusterSPClientId
+- name: ContosoSH360ClusterSPClientSecret
+- name: ContosoSH360ClusterSPObjectId
+- name: chVmAdminPassword
+- name: chVmAdminUser
+
 stages:
 - stage: Lint
   displayName: LintCode
@@ -91,13 +97,6 @@ stages:
   - job: ValidateBicepCode
     displayName: Validate Bicep code
     steps:
-    - task: AzureKeyVault@1
-      displayName: Load Secrets
-      inputs:
-        azureSubscription: '$(stagingSubscriptionEndpoint)'
-        KeyVaultName: '$(stagingKeyVaultName)'
-        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
-
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
         deploymentScope: 'Subscription'
@@ -128,13 +127,6 @@ stages:
   - job: PreviewAzureChanges
     displayName: Preview Azure changes
     steps:
-    - task: AzureKeyVault@1
-      displayName: Load Secrets
-      inputs:
-        azureSubscription: '$(stagingSubscriptionEndpoint)'
-        KeyVaultName: '$(stagingKeyVaultName)'
-        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
-
     - task: AzurePowerShell@4
       name: RunWhatIf
       displayName: Run what-if
@@ -175,13 +167,6 @@ stages:
     
     steps:
     - checkout: self
-
-    - task: AzureKeyVault@1
-      displayName: Load Secrets
-      inputs:
-        azureSubscription: '$(stagingSubscriptionEndpoint)'
-        KeyVaultName: '$(stagingKeyVaultName)'
-        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId, chVmAdminPassword, chVmAdminUser '
 
     - task: AzurePowerShell@4
       displayName: 'Create resources'
