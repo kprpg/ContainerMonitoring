@@ -191,7 +191,7 @@ stages:
           } -Verbose
 
     - task: AzureCLI@2
-      displayName: 'Enable MDM'
+      displayName: 'Cluster role assignment'
       #condition: false
       inputs:
         azureSubscription: $(azureSubscriptionEndpoint)
