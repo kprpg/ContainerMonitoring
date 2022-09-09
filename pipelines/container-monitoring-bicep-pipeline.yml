@@ -32,10 +32,15 @@ variables:
   value: ${{ parameters.prefix }}
 
 - name: ContosoSH360ClusterSPClientId
+  value: ''
 - name: ContosoSH360ClusterSPClientSecret
+  value: ''
 - name: ContosoSH360ClusterSPObjectId
+  value: ''
 - name: chVmAdminPassword
+  value: ''
 - name: chVmAdminUser
+  value: ''
 
 stages:
 - stage: Lint
