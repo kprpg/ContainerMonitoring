@@ -19,6 +19,8 @@ parameters:
   type: string
 
 variables:
+- group: ContainerMonitoring
+
 - ${{ if eq(parameters.environment, 'Integration') }}:
   - template: container-monitoring-integration.variables.yml
 - ${{ if eq(parameters.environment, 'Production') }}:
@@ -30,17 +32,6 @@ variables:
 
 - name: prefix
   value: ${{ parameters.prefix }}
-
-- name: ContosoSH360ClusterSPClientId
-  value: ''
-- name: ContosoSH360ClusterSPClientSecret
-  value: ''
-- name: ContosoSH360ClusterSPObjectId
-  value: ''
-- name: chVmAdminPassword
-  value: ''
-- name: chVmAdminUser
-  value: ''
 
 stages:
 - stage: Lint
