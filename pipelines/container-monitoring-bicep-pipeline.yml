@@ -150,7 +150,7 @@ stages:
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
           } -Verbose
 
-- stage: IaCDeploy
+- stage: BicepDeploy
   displayName: Deploy Infrastructure
   jobs:
   - job: Deploy
