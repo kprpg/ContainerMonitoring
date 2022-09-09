@@ -19,8 +19,6 @@ parameters:
   type: string
 
 variables:
-- group: ContainerMonitoring
-
 - ${{ if eq(parameters.environment, 'Integration') }}:
   - template: container-monitoring-integration.variables.yml
 - ${{ if eq(parameters.environment, 'Production') }}:
