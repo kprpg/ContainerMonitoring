@@ -105,7 +105,7 @@ var nonMonitoredAKSPrimaryAgentPoolProfile = [
 targetScope = 'subscription'
 
 // AKS cluster Resource group and workspace Resource group deployment 
-module rgModule 'modules/resourceGroup.bicep' = [for resourceGroup in resourceGroups: {
+module rgModule 'modules/Microsoft.Resources/resourceGroups/resourceGroup.bicep' = [for resourceGroup in resourceGroups: {
   name: 'rgDeploy${resourceGroup}'
   params: {
     resourceGroupName: resourceGroup
@@ -114,7 +114,7 @@ module rgModule 'modules/resourceGroup.bicep' = [for resourceGroup in resourceGr
 }]
 
 //Log analytics workspace deployment
-module workspaceModule 'modules/logAnalyticsWorkspace.bicep' = {
+module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/logAnalyticsWorkspace.bicep' = {
   scope: resourceGroup(opsResourceGroupName)
   name: '${prefix}workspaceDeploy'
   params: {
@@ -128,7 +128,7 @@ module workspaceModule 'modules/logAnalyticsWorkspace.bicep' = {
 }
 
 // Saved Searches Deployment
-module logAnalyticsWorkspaceSavedSearches 'modules/workspaceSavedSearch.bicep' = [for (savedSearch, index) in savedSearches: {
+module logAnalyticsWorkspaceSavedSearches 'modules/Microsoft.OperationalInsights/workspaces/savedSearch/workspaceSavedSearch.bicep' = [for (savedSearch, index) in savedSearches: {
   scope: resourceGroup(opsResourceGroupName)
   name: '${uniqueString(deployment().name)}-LAW-SavedSearch-${index}'
   params: {
@@ -142,7 +142,7 @@ module logAnalyticsWorkspaceSavedSearches 'modules/workspaceSavedSearch.bicep' =
 }]
 
 // Monitored AKS cluster deployment
-module monitoredAksModule 'modules/aks.bicep' = {
+module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/aks.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}monitoredAKSDeploy'
   params: {
@@ -161,7 +161,7 @@ module monitoredAksModule 'modules/aks.bicep' = {
 }
 
 // Non monitored AKS cluster deployment
-module nonMonitoredAksModule 'modules/aks.bicep' = {
+module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/aks.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}nonMonitoredAKSDeploy'
   params: {
