@@ -1,10 +1,10 @@
-# Introduction
+## Introduction
 This project provides the below monitoring capabilities
 - Showcase the difference between monitored and non-monitored cluster
 - Container insight and health monitoring for AKS resources
-- Identifying and troubleshooting the root cause for application slowness and failure
+- Help in identification of bug and root cause analysis
 
-# Azure Monitor for Containers
+## Azure Monitor for Containers
 This solution has been used to create an AKS monitoring scenario in the contoso demo environment, and can also be used by users to create replica in their own azure environment.
 
 ## Contents
@@ -27,11 +27,7 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 * Contributor access to an azure subscription
 * Contributor permission on Azure DevOps project
-* ContosoSH360ClusterSPClientId - This contains client id which will be used in service profile for authentication
-* ContosoSH360ClusterSPObjectId - This contain object id of above client id
-* ContosoSH360ClusterSPClientSecret  - This contain client secret for above client id which will be used in service profile for authentication
-* chVmAdminPassword - This include windows profile password
-* chVmAdminUser - This include windows profile username
+* Client id with its object id and secret is required in azure environment
 
 ## Setup
 
@@ -44,38 +40,35 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
     ![steps to clone container monitoring repository](./deploymentStepGIFs/stepsTocloneRepo.gif =1000x)
 
-2. Use an existing or create a new service connection as part of azure authentication from pipeline. 
+2. Use an existing or create a new service connection for azure subscription authentication with devops. 
 
-    ![steps to create new service connection](./deploymentStepGIFs/stepsToCreateServiceConnection.gif)
+    ![steps to create new service connection](./deploymentStepGIFs/stepsToCreateServiceConnection.gif =1000x)
 
 3. Update service connection in Container-monitoring-environment.variables.yml.
-    ![Steps to update service connection in variable file](./deploymentStepGIFs/updateSPNInVariableFile.gif)
 
-1. Ensure that the Owner role is assigned to the service connection's service principal. This is required for role assignment within resource provisioning
-1. Create a service principal for the Kubernetes cluster
-1. Create a new pipeline in your project with existing Azure pipelines yaml file.
+    ![Steps to update service connection in variable file](./deploymentStepGIFs/updateSPNInVariableFile.gif =1000x)
 
-    ![steps to create pipeline](./deploymentStepGIFs/stepsToCreatePipeline.gif)
+4. Create a new azure devops build pipeline in your project with existing yaml file within cloned/fork repo.
 
-4. Enter below variables as pipeline secret variables
+    ![steps to create pipeline](./deploymentStepGIFs/stepsToCreatePipeline.gif =1000x)
 
-    - ContosoSH360ClusterSPClientId
-    - ContosoSH360ClusterSPObjectId
-    - ContosoSH360ClusterSPClientSecret
-    - chVmAdminPassword
-    - chVmAdminUser
+5. Enter below variables as pipeline secret variables
 
-    ![steps to add pipeline variables](./deploymentStepGIFs/stepsToAddPipelineVariables.gif)
+    - ContosoSH360ClusterSPClientId - Client id of an azure spn
+    - ContosoSH360ClusterSPObjectId - Object id of an azure spn
+    - ContosoSH360ClusterSPClientSecret - Client secret of an azure spn
+    - chVmAdminPassword - Windows profile user password
+    - chVmAdminUser - Windows profile username
 
-7. Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
-8. Update the container-monitoring-bicep-pipeline.yml pipeline to use your environment variables file
-9. Container-monitoring-bicep-pipeline.yml pipeline to your Azure DevOps project
+    ![steps to add pipeline variables](./deploymentStepGIFs/stepsToAddPipelineVariables.gif =1000x)
 
-## Runnning the sample
+6. **Optional:** Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
 
-1.  Run the pipeline
+## Pipeline execution
 
-    ![steps to run pipeline](./deploymentStepGIFs/stepsToRunPipeline.gif)
+1.  Run the pipeline and add prefix based on your environment naming convention
+
+    ![steps to run pipeline](./deploymentStepGIFs/stepsToRunPipeline.gif =1000x)
 
 ## Contributing
 
