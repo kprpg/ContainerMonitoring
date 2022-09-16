@@ -65,4 +65,4 @@ Use Get-AzADServicePrincipal to get ObjectId
 
 ## Contributing
 
-It is detailed under ["contributions.md"](https://dev.azure.com/vsogd/_git/DOJO-Whitebelt-SKU?path=%2FCONTRIBUTING.md) file which is present along with source code in the repository.
+It is detailed under ["contributions.md"]() file which is present along with source code in the repository.
