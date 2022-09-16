@@ -42,8 +42,13 @@ This solution has been used to create an AKS monitoring scenario in the Contoso 
 
     ![steps to clone container monitoring repository](./deploymentStepGIFs/stepsTocloneRepo.gif)
 
-2. Use an existing or create a new service connection as part of azure authentication from pipeline. Update service connection in Container-monitoring-environment.variables.yml.
+2. Use an existing or create a new service connection as part of azure authentication from pipeline. 
+
+    ![steps to create new service connection](./deploymentStepGIFs/stepsToCreateServiceConnection.gif)
+
+3. Update service connection in Container-monitoring-environment.variables.yml.
     ![Steps to update service connection in variable file](./deploymentStepGIFs/updateSPNInVariableFile.gif)
+
 1. Ensure that the Owner role is assigned to the service connection's service principal. This is required for role assignment within resource provisioning
 1. Create a service principal for the Kubernetes cluster
 1. Create a new pipeline in your project with existing Azure pipelines yaml file.
