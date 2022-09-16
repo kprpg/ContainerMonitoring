@@ -72,4 +72,4 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 ## Contributing
 
-It is detailed under ["contributions.md"]() file which is present along with source code in the repository.
+It is detailed under ["./CONTRIBUTING.md"]() file which is present along with source code in the repository.
