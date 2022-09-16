@@ -52,6 +52,10 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
     ![steps to create service principal for the Kubernetes cluster](./deploymentStepGIFs/stepsToCreateAppRegistration.gif)
 
+    Steps to get the object ID 
+
+    ![steps to get object ID](./deploymentStepGIFs/stepsToGetObjectID.gif)
+
 5. Create a new azure devops build pipeline in your project with existing yaml file within cloned/fork repo.
 
     ![steps to create pipeline](./deploymentStepGIFs/stepsToCreatePipeline.gif =1000x)
