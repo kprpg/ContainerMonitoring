@@ -48,11 +48,16 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
     ![Steps to update service connection in variable file](./deploymentStepGIFs/updateSPNInVariableFile.gif =1000x)
 
-4. Create a new azure devops build pipeline in your project with existing yaml file within cloned/fork repo.
+4. Create a service principal for the Kubernetes cluster.
+
+    ![steps to create service principal for the Kubernetes cluster](./deploymentStepGIFs/stepsToCreateAppRegistration.gif)
+
+5. Create a new azure devops build pipeline in your project with existing yaml file within cloned/fork repo.
 
     ![steps to create pipeline](./deploymentStepGIFs/stepsToCreatePipeline.gif =1000x)
 
-5. Enter below variables as pipeline secret variables
+
+6. Enter below variables as pipeline secret variables
 
     - **ContosoSH360ClusterSPClientId** - Client id of an azure spn
     - **ContosoSH360ClusterSPObjectId** - Object id from enterprise application
@@ -62,7 +67,7 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
     ![steps to add pipeline variables](./deploymentStepGIFs/stepsToAddPipelineVariables.gif =1000x)
 
-6. **Optional:** Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
+7. **Optional:** Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
 
 ## Pipeline execution
 
