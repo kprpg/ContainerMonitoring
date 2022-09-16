@@ -25,9 +25,9 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 ## Prerequisites
 
-* Owner access to an azure subscription
-* Owner permission on Azure DevOps project
-* Client id and secret and Object id from enterprise application is required in azure environment
+* Owner/Contributor with User access administrator permission to an azure subscription
+* Contributor permission on Azure DevOps project
+* Client id and secret from Application registration and Object id from enterprise application is required in azure environment
 
 ## Setup
 
