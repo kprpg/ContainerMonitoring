@@ -13,11 +13,11 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 |--------------------------------------------------|--------------------------------------------|
 | `arm`                                            | ARM templates                             |
 | `bicep`                                            | Bicep templates                             |
-| `yaml`                                           | Kubernetes configuration files            |
+| `kubernetes-manifests`                                           | Kubernetes configuration files            |
 | `.gitignore`                                     | Define what to ignore at commit time      |
 | `CHANGELOG.md`                                   | List of changes                           |
 | `CONTRIBUTING.md`                                | Guidelines for contributing               |
-| `container-monitoring-pipeline.yml`              | Pipeline                             |
+| `container-monitoring-bicep-pipeline.yml`              | Pipeline                             |
 | `container-monitoring-environment.variables.yml` | Environment specific variables            |
 | `container-monitoring-variables.yml`             | Pipeline variables                        |
 | `LICENSE`                                        | License file                         |
