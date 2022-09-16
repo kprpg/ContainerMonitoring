@@ -54,8 +54,8 @@ This solution help team in recreating this monitoring scenario within their envi
     ![steps to add variable group](./deploymentStepGIFs/stepsToAddPipelineVariables.gif)
 
 7. Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
-8. Update the container-monitoring-pipeline.yml pipeline to use your environment variables file
-9. Container-monitoring-pipeline.yml pipeline to your Azure DevOps project
+8. Update the container-monitoring-bicep-pipeline.yml pipeline to use your environment variables file
+9. Container-monitoring-bicep-pipeline.yml pipeline to your Azure DevOps project
 
 ## Runnning the sample
 
