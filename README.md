@@ -1,11 +1,11 @@
 # Introduction
 This project provides the below monitoring capabilities
 - Showcase the difference between monitored and non-monitored cluster
-- Container insight to monitor AKS cluster resources and health monitoring
-- Finding and troubleshooting the root cause for application slowness and failure
+- Container insight and health monitoring for AKS resources
+- Identifying and troubleshooting the root cause for application slowness and failure
 
 # Azure Monitor for Containers
-This solution has been used to create an AKS monitoring scenario in the Contoso demo environment, and can also be used to deploy the same replica for users on their own azure environment
+This solution has been used to create an AKS monitoring scenario in the contoso demo environment, and can also be used by users to create replica in their own azure environment.
 
 ## Contents
 
@@ -26,21 +26,23 @@ This solution has been used to create an AKS monitoring scenario in the Contoso 
 ## Prerequisites
 
 * Contributor access to an azure subscription
-* Azure DevOps project
-* Permissions to create repositories, import and run pipelines
-* ContosoSH360ClusterSPClientId - This contains client id which will be used in service profile
+* Contributor permission on Azure DevOps project
+* ContosoSH360ClusterSPClientId - This contains client id which will be used in service profile for authentication
 * ContosoSH360ClusterSPObjectId - This contain object id of above client id
-* ContosoSH360ClusterSPClientSecret  - This contain client secret for above id
+* ContosoSH360ClusterSPClientSecret  - This contain client secret for above client id which will be used in service profile for authentication
 * chVmAdminPassword - This include windows profile password
 * chVmAdminUser - This include windows profile username
 
 ## Setup
 
 1. Clone/Fork the repository to your Azure DevOps project
+- Forking
 
-    ![steps to fork container monitoring repository in your Azure DevOps project](./deploymentStepGIFs/stepsToForkRepo.gif)
+    ![steps to fork container monitoring repository in your Azure DevOps project](./deploymentStepGIFs/stepsToForkRepo.gif =1000x)
 
-    ![steps to clone container monitoring repository](./deploymentStepGIFs/stepsTocloneRepo.gif)
+- Clone
+
+    ![steps to clone container monitoring repository](./deploymentStepGIFs/stepsTocloneRepo.gif =1000x)
 
 2. Use an existing or create a new service connection as part of azure authentication from pipeline. Update service connection in Container-monitoring-environment.variables.yml.
     ![Steps to update service connection in variable file](./deploymentStepGIFs/updateSPNInVariableFile.gif)
