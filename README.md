@@ -25,9 +25,9 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 ## Prerequisites
 
-* Contributor access to an azure subscription
-* Contributor permission on Azure DevOps project
-* Client id with its object id and secret is required in azure environment
+* Owner access to an azure subscription
+* Owner permission on Azure DevOps project
+* Client id and secret and Object id from enterprise application is required in azure environment
 
 ## Setup
 
@@ -55,7 +55,7 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 5. Enter below variables as pipeline secret variables
 
     - **ContosoSH360ClusterSPClientId** - Client id of an azure spn
-    - **ContosoSH360ClusterSPObjectId** - Object id of an azure spn
+    - **ContosoSH360ClusterSPObjectId** - Object id from enterprise application
     - **ContosoSH360ClusterSPClientSecret** - Client secret of an azure spn
     - **chVmAdminPassword** - Windows profile user password
     - **chVmAdminUser** - Windows profile username
