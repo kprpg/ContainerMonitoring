@@ -27,7 +27,14 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 * Owner/Contributor with User access administrator permission to an azure subscription
 * Contributor permission on Azure DevOps project
-* Client id and secret from Application registration and Object id from enterprise application is required in azure environment
+* Client id and secret from service principal and Object id from enterprise application is required in azure environment
+    - How to create a service principal
+
+    ![steps to create service principal for the Kubernetes cluster](./deploymentStepGIFs/stepsToCreateAppRegistration.gif)
+
+    - How to retrieve service principal object id 
+
+    ![steps to get object ID](./deploymentStepGIFs/stepsToGetObjectID.gif =1000x)
 
 ## Setup
 
@@ -48,20 +55,13 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
     ![Steps to update service connection in variable file](./deploymentStepGIFs/updateSPNInVariableFile.gif =1000x)
 
-4. Create a service principal for the Kubernetes cluster.
 
-    ![steps to create service principal for the Kubernetes cluster](./deploymentStepGIFs/stepsToCreateAppRegistration.gif)
-
-    Steps to get the object ID 
-
-    ![steps to get object ID](./deploymentStepGIFs/stepsToGetObjectID.gif)
-
-5. Create a new azure devops build pipeline in your project with existing yaml file within cloned/fork repo.
+4. Create a new azure devops build pipeline in your project with existing yaml file within cloned/fork repo.
 
     ![steps to create pipeline](./deploymentStepGIFs/stepsToCreatePipeline.gif =1000x)
 
 
-6. Enter below variables as pipeline secret variables
+5. Enter below variables as pipeline secret variables
 
     - **ContosoSH360ClusterSPClientId** - Client id of an azure spn
     - **ContosoSH360ClusterSPObjectId** - Object id from enterprise application
@@ -71,7 +71,7 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
     ![steps to add pipeline variables](./deploymentStepGIFs/stepsToAddPipelineVariables.gif =1000x)
 
-7. **Optional:** Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
+6. **Optional:** Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
 
 ## Pipeline execution
 
