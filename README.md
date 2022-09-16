@@ -25,9 +25,16 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 ## Prerequisites
 
-* Contributor access to an azure subscription
+* Owner/Contributor with User access administrator permission to an azure subscription
 * Contributor permission on Azure DevOps project
-* Client id with its object id and secret is required in azure environment
+* Client id and secret from service principal and Object id from enterprise application is required in azure environment
+    - How to create a service principal
+
+    ![steps to create service principal for the Kubernetes cluster](./deploymentStepGIFs/stepsToCreateAppRegistration.gif)
+
+    - How to retrieve service principal object id 
+
+    ![steps to get object ID](./deploymentStepGIFs/stepsToGetObjectID.gif =1000x)
 
 ## Setup
 
@@ -48,14 +55,16 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
     ![Steps to update service connection in variable file](./deploymentStepGIFs/updateSPNInVariableFile.gif =1000x)
 
+
 4. Create a new azure devops build pipeline in your project with existing yaml file within cloned/fork repo.
 
     ![steps to create pipeline](./deploymentStepGIFs/stepsToCreatePipeline.gif =1000x)
 
+
 5. Enter below variables as pipeline secret variables
 
     - **ContosoSH360ClusterSPClientId** - Client id of an azure spn
-    - **ContosoSH360ClusterSPObjectId** - Object id of an azure spn
+    - **ContosoSH360ClusterSPObjectId** - Object id from enterprise application
     - **ContosoSH360ClusterSPClientSecret** - Client secret of an azure spn
     - **chVmAdminPassword** - Windows profile user password
     - **chVmAdminUser** - Windows profile username
