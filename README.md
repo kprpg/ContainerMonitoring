@@ -30,7 +30,7 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 * Client id and secret from service principal and Object id from enterprise application is required in azure environment
     - How to create a service principal
 
-    ![steps to create service principal for the Kubernetes cluster](./deploymentStepGIFs/stepsToCreateAppRegistration.gif)
+    ![steps to create service principal for the Kubernetes cluster](./deploymentStepGIFs/stepsToCreateAppRegistration.gif =1000x)
 
     - How to retrieve service principal object id 
 
