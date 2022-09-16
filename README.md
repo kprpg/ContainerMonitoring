@@ -3,8 +3,6 @@ Licensed under the MIT license.
 
 ---
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdev.azure.com%2Fcontosohotelsdev.visualstudio.com%2FContosoHotels%2F_apis%2Fgit%2Frepositories%2FContainerMonitoring%2Fitems%3FscopePath%3D%2Fbicep%2Fmain.json%26api-version%3D6.0)
-
 page_type: Azure Monitor for Containers
 languages:
 - ARM templates
