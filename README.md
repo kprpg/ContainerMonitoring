@@ -46,13 +46,11 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 2. Use an existing or create a new service connection as part of azure authentication from pipeline. Update service connection in Container-monitoring-environment.variables.yml.
     ![Steps to update service connection in variable file](./deploymentStepGIFs/updateSPNInVariableFile.gif)
-1. Ensure that the Owner role is assigned to the service connection's service principal. This is required for role assignment within resource provisioning
-1. Create a service principal for the Kubernetes cluster
-1. Create a new pipeline in your project with existing Azure pipelines yaml file.
+3. Create a new pipeline in your project with existing Azure pipelines yaml file.
 
     ![steps to create pipeline](./deploymentStepGIFs/stepsToCreatePipeline.gif)
 
-6. Enter below variables as pipeline secret variables
+4. Enter below variables as pipeline secret variables
 
     - ContosoSH360ClusterSPClientId
     - ContosoSH360ClusterSPObjectId
