@@ -44,7 +44,7 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
     ![steps to create new service connection](./deploymentStepGIFs/stepsToCreateServiceConnection.gif =1000x)
 
-3. Update service connection in Container-monitoring-environment.variables.yml.
+3. Update service connection in _Container-monitoring-environment.variables.yml_.
 
     ![Steps to update service connection in variable file](./deploymentStepGIFs/updateSPNInVariableFile.gif =1000x)
 
@@ -54,11 +54,11 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 5. Enter below variables as pipeline secret variables
 
-    - ContosoSH360ClusterSPClientId - Client id of an azure spn
-    - ContosoSH360ClusterSPObjectId - Object id of an azure spn
-    - ContosoSH360ClusterSPClientSecret - Client secret of an azure spn
-    - chVmAdminPassword - Windows profile user password
-    - chVmAdminUser - Windows profile username
+    - **ContosoSH360ClusterSPClientId** - Client id of an azure spn
+    - **ContosoSH360ClusterSPObjectId** - Object id of an azure spn
+    - **ContosoSH360ClusterSPClientSecret** - Client secret of an azure spn
+    - **chVmAdminPassword** - Windows profile user password
+    - **chVmAdminUser** - Windows profile username
 
     ![steps to add pipeline variables](./deploymentStepGIFs/stepsToAddPipelineVariables.gif =1000x)
 
