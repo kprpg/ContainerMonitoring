@@ -1,48 +1,27 @@
-Copyright (c) Microsoft Corporation.  
-Licensed under the MIT license.
-
----
-
-page_type: Azure Monitor for Containers
-languages:
-- ARM templates
-products:
-- kubernetes
-description: "monitor an Azure Kubernetes Service (AKS) cluster with Azure Monitor for containers"
-urlFragment: "update-this-to-unique-url-stub"
----
+# Introduction
+This project is dedicated to deliver monitoring capability of container insights for Azure kubernetes service (AKS). This helps team in identifying any issue within their cluster and performing root cause analysis.
 
 # Azure Monitor for Containers
-
-<!-- 
-Guidelines on README format: https://review.docs.microsoft.com/help/onboard/admin/samples/concepts/readme-template?branch=master
-
-Guidance on onboarding samples to docs.microsoft.com/samples: https://review.docs.microsoft.com/help/onboard/admin/samples/process/onboarding?branch=master
-
-Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
--->
-
-This solution deployes resources for the Azure Monitor for containers demo scenario.
+This solution help team in recreating this monitoring scenario within their environment.
 
 ## Contents
 
 | File/folder                                      | Description                                |
 |--------------------------------------------------|--------------------------------------------|
-| `arm`                                            | ARM templates.                             |
-| `yaml`                                           | Kubernetes configuration files.            |
-| `.gitignore`                                     | Define what to ignore at commit time.      |
-| `CHANGELOG.md`                                   | List of changes.                           |
-| `CONTRIBUTING.md`                                | Guidelines for contributing.               |
-| `container-monitoring-pipeline.yml`              | Pipeline.                             |
-| `container-monitoring-environment.variables.yml` | Environment specific variables.            |
-| `container-monitoring-variables.yml`             | Pipeline variables.                        |
-| `LICENSE`                                        | The license.                               |
-| `README.md`                                      | This README file.                          |
+| `arm`                                            | ARM templates                             |
+| `yaml`                                           | Kubernetes configuration files            |
+| `.gitignore`                                     | Define what to ignore at commit time      |
+| `CHANGELOG.md`                                   | List of changes                           |
+| `CONTRIBUTING.md`                                | Guidelines for contributing               |
+| `container-monitoring-pipeline.yml`              | Pipeline                             |
+| `container-monitoring-environment.variables.yml` | Environment specific variables            |
+| `container-monitoring-variables.yml`             | Pipeline variables                        |
+| `LICENSE`                                        | License file                         |
+| `README.md`                                      | Readme file                        |
 
 ## Prerequisites
 
-* Azure subscription
-* You should be an owner of the subscription
+* Owner access to an azure subscription
 * Azure DevOps project
 * Permissions to create repositories, import and run pipelines
 
