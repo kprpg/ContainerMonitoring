@@ -84,23 +84,6 @@ var monitoredAKSPrimaryAgentPoolProfile = [
     maxPods: 30
   }
 ]
-var nonMonitoredAKSPrimaryAgentPoolProfile = [
-  {
-    name: 'linuxpool'
-    osDiskSizeGB: 120
-    count: 3
-    vmSize: agentVMSize
-    osType: 'Linux'
-    enableAutoScaling: true
-    storageProfile: 'ManagedDisks'
-    type: 'VirtualMachineScaleSets'
-    minCount: 2
-    maxCount: 3
-    mode: 'System'
-
-  }
-]
-
 
 targetScope = 'subscription'
 
@@ -158,25 +141,4 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/ak
     serviceCidr: serviceCidr
     dockerBridgeCidr: dockerBridgeCidr
   }
-}
-
-// Non monitored AKS cluster deployment
-module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/aks.bicep' = {
-  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: '${prefix}nonMonitoredAKSDeploy'
-  params: {
-    clusterName: nonMontioredClusterName
-    location: location
-    servicePrincipalClientId: servicePrincipalClientId
-    servicePrincipalClientSecret: servicePrincipalClientSecret
-    omsAgentEnabled: false
-    primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
-    adminUser: adminUser
-    adminPassword: adminPassword
-    serviceCidr: serviceCidr
-    dockerBridgeCidr: dockerBridgeCidr
-  }
-  dependsOn: [
-    monitoredAksModule
-  ]
 }
