@@ -107,7 +107,6 @@ stages:
           -logAnalyticsWorkspaceName $(workspaceName)
           -workspaceSkuName $(workspaceSkuName)
           -montioredClusterName $(AKSName)
-          -nonMontioredClusterName $(NonMonitoredAKSName)
           -adminUser $(chVmAdminUser)
           -adminPassword $(chVmAdminPassword)
           -servicePrincipalClientId $(ContosoSH360ClusterSPClientId)
@@ -138,7 +137,6 @@ stages:
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
             montioredClusterName = '$(AKSName)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
@@ -178,7 +176,6 @@ stages:
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
             montioredClusterName = '$(AKSName)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
