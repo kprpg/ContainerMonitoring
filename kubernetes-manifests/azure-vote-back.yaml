@@ -1,0 +1,52 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: azure-vote-back
+  namespace: azure-vote
+  uid: 796e7faf-e4c4-4e43-8166-8904b58aad3f
+  resourceVersion: '1681299'
+  creationTimestamp: '2022-09-13T09:36:53Z'
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"azure-vote-back","namespace":"azure-vote"},"spec":{"ports":[{"port":6379}],"selector":{"app":"azure-vote-back"}}}
+  managedFields:
+    - manager: kubectl-client-side-apply
+      operation: Update
+      apiVersion: v1
+      time: '2022-09-13T09:36:53Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:kubectl.kubernetes.io/last-applied-configuration: {}
+        f:spec:
+          f:internalTrafficPolicy: {}
+          f:ports:
+            .: {}
+            k:{"port":6379,"protocol":"TCP"}:
+              .: {}
+              f:port: {}
+              f:protocol: {}
+              f:targetPort: {}
+          f:selector: {}
+          f:sessionAffinity: {}
+          f:type: {}
+spec:
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  selector:
+    app: azure-vote-back
+  clusterIP: 10.0.6.155
+  clusterIPs:
+    - 10.0.6.155
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+status:
+  loadBalancer: {}
