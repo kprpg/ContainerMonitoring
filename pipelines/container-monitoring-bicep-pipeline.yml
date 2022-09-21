@@ -106,7 +106,7 @@ stages:
           -opsResourceGroupName $(workspaceResourceGroupName)
           -logAnalyticsWorkspaceName $(workspaceName)
           -workspaceSkuName $(workspaceSkuName)
-          -montioredClusterName $(AKSName)
+          -monitoredClusterName $(AKSName)
           -adminUser $(chVmAdminUser)
           -adminPassword $(chVmAdminPassword)
           -servicePrincipalClientId $(ContosoSH360ClusterSPClientId)
@@ -136,7 +136,7 @@ stages:
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
-            montioredClusterName = '$(AKSName)'
+            monitoredClusterName = '$(AKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
@@ -175,7 +175,7 @@ stages:
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
-            montioredClusterName = '$(AKSName)'
+            monitoredClusterName = '$(AKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
@@ -214,81 +214,21 @@ stages:
       displayName: 'Install Kubectl latest'
 
     - task: Kubernetes@1
-      displayName: 'kubectl apply invalidimage'
+      displayName: 'kubectl apply azure-vote-namespace'
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/invalidimage.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/azure-vote-namespace.yaml'
 
     - task: Kubernetes@1
-      displayName: 'kubectl apply ngnix-app'
+      displayName: 'kubectl apply azure-vote frontend and backend'
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
-
-    - task: Kubernetes@1
-      displayName: 'kubectl apply minecraft-namespace'
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-        azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
-        command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft-namespace.yaml'
-
-    - task: Kubernetes@1
-      displayName: 'kubectl apply minecraft3'
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-        azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
-        command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft3.yaml'
-
-    - task: Kubernetes@1
-      displayName: 'kubectl apply minecraft3'
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-        azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
-        command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
-
-    - task: Kubernetes@1
-      displayName: 'kubectl apply prometheus'
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-        azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
-        command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus.yaml'
-
-    - task: Kubernetes@1
-      displayName: 'kubectl apply windows-service'
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-        azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
-        command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/windows-service.yaml'
-
-    - task: Kubernetes@1
-      displayName: 'kubectl apply prometheus-bundle'
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-        azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
-        command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus-bundle.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/azure-vote.yaml'

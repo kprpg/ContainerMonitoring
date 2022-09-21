@@ -14,8 +14,7 @@ param workspaceSkuName string
 param contosoSH360ClusterResourceGroupName string
 param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
-param montioredClusterName string
-param nonMontioredClusterName string
+param monitoredClusterName string
 
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
@@ -129,7 +128,7 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/ak
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}monitoredAKSDeploy'
   params: {
-    clusterName: montioredClusterName
+    clusterName: monitoredClusterName
     location: location
     servicePrincipalClientId: servicePrincipalClientId
     servicePrincipalClientSecret: servicePrincipalClientSecret
