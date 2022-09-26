@@ -233,12 +233,6 @@ stages:
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/azure-vote-running.yaml'
     
-    - task: PowerShell@2
-      displayName: waiting for Job to be finished
-      inputs:
-        targetType: 'inline'
-        script: 'kubectl wait deployment -n azure-vote azure-vote-back --for condition=Available=True --timeout=90s'
-    
     - task: Bash@3
       displayName: waiting for all jobs to be finished
       inputs:
