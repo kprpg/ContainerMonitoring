@@ -224,11 +224,26 @@ stages:
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/azure-vote-namespace.yaml'
 
     - task: Kubernetes@1
-      displayName: 'kubectl apply azure-vote frontend and backend'
+      displayName: 'kubectl apply azure-vote running'
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
         command: apply
-        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/azure-vote.yaml'
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/azure-vote-running.yaml'
+    
+    - task: Delay@1
+      displayName: delay for 1 minute
+      inputs:
+        delayForMinutes: '1' 
+    
+    - task: Kubernetes@1
+      displayName: 'kubectl apply azure-vote pending'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        command: apply
+        arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/azure-vote-pending.yaml'
