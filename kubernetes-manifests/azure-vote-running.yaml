@@ -4,7 +4,7 @@ metadata:
   name: azure-vote-back
   namespace: azure-vote
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: azure-vote-back
@@ -49,7 +49,7 @@ metadata:
   name: azure-vote-front
   namespace: azure-vote
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: azure-vote-front
