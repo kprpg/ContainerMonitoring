@@ -1,15 +1,13 @@
 variables:
 - name: prefix
-  value: CH1
+  value: CH
 - name: suffix
-  value: '-Play'
+  value: -Play
 - name: azureSubscriptionEndpoint
-  value: 'Contoso Hotels Tenant - Integration'
-
+  value: 'ContainerInsights_PM_Auston'
 - name: stagingSubscriptionEndpoint
-  value: 'Contoso Hotels Tenant - PREPROD (DEV)'
+  value: 'ContainerInsights_PM_Auston'
 - name: stagingKeyVaultName
-  value: CH-StagingKV-Dev
-
+  value: "Gearama-KV"
 - name: location
   value: eastus
