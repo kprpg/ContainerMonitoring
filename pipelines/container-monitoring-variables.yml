@@ -16,7 +16,7 @@ variables:
   value: '$(Build.SourcesDirectory)'
 
 - name: agentVMSize
-  value: Standard_D2s_v3
+  value: Standard_D2as_v4
 - name: workspaceSkuName
   value: Standalone
 - name: roleDefinitionName
