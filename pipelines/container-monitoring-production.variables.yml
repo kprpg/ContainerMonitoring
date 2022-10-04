@@ -1,13 +1,15 @@
 variables:
 - name: prefix
-  value: GM1
+  value: CH1
 - name: suffix
-  value:
+  value: 
 - name: azureSubscriptionEndpoint
   value: 'MSTestAprilJones'
+
 - name: stagingSubscriptionEndpoint
-  value: 'MSTestAprilJones'
+  value: 'Contoso Hotels Tenant - PREPROD (DEV)'
 - name: stagingKeyVaultName
-  value: "GE-StagingKV"
+  value: CH-StagingKV-Dev
+
 - name: location
   value: eastus
