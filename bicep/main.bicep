@@ -12,13 +12,11 @@ param serviceCidr string
 
 param workspaceSkuName string
 param contosoSH360ClusterResourceGroupName string
-param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
 param monitoredClusterName string
 
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
-  opsResourceGroupName
 ]
 
 var savedSearches = [
@@ -85,7 +83,7 @@ module rgModule 'modules/Microsoft.Resources/resourceGroups/resourceGroup.bicep'
 
 //Log analytics workspace deployment
 module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/logAnalyticsWorkspace.bicep' = {
-  scope: resourceGroup(opsResourceGroupName)
+  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}workspaceDeploy'
   params: {
     workspaceName: logAnalyticsWorkspaceName
@@ -99,7 +97,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/logAnal
 
 // Saved Searches Deployment
 module logAnalyticsWorkspaceSavedSearches 'modules/Microsoft.OperationalInsights/workspaces/savedSearch/workspaceSavedSearch.bicep' = [for (savedSearch, index) in savedSearches: {
-  scope: resourceGroup(opsResourceGroupName)
+  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${uniqueString(deployment().name)}-LAW-SavedSearch-${index}'
   params: {
     workspaceName: workspaceModule.outputs.workspaceName
