@@ -23,20 +23,20 @@ var savedSearches = [
   {
     name: 'ListAllPods'
     category: 'Container Logs'
-    displayName: 'list all pods by namespace'
-    query: '//List all Pods connected to your LA workspace\r\nKubePodInventory\r\n//| where Namespace == "azure-vote"\r\n| project ClusterName,PodName=Name,Namespace,PodStatus,PodStartTime,PodRestartCount,PodCreationTimeStamp'
+    displayName: 'List pods by namespace'
+    query: '//List all Pods connected to your LA workspace\r\nKubePodInventory\r\n| project ClusterName,PodName=Name,Namespace,PodStatus,PodStartTime,PodRestartCount,PodCreationTimeStamp\r\n//| where PodName contains "azure-vote"\r\n| distinct ClusterName,PodName,Namespace,PodStatus,PodStartTime,PodRestartCount,PodCreationTimeStamp'
   }
   {
     name: 'ListUnscheduledPods'
     category: 'Container Insights'
     displayName: 'List unscheduled pods'
-    query: '//List all Pods not in running state\r\nKubePodInventory\r\n//| where Namespace == "azure-vote"\r\n| where PodStatus != "Running"\r\n| project ClusterName,PodName=Name,Namespace,PodStatus,PodStartTime,PodRestartCount,PodCreationTimeStamp'
+    query: '//List all Pods not in running state\r\nKubePodInventory\r\n| project ClusterName,PodName=Name,Namespace,PodStatus,PodStartTime,PodRestartCount,PodCreationTimeStamp\r\n//| where Namespace == "azure-vote"\r\n| where PodStatus != "Running"\r\n| distinct ClusterName,PodName,Namespace,PodStatus,PodStartTime,PodRestartCount,PodCreationTimeStamp'
   }
   {
     name: 'ReasonforUnscheduledPods'
     category: 'Container Insights'
     displayName: 'Reason for unscheduled pods'
-    query: '//Find cause for unscheduled pods\r\nKubeEvents\r\n| where ObjectKind =~ "Pod"\r\n| where Namespace =~ "azure-vote"\r\n| project TimeGenerated, Name, ObjectKind, KubeEventType, Reason, Message, Namespace\r\n| order by TimeGenerated desc'
+    query: '//Find cause for unscheduled pods\r\nKubeEvents\r\n//| project Name, ObjectKind, KubeEventType, Reason, Message, Namespace\r\n| where ObjectKind =~ "Pod"\r\n| where Namespace =~ "azure-vote"\r\n| distinct Name, ObjectKind, KubeEventType, Reason, Message, Namespace'
   }
 ]
 
