@@ -103,7 +103,7 @@ stages:
           -location $(location)
           -prefix $(prefix)
           -contosoSH360ClusterResourceGroupName $(resourceGroupName)
-          -opsResourceGroupName $(workspaceResourceGroupName)
+          -opsResourceGroupName $(resourceGroupName)
           -logAnalyticsWorkspaceName $(workspaceName)
           -workspaceSkuName $(workspaceSkuName)
           -monitoredClusterName $(AKSName)
@@ -133,7 +133,7 @@ stages:
             location = '$(location)'
             prefix = '$(prefix)'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-            opsResourceGroupName = '$(workspaceResourceGroupName)'
+            opsResourceGroupName = '$(resourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
             monitoredClusterName = '$(AKSName)'
@@ -172,7 +172,7 @@ stages:
             location = '$(location)'
             prefix = '$(prefix)'
             contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-            opsResourceGroupName = '$(workspaceResourceGroupName)'
+            opsResourceGroupName = '$(resourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
             monitoredClusterName = '$(AKSName)'
