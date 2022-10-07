@@ -38,12 +38,12 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 ## Setup
 
-1. Clone/Fork the repository to your Azure DevOps project
-- Forking
+1. Clone/Fork the repository [ContainerMonitoring](https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring) to your Azure DevOps project.
+- How to fork a repository
 
     ![steps to fork container monitoring repository in your Azure DevOps project](./deploymentStepGIFs/stepsToForkRepo.gif =1000x)
 
-- Clone
+- How to clone a repository
 
     ![steps to clone container monitoring repository](./deploymentStepGIFs/stepsTocloneRepo.gif =1000x)
 
