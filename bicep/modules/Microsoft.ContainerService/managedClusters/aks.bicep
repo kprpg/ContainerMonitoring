@@ -23,7 +23,7 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-01-01'
     agentPoolProfiles: primaryAgentPoolProfile
     servicePrincipalProfile: {
       clientId: servicePrincipalClientId
-      Secret: servicePrincipalClientSecret
+      secret: servicePrincipalClientSecret
     }
     windowsProfile: {
       adminUsername: adminUser
