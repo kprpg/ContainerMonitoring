@@ -1,7 +1,6 @@
 param workspaceName string
 param workspaceSkuName string
 param location string = resourceGroup().location
-// param solutionTypes array
 
 resource workspaceResource 'microsoft.operationalinsights/workspaces@2021-06-01' = {
   name: workspaceName
@@ -14,20 +13,6 @@ resource workspaceResource 'microsoft.operationalinsights/workspaces@2021-06-01'
   }
 }
 
-// resource workspaceSolution 'Microsoft.OperationsManagement/solutions@2015-11-01-preview' = [for item in solutionTypes: {
-//   name: '${item}'
-//   location: location
-//   properties: {
-//     workspaceResourceId: workspaceResource.id
-//   }
-//   plan: {
-//     name: '${item}'
-//     product: 'OMSGallery/${item}'
-//     promotionCode: ''
-//     publisher: 'Microsoft'
-//   }
-// }]
-
 resource workspaceName_ContainerLog 'Microsoft.OperationalInsights/workspaces/tables@2021-12-01-preview' = {
   parent: workspaceResource
   name: 'ContainerLog'
@@ -39,26 +24,21 @@ resource workspaceName_ContainerLog 'Microsoft.OperationalInsights/workspaces/ta
     }
     retentionInDays: 365
   }
-  // dependsOn: [
-  //   workspaceSolution
-  // ]
 }
 
-// resource workspaceName_ContainerLogV2 'Microsoft.OperationalInsights/workspaces/tables@2021-12-01-preview' = {
-//   parent: workspaceResource
-//   name: 'ContainerLogV2'
-//   properties: {
-//     totalRetentionInDays: 1460
-//     plan: 'Basic'
-//     schema: {
-//       name: 'ContainerLogV2'
-//     }
-//     retentionInDays: 8
-//   }
-//   dependsOn: [
-//     workspaceSolution
-//   ]
-// }
+resource workspaceName_Container_SearchJob_Table 'Microsoft.OperationalInsights/workspaces/tables@2021-12-01-preview' = {
+  parent: workspaceResource
+  name: 'Container_SearchJob_Table'
+  properties: {
+    totalRetentionInDays: 90
+    plan: 'Analytics'
+    schema: {
+      name: 'Container_SearchJob_SRCH'
+      description: 'Search job'
+    }
+    retentionInDays: 90
+  }
+}
 
 output workspaceName string = workspaceResource.name
 output workspaceId string = workspaceResource.id
