@@ -16,9 +16,9 @@ param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
 param montioredClusterName string
 param nonMontioredClusterName string
-param solutionTypes array = [
-  'ContainerInsights'
-]
+// param solutionTypes array = [
+//   'ContainerInsights'
+// ]
 
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
@@ -124,7 +124,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/logAnal
     workspaceName: logAnalyticsWorkspaceName
     location: location
     workspaceSkuName: workspaceSkuName
-    solutionTypes: solutionTypes
+    // solutionTypes: solutionTypes
   }
   dependsOn: [
     rgModule
