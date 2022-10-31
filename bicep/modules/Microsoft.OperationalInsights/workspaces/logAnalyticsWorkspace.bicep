@@ -1,6 +1,7 @@
 param workspaceName string
 param workspaceSkuName string
 param location string = resourceGroup().location
+param solutionTypes array
 
 resource workspaceResource 'microsoft.operationalinsights/workspaces@2021-06-01' = {
   name: workspaceName
@@ -12,6 +13,20 @@ resource workspaceResource 'microsoft.operationalinsights/workspaces@2021-06-01'
     retentionInDays: 90
   }
 }
+
+resource workspaceSolution 'Microsoft.OperationsManagement/solutions@2015-11-01-preview' = [for item in solutionTypes: {
+  name: '${item}'
+  location: location
+  properties: {
+    workspaceResourceId: workspaceResource.id
+  }
+  plan: {
+    name: '${item}'
+    product: 'OMSGallery/${item}'
+    promotionCode: ''
+    publisher: 'Microsoft'
+  }
+}]
 
 resource workspaceName_ContainerLog 'Microsoft.OperationalInsights/workspaces/tables@2021-12-01-preview' = {
   parent: workspaceResource
