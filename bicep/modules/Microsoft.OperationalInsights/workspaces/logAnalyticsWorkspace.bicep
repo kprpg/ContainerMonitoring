@@ -26,6 +26,9 @@ resource workspaceSolution 'Microsoft.OperationsManagement/solutions@2015-11-01-
     promotionCode: ''
     publisher: 'Microsoft'
   }
+  dependsOn: [
+    workspaceResource
+  ]
 }]
 
 resource workspaceName_ContainerLog 'Microsoft.OperationalInsights/workspaces/tables@2021-12-01-preview' = {
