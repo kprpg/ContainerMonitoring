@@ -39,6 +39,9 @@ resource workspaceName_ContainerLog 'Microsoft.OperationalInsights/workspaces/ta
     }
     retentionInDays: 365
   }
+  dependsOn: [
+    workspaceSolution
+  ]
 }
 
 resource workspaceName_ContainerLogV2 'Microsoft.OperationalInsights/workspaces/tables@2021-12-01-preview' = {
@@ -52,6 +55,9 @@ resource workspaceName_ContainerLogV2 'Microsoft.OperationalInsights/workspaces/
     }
     retentionInDays: 8
   }
+  dependsOn: [
+    workspaceSolution
+  ]
 }
 
 output workspaceName string = workspaceResource.name
