@@ -28,13 +28,13 @@ resource workspaceName_ContainerLog 'Microsoft.OperationalInsights/workspaces/ta
 
 resource workspaceName_Container_SearchJob_Table 'Microsoft.OperationalInsights/workspaces/tables@2021-12-01-preview' = {
   parent: workspaceResource
-  name: 'Container_SearchJob_Table'
+  name: 'Container_SearchJob_SRCH'
   properties: {
     totalRetentionInDays: 90
     plan: 'Analytics'
     schema: {
       name: 'Container_SearchJob_SRCH'
-      description: 'Search job'
+      description: 'Search job for demo'
     }
     retentionInDays: 90
   }
