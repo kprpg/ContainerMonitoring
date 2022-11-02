@@ -115,6 +115,10 @@ stages:
           -agentVMSize $(agentVMSize)
           -serviceCidr $(aksClusterServiceCidr)
           -dockerBridgeCidr $(aksClusterDockerBridgeCidr)
+          -managedIdentityName $(managedIdentityName)
+          -searchTableName $(searchTableName)
+          -searchStartTime $(searchStartTime)
+          -searchEndTime $(searchEndTime)
 
 - stage: Preview
   jobs: 
@@ -146,6 +150,10 @@ stages:
             agentVMSize = '$(agentVMSize)'
             serviceCidr = '$(aksClusterServiceCidr)'
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+            managedIdentityName = '$(managedIdentityName)''
+            searchTableName = '$(searchTableName)'
+            searchStartTime = '$(searchStartTime)'
+            searchEndTime = '$(searchEndTime)'
           } -Verbose
 
 - stage: BicepDeploy
@@ -186,6 +194,10 @@ stages:
             agentVMSize = '$(agentVMSize)'
             serviceCidr = '$(aksClusterServiceCidr)'
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+            managedIdentityName = '$(managedIdentityName)''
+            searchTableName = '$(searchTableName)'
+            searchStartTime = '$(searchStartTime)'
+            searchEndTime = '$(searchEndTime)'
           } -Verbose
 
     - task: AzureCLI@2
