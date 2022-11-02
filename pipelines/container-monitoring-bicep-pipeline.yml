@@ -150,8 +150,6 @@ stages:
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             managedIdentityName = '$(managedIdentityName)'
             searchTableName = '$(searchTableName)'
-            searchStartTime = '$(searchStartTime)'
-            searchEndTime = '$(searchEndTime)'
           } -Verbose
 
 - stage: BicepDeploy
@@ -194,8 +192,6 @@ stages:
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             managedIdentityName = '$(managedIdentityName)'
             searchTableName = '$(searchTableName)'
-            searchStartTime = '$(searchStartTime)'
-            searchEndTime = '$(searchEndTime)'
           } -Verbose
 
     - task: AzureCLI@2
