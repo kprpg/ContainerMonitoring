@@ -20,9 +20,9 @@ variables:
 - name: searchTableName
   value: $(prefix)search$(suffix)_SRCH
 - name: searchStartTime
-  value: 10/29/2022 00:00:00
+  value: '2022-10-29T00:00:00Z'
 - name: searchEndTime
-  value: 10/31/2022 00:00:00
+  value: '2022-10-31T00:00:00Z'
 
 - name: agentVMSize
   value: Standard_D2s_v3
