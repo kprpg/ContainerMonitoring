@@ -19,8 +19,6 @@ param nonMontioredClusterName string
 
 param managedIdentityName string
 param searchTableName string
-param searchStartTime string
-param searchEndTime string
 
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
@@ -154,8 +152,6 @@ module workspaceSearchTable 'modules/Microsoft.OperationalInsights/workspaces/se
     location: location
     managedIdentityName: managedIdentityName
     resourceGroupName: opsResourceGroupName
-    searchEndTime: searchEndTime
-    searchStartTime: searchStartTime
     searchTableName: searchTableName
     workspaceName: workspaceModule.outputs.workspaceName
   }

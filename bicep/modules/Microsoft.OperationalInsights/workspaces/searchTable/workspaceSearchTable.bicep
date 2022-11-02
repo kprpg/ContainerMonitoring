@@ -6,8 +6,8 @@ param roleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c'  //contributor role
 param resourceGroupName string
 param workspaceName string
 param searchTableName string
-param searchStartTime string
-param searchEndTime string
+param searchStartTime string = '2022-10-29T00:00:00Z'
+param searchEndTime string = '2022-10-31T00:00:00Z'
 
 // create an user assigned managed identity
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {

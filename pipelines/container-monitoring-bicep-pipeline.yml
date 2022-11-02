@@ -117,8 +117,6 @@ stages:
           -dockerBridgeCidr $(aksClusterDockerBridgeCidr)
           -managedIdentityName $(managedIdentityName)
           -searchTableName $(searchTableName)
-          -searchStartTime $(searchStartTime)
-          -searchEndTime $(searchEndTime)
 
 - stage: Preview
   jobs: 
