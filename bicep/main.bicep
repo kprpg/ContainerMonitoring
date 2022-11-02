@@ -149,7 +149,7 @@ module logAnalyticsWorkspaceSavedSearches 'modules/Microsoft.OperationalInsights
 // Search Job Table Deployment
 module workspaceSearchTable 'modules/Microsoft.OperationalInsights/workspaces/searchTable/workspaceSearchTable.bicep' = {
   scope: resourceGroup(opsResourceGroupName)
-  name: '${prefix}searchTable_${searchTableName}'
+  name: '${prefix}searchTable'
   params: {
     location: location
     managedIdentityName: managedIdentityName
