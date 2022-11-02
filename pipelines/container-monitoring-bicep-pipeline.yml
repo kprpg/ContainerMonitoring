@@ -150,7 +150,7 @@ stages:
             agentVMSize = '$(agentVMSize)'
             serviceCidr = '$(aksClusterServiceCidr)'
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
-            managedIdentityName = '$(managedIdentityName)''
+            managedIdentityName = '$(managedIdentityName)'
             searchTableName = '$(searchTableName)'
             searchStartTime = '$(searchStartTime)'
             searchEndTime = '$(searchEndTime)'
