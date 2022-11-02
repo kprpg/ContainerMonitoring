@@ -16,7 +16,7 @@ variables:
   value: '$(Build.SourcesDirectory)'
 
 - name: managedIdentityName
-  value: $(prefix)-mi-(suffix)
+  value: $(prefix)-mi-$(suffix)
 - name: searchTableName
   value: $(prefix)search$(suffix)_SRCH
 
