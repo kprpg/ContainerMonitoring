@@ -17,6 +17,11 @@ param logAnalyticsWorkspaceName string
 param montioredClusterName string
 param nonMontioredClusterName string
 
+param managedIdentityName string
+param searchTableName string
+param searchStartTime string
+param searchEndTime string
+
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
   opsResourceGroupName
@@ -140,6 +145,21 @@ module logAnalyticsWorkspaceSavedSearches 'modules/Microsoft.OperationalInsights
     query: savedSearch.query
   }
 }]
+
+// Search Job Table Deployment
+module workspaceSearchTable 'modules/Microsoft.OperationalInsights/workspaces/searchTable/workspaceSearchTable.bicep' = {
+  scope: resourceGroup(opsResourceGroupName)
+  name: '${prefix}searchTable_${searchTableName}'
+  params: {
+    location: location
+    managedIdentityName: managedIdentityName
+    resourceGroupName: opsResourceGroupName
+    searchEndTime: searchEndTime
+    searchStartTime: searchStartTime
+    searchTableName: searchTableName
+    workspaceName: workspaceModule.outputs.workspaceName
+  }
+}
 
 // Monitored AKS cluster deployment
 module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/aks.bicep' = {
