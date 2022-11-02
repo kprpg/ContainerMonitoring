@@ -9,7 +9,6 @@ resource workspaceResource 'microsoft.operationalinsights/workspaces@2021-06-01'
     sku: {
       name: workspaceSkuName
     }
-    retentionInDays: 90
   }
 }
 
@@ -23,16 +22,6 @@ resource workspaceName_ContainerLog 'Microsoft.OperationalInsights/workspaces/ta
       name: 'ContainerLog'
     }
     retentionInDays: 365
-  }
-}
-
-resource table 'Microsoft.OperationalInsights/workspaces/tables@2021-12-01-preview' = {
-  parent: workspaceResource
-  name: 'Container_SearchJob_SRCH'
-  properties: {
-    totalRetentionInDays: 90
-    plan: 'Analytics'
-    retentionInDays: 90
   }
 }
 
