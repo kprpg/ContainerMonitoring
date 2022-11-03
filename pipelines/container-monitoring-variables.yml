@@ -18,7 +18,7 @@ variables:
 - name: managedIdentityName
   value: $(prefix)-mi$(suffix)
 - name: searchTableName
-  value: mySearchJob1_SRCH
+  value: Container_SearchJob_SRCH
 
 - name: agentVMSize
   value: Standard_D2s_v3
