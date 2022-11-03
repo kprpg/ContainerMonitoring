@@ -1,7 +1,7 @@
 param location string
 param utcValue string = utcNow()
 param managedIdentityName string
-param roleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c'  //contributor role
+param roleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
 
 param resourceGroupName string
 param workspaceName string
@@ -56,22 +56,33 @@ resource createSearchJobTable 'Microsoft.Resources/deploymentScripts@2020-10-01'
     Authorization = "Bearer $token"
     'Content-Type' = 'application/json'
     }
-    
-    $tableUri = "https://management.azure.com/subscriptions/$subscriptionId/resourcegroups/$resourceGroupName/providers/Microsoft.OperationalInsights/workspaces/$workspaceName/tables/$searchTableName" + "?api-version=2021-12-01-preview"
-    Write-Host "URI: $($tableUri)"
 
-    $reqbody = "{
-    ""properties"": { 
-    ""searchResults"": {
-          ""query"": ""ContainerLog"",
-          ""limit"": 1000,
-          ""startSearchTime"": ""$searchStartTime"",
-          ""endSearchTime"": ""$searchEndTime""
-        }
+    try
+    {
+      Invoke-WebRequest -Method GET -Uri $TableUri -Headers $headers -ContentType 'application/json' -UseBasicParsing 
+    }
+    catch
+    {
+      if( $_.exception -like "*404*")
+      {
+        Write-Host "$searchTableName table doesn't exist" -ForegroundColor Yellow
+        Write-Host "Creating search job table $searchTableName" -ForegroundColor Yellow
+
+        $reqbody = "{
+        ""properties"": { 
+        ""searchResults"": {
+              ""query"": ""ContainerLog"",
+              ""limit"": 1000,
+              ""startSearchTime"": ""$searchStartTime"",
+              ""endSearchTime"": ""$searchEndTime""
+            }
+          }
+        }"
+
+      Invoke-WebRequest -Method PUT -Uri $TableUri -Headers $headers -ContentType 'application/json' -Body $reqBody -UseBasicParsing
+      
       }
-    }"
-    
-    Invoke-WebRequest -Method PUT -Uri $tableUri -Headers $headers -ContentType 'application/json' -Body $reqBody -UseBasicParsing
+    }
     
     $DeploymentScriptOutputs = @{}
     $DeploymentScriptOutputs["resultStatus"] = $output
