@@ -45,6 +45,9 @@ resource createSearchJobTable 'Microsoft.Resources/deploymentScripts@2020-10-01'
     'Content-Type' = 'application/json'
     }
 
+    $TableUri = "https://management.azure.com/subscriptions/$subscriptionId/resourcegroups/$resourceGroupName/providers/Microsoft.OperationalInsights/workspaces/$workspaceName/tables/$searchTableName" + "?api-version=2021-12-01-preview"
+    Write-Host "URI: $($TableUri)"
+
     try
     {
       Invoke-WebRequest -Method GET -Uri $TableUri -Headers $headers -ContentType 'application/json' -UseBasicParsing 
