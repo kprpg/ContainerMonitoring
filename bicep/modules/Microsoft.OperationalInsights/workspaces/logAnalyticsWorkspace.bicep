@@ -16,7 +16,7 @@ resource workspaceName_ContainerLog 'Microsoft.OperationalInsights/workspaces/ta
   parent: workspaceResource
   name: 'ContainerLog'
   properties: {
-    totalRetentionInDays: 1460
+    totalRetentionInDays: 2556
     plan: 'Analytics'
     schema: {
       name: 'ContainerLog'
