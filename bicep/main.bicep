@@ -20,6 +20,8 @@ param nonMontioredClusterName string
 param managedIdentityName string
 param searchTableName string
 
+param contributorRoleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
+
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
   opsResourceGroupName
@@ -151,6 +153,7 @@ module userAssignedIdentityModule 'modules/Microsoft.ManagedIdentity/userAssigne
   params: {
     location: location
     managedIdentityName: managedIdentityName
+    roleId: contributorRoleId
   }
   dependsOn: [
     rgModule
