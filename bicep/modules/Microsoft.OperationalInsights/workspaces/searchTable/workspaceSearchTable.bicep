@@ -1,7 +1,6 @@
 param location string
 param utcValue string = utcNow()
 param managedIdentityName string
-param roleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
 
 param resourceGroupName string
 param workspaceName string
@@ -9,20 +8,9 @@ param searchTableName string
 param searchStartTime string = '2022-10-29T00:00:00Z'
 param searchEndTime string = '2022-10-31T00:00:00Z'
 
-// create an user assigned managed identity
-resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
-  name: managedIdentityName
-  location: location
-}
 
-// assign contributor role to user assiged managed identity
-resource roleassignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(resourceGroup().id, roleId, managedIdentityName)
-  properties: {
-    principalId: userAssignedIdentity.properties.principalId
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleId)
-    principalType: 'ServicePrincipal'
-  }
+resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
+  name: managedIdentityName
 }
 
 // create log table based on search job
@@ -91,7 +79,4 @@ resource createSearchJobTable 'Microsoft.Resources/deploymentScripts@2020-10-01'
     cleanupPreference: 'OnSuccess'
     retentionInterval: 'P1D'
   }
-  dependsOn: [
-    roleassignment
-  ]
 }

@@ -144,13 +144,23 @@ module logAnalyticsWorkspaceSavedSearches 'modules/Microsoft.OperationalInsights
   }
 }]
 
+// Create an User assigned managed identity
+module userAssignedIdentityModule 'modules/Microsoft.ManagedIdentity/userAssignedIdentities/userAssignedIdentity.bicep' = {
+  scope: resourceGroup(opsResourceGroupName)
+  name: '${prefix}userMI'
+  params: {
+    location: location
+    managedIdentityName: managedIdentityName
+  }
+}
+
 // Search Job Table Deployment
 module workspaceSearchTable 'modules/Microsoft.OperationalInsights/workspaces/searchTable/workspaceSearchTable.bicep' = {
   scope: resourceGroup(opsResourceGroupName)
   name: '${prefix}searchTable'
   params: {
     location: location
-    managedIdentityName: managedIdentityName
+    managedIdentityName: userAssignedIdentityModule.outputs.name
     resourceGroupName: opsResourceGroupName
     searchTableName: searchTableName
     workspaceName: workspaceModule.outputs.workspaceName
