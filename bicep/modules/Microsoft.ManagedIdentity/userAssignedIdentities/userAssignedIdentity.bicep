@@ -1,6 +1,6 @@
 param location string
 param managedIdentityName string
-param roleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
+param roleId string
 
 
 // create an user assigned managed identity
@@ -9,7 +9,7 @@ resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@
   location: location
 }
 
-// assign contributor role to user assiged managed identity
+// assign role to user assiged managed identity
 resource roleassignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(resourceGroup().id, roleId, managedIdentityName)
   properties: {
