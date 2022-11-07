@@ -152,6 +152,9 @@ module userAssignedIdentityModule 'modules/Microsoft.ManagedIdentity/userAssigne
     location: location
     managedIdentityName: managedIdentityName
   }
+  dependsOn: [
+    rgModule
+  ]
 }
 
 // Search Job Table Deployment
