@@ -9,6 +9,7 @@ resource workspaceResource 'microsoft.operationalinsights/workspaces@2021-06-01'
     sku: {
       name: workspaceSkuName
     }
+    retentionInDays: 90
   }
 }
 
