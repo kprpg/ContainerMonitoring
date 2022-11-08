@@ -15,6 +15,11 @@ variables:
 - name: ContosoSH360ClusterFolder
   value: '$(Build.SourcesDirectory)'
 
+- name: managedIdentityName
+  value: $(prefix)-mi$(suffix)
+- name: searchTableName
+  value: Container_SearchJob_SRCH
+
 - name: agentVMSize
   value: Standard_D2s_v3
 - name: workspaceSkuName

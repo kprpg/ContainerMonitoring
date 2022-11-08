@@ -18,12 +18,12 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-01-01'
   name: clusterName
   location: location
   properties: {
-    kubernetesVersion: '1.23.5'
+    kubernetesVersion: '1.23.12'
     dnsPrefix: dnsPrefix
     agentPoolProfiles: primaryAgentPoolProfile
     servicePrincipalProfile: {
       clientId: servicePrincipalClientId
-      Secret: servicePrincipalClientSecret
+      secret: servicePrincipalClientSecret
     }
     windowsProfile: {
       adminUsername: adminUser

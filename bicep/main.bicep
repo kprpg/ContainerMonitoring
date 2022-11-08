@@ -17,6 +17,11 @@ param logAnalyticsWorkspaceName string
 param montioredClusterName string
 param nonMontioredClusterName string
 
+param managedIdentityName string
+param searchTableName string
+
+param contributorRoleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
+
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
   opsResourceGroupName
@@ -140,6 +145,33 @@ module logAnalyticsWorkspaceSavedSearches 'modules/Microsoft.OperationalInsights
     query: savedSearch.query
   }
 }]
+
+// Create an User assigned managed identity
+module userAssignedIdentityModule 'modules/Microsoft.ManagedIdentity/userAssignedIdentities/userAssignedIdentity.bicep' = {
+  scope: resourceGroup(opsResourceGroupName)
+  name: '${prefix}userMI'
+  params: {
+    location: location
+    managedIdentityName: managedIdentityName
+    roleId: contributorRoleId
+  }
+  dependsOn: [
+    rgModule
+  ]
+}
+
+// Search Job Table Deployment
+module workspaceSearchTable 'modules/Microsoft.OperationalInsights/workspaces/searchTable/workspaceSearchTable.bicep' = {
+  scope: resourceGroup(opsResourceGroupName)
+  name: '${prefix}searchTable'
+  params: {
+    location: location
+    managedIdentityName: userAssignedIdentityModule.outputs.name
+    resourceGroupName: opsResourceGroupName
+    searchTableName: searchTableName
+    workspaceName: workspaceModule.outputs.workspaceName
+  }
+}
 
 // Monitored AKS cluster deployment
 module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/aks.bicep' = {
