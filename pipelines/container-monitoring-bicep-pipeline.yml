@@ -18,6 +18,10 @@ parameters:
   displayName: 'Prefix'
   type: string
 
+- name: clusterVersion
+  displayName: 'AKS Cluster Version'
+  type: string
+
 variables:
 - ${{ if eq(parameters.environment, 'Integration') }}:
   - template: container-monitoring-integration.variables.yml
@@ -117,6 +121,11 @@ stages:
           -dockerBridgeCidr $(aksClusterDockerBridgeCidr)
           -managedIdentityName $(managedIdentityName)
           -searchTableName $(searchTableName)
+          -monitoredAKSNetworkPolicy $(monitoredAKSNetworkPolicy)
+          -monitoredAKSNetworkPlugin $(monitoredAKSNetworkPlugin)
+          -nonMonitoredAKSNetworkPolicy $(nonMonitoredAKSNetworkPolicy)
+          -nonMonitoredAKSNetworkPlugin $(nonMonitoredAKSNetworkPlugin)
+          -kubernetesVersion ${{ parameters.clusterVersion }}
 
 - stage: Preview
   jobs: 
@@ -150,6 +159,11 @@ stages:
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             managedIdentityName = '$(managedIdentityName)'
             searchTableName = '$(searchTableName)'
+            monitoredAKSNetworkPolicy = '$(monitoredAKSNetworkPolicy)'
+            monitoredAKSNetworkPlugin = '$(monitoredAKSNetworkPlugin)'
+            nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
+            nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
+            kubernetesVersion = '${{ parameters.clusterVersion }}'
           } -Verbose
 
 - stage: BicepDeploy
@@ -192,6 +206,11 @@ stages:
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             managedIdentityName = '$(managedIdentityName)'
             searchTableName = '$(searchTableName)'
+            monitoredAKSNetworkPolicy = '$(monitoredAKSNetworkPolicy)'
+            monitoredAKSNetworkPlugin = '$(monitoredAKSNetworkPlugin)'
+            nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
+            nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
+            kubernetesVersion = '${{ parameters.clusterVersion }}'
           } -Verbose
 
     - task: AzureCLI@2

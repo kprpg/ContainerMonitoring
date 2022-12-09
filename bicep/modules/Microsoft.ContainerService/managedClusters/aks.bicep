@@ -6,33 +6,28 @@ param servicePrincipalClientId string
 param servicePrincipalClientSecret string
 param workspaceResourceId string = ''
 param omsAgentEnabled bool = true
-param adminUser string
-@secure()
-param adminPassword string
 param dockerBridgeCidr string
 param serviceCidr string
+param networkPolicy string
+param networkPlugin string
+param kubernetesVersion string
 
 var dnsPrefix = '${clusterName}-dns'
 
-resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-01-01' = {
+resource clusterResource 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
   name: clusterName
   location: location
   properties: {
-    kubernetesVersion: '1.23.12'
+    kubernetesVersion: kubernetesVersion
     dnsPrefix: dnsPrefix
     agentPoolProfiles: primaryAgentPoolProfile
     servicePrincipalProfile: {
       clientId: servicePrincipalClientId
       secret: servicePrincipalClientSecret
     }
-    windowsProfile: {
-      adminUsername: adminUser
-      adminPassword: adminPassword
-    }
     enableRBAC: true
     networkProfile: {
-      networkPlugin: 'azure'
-      networkPolicy: 'azure'
+      networkPlugin: networkPlugin
       serviceCidr: serviceCidr
       dockerBridgeCidr: dockerBridgeCidr
     }

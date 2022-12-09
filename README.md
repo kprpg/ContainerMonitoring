@@ -75,10 +75,16 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 ## Pipeline execution
 
-1.  Run the pipeline and add prefix based on your environment naming convention
+1.  Run the pipeline and enter prefix based on your environment naming convention
 
     ![steps to run pipeline](./deploymentStepGIFs/stepsToRunPipeline.gif =1000x)
 
+2. Parameter Selection
+
+    * **AKS Cluster Version** - Use supported version for your region
+
+        To find out what versions are currently available for your subscription and region, please refer [AKS cluster supported versions](https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-powershell#azure-portal-and-cli-versions).
+    
 ## Contributing
 
 It is detailed under [contributing.md](./CONTRIBUTING.md) file which is present along with source code in the repository.

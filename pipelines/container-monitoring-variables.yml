@@ -23,7 +23,7 @@ variables:
 - name: agentVMSize
   value: Standard_D2s_v3
 - name: workspaceSkuName
-  value: Standalone
+  value: pergb2018
 - name: roleDefinitionName
   value: Monitoring Metrics Publisher
 - name: aksClusterNetworkPlugin
@@ -36,3 +36,12 @@ variables:
   value: 172.17.0.1/16
 - name: clusterVersion
   value: 1.23.5
+
+- name: monitoredAKSNetworkPolicy
+  value: azure
+- name: monitoredAKSNetworkPlugin
+  value: azure
+- name: nonMonitoredAKSNetworkPolicy
+  value: none
+- name: nonMonitoredAKSNetworkPlugin
+  value: kubenet

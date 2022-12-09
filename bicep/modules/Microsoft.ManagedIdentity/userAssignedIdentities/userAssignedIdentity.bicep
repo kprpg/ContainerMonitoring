@@ -11,7 +11,7 @@ resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@
 
 // assign role to user assiged managed identity
 resource roleassignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(resourceGroup().id, roleId, managedIdentityName)
+  name: guid(subscription().id, userAssignedIdentity.id, roleId)
   properties: {
     principalId: userAssignedIdentity.properties.principalId
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleId)
