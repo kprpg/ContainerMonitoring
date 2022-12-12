@@ -5,9 +5,6 @@ param managedIdentityName string
 param resourceGroupName string
 param workspaceName string
 param searchTableName string
-param searchStartTime string = '2022-10-29T00:00:00Z'
-param searchEndTime string = '2022-10-31T00:00:00Z'
-
 
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: managedIdentityName
@@ -28,16 +25,17 @@ resource createSearchJobTable 'Microsoft.Resources/deploymentScripts@2020-10-01'
     forceUpdateTag: utcValue
     azPowerShellVersion: '8.0'
     timeout: 'PT10M'
-    arguments: '-resourceGroupName ${resourceGroupName} -workspaceName ${workspaceName} -searchTableName ${searchTableName} -searchStartTime ${searchStartTime} -searchEndTime ${searchEndTime}'
+    arguments: '-resourceGroupName ${resourceGroupName} -workspaceName ${workspaceName} -searchTableName ${searchTableName}'
     scriptContent: '''
     param( 
       [string] $resourceGroupName,
       [string] $workspaceName,
-      [string] $searchTableName,
-      [string] $searchStartTime,
-      [string] $searchEndTime
+      [string] $searchTableName
     )
     
+    $searchStartTime = (Get-Date).AddMonths(-1)
+    $searchEndTime = Get-Date
+
     $subscriptionId = ((Get-Azcontext).Subscription).id
     $token = (Get-AzAccessToken).Token
     $headers = @{
