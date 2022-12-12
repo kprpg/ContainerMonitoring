@@ -36,16 +36,6 @@ variables:
   value: ${{ parameters.prefix }}
 
 stages:
-- stage: Lint
-  displayName: LintCode
-  jobs:
-  - job: LintCode
-    displayName: Lint Code
-    steps:
-    - script: |
-          az bicep build --file $(Build.SourcesDirectory)/bicep/main.bicep
-      displayName: 'Run Bicep linter'
-
 - stage: SecurityTest
   displayName: Run Security Code Analysis scan
   jobs:
@@ -90,6 +80,16 @@ stages:
       inputs:
         GdnBreakAllTools: true
 
+- stage: Lint
+  displayName: LintCode
+  jobs:
+  - job: LintCode
+    displayName: Lint Code
+    steps:
+    - script: |
+          az bicep build --file $(Build.SourcesDirectory)/bicep/main.bicep
+      displayName: 'Run Bicep linter'
+      
 - stage: Validate
   jobs:
   - job: ValidateBicepCode
