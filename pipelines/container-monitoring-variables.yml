@@ -20,8 +20,7 @@ variables:
 - name: searchTableName
   value: Container_SearchJob_SRCH
 
-- name: agentVMSize
-  value: Standard_D2s_v3
+
 - name: workspaceSkuName
   value: pergb2018
 - name: roleDefinitionName

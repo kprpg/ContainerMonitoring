@@ -13,3 +13,6 @@ variables:
 
 - name: location
   value: eastus
+
+- name: agentVMSize
+  value: Standard_B2s

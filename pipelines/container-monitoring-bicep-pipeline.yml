@@ -14,6 +14,36 @@ parameters:
   - PreProd
   - Production
 
+- name: securityTest 
+  displayName: 'Deploy Security Test stage'
+  type: boolean 
+  default: false
+
+- name: Lint 
+  displayName: 'Deploy Lint stage'
+  type: boolean 
+  default: false
+
+- name: Validate 
+  displayName: 'Deploy Validate stage'
+  type: boolean 
+  default: false
+
+- name: Preview 
+  displayName: 'Deploy preview stage'
+  type: boolean 
+  default: false
+
+- name: InfrastructureDeployment 
+  displayName: 'Deploy Infrastructure stage'
+  type: boolean 
+  default: false
+
+- name: ApplicationDeployment 
+  displayName: 'Deploy Application stage'
+  type: boolean 
+  default: false
+
 - name: prefix
   displayName: 'Prefix'
   type: string
@@ -38,6 +68,7 @@ variables:
 stages:
 - stage: SecurityTest
   displayName: Run Security Code Analysis scan
+  condition: ${{ parameters.securityTest }}
   jobs:
   - job: SecurityCodeAnalysisScans
     displayName:  Run Security Code Analysis Scans
@@ -82,6 +113,7 @@ stages:
 
 - stage: Lint
   displayName: LintCode
+  condition: ${{ parameters.Lint }}
   jobs:
   - job: LintCode
     displayName: Lint Code
@@ -91,6 +123,8 @@ stages:
       displayName: 'Run Bicep linter'
       
 - stage: Validate
+  displayName: Validate Bicep code
+  condition: ${{ parameters.Validate }}
   jobs:
   - job: ValidateBicepCode
     displayName: Validate Bicep code
@@ -128,6 +162,8 @@ stages:
           -kubernetesVersion ${{ parameters.clusterVersion }}
 
 - stage: Preview
+  displayName: Bicep Preview
+  condition: ${{ parameters.Preview }}
   jobs: 
   - job: PreviewAzureChanges
     displayName: Preview Azure changes
@@ -167,7 +203,8 @@ stages:
           } -Verbose
 
 - stage: BicepDeploy
-  displayName: Deploy Infrastructure
+  displayName: Bicep Deployment
+  condition: ${{ parameters.InfrastructureDeployment }}
   jobs:
   - job: Deploy
     displayName: Deploy Container Monitoring
@@ -226,7 +263,8 @@ stages:
           az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
 
 - stage: ApplicationDeployment
-  displayName: Deploy Application
+  displayName: Application Deployment
+  condition: ${{ parameters.ApplicationDeployment }}
   jobs:
   - job: Deploy
     displayName: Deploy Manifests to Container Monitoring
