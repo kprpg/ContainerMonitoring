@@ -16,3 +16,6 @@ variables:
 
 - name: agentVMSize
   value: Standard_B2s
+
+- name: retentionPeriod
+  value: 30

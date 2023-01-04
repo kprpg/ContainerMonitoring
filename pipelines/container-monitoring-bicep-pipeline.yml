@@ -151,6 +151,7 @@ stages:
           -servicePrincipalClientId $(ContosoSH360ClusterSPClientId)
           -servicePrincipalClientSecret $(ContosoSH360ClusterSPClientSecret)
           -agentVMSize $(agentVMSize)
+          -retentionPeriod $(retentionPeriod)
           -serviceCidr $(aksClusterServiceCidr)
           -dockerBridgeCidr $(aksClusterDockerBridgeCidr)
           -managedIdentityName $(managedIdentityName)
@@ -191,6 +192,7 @@ stages:
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
+            retentionPeriod = $(retentionPeriod)
             serviceCidr = '$(aksClusterServiceCidr)'
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             managedIdentityName = '$(managedIdentityName)'
@@ -239,6 +241,7 @@ stages:
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
             servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
+            retentionPeriod = $(retentionPeriod)
             serviceCidr = '$(aksClusterServiceCidr)'
             dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
             managedIdentityName = '$(managedIdentityName)'

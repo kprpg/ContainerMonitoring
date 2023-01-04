@@ -19,6 +19,8 @@ param workspaceSkuName string
 param contosoSH360ClusterResourceGroupName string
 param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
+param retentionPeriod int
+
 param montioredClusterName string
 param nonMontioredClusterName string
 
@@ -97,6 +99,7 @@ module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/logAnal
     workspaceName: logAnalyticsWorkspaceName
     location: location
     workspaceSkuName: workspaceSkuName
+    retentionPeriod: retentionPeriod    
   }
   dependsOn: [
     rgModule

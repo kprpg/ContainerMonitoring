@@ -16,3 +16,6 @@ variables:
 
 - name: agentVMSize
   value: Standard_D2s_v3
+
+- name: retentionPeriod
+  value: 90
