@@ -37,7 +37,7 @@ var resourceGroups = [
 var monitoredAKSPrimaryAgentPoolProfile = [
   {
     name: 'linuxpool'
-    SubnetId: vnetModule.outputs.subnetId
+    vnetSubnetId: vnetModule.outputs.subnetId
     osDiskSizeGB: 120
     count: 2
     vmSize: agentVMSize
@@ -51,7 +51,7 @@ var monitoredAKSPrimaryAgentPoolProfile = [
   }
   {
     name: 'window'
-    SubnetId: vnetModule.outputs.subnetId
+    vnetSubnetId: vnetModule.outputs.subnetId
     osDiskSizeGB: 120
     count: 1
     vmSize: agentVMSize
