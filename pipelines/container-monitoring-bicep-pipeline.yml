@@ -161,6 +161,10 @@ stages:
           -nonMonitoredAKSNetworkPolicy $(nonMonitoredAKSNetworkPolicy)
           -nonMonitoredAKSNetworkPlugin $(nonMonitoredAKSNetworkPlugin)
           -kubernetesVersion ${{ parameters.clusterVersion }}
+          -vnetName = '$(vnetName)'
+          -subnetName = '$(subnetName)'
+          -subnetAddressPrefix = '$(subnetAddressPrefix)'
+          -vnetAddressPrefix = '$(vnetAddressPrefix)'
 
 - stage: Preview
   displayName: Bicep Preview
@@ -255,6 +259,10 @@ stages:
             nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
             nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
             kubernetesVersion = '${{ parameters.clusterVersion }}'
+            vnetName = '$(vnetName)'
+            subnetName = '$(subnetName)'
+            subnetAddressPrefix = '$(subnetAddressPrefix)'
+            vnetAddressPrefix = '$(vnetAddressPrefix)'
           } -Verbose
 
     - task: AzureCLI@2
