@@ -37,7 +37,7 @@ var resourceGroups = [
 var monitoredAKSPrimaryAgentPoolProfile = [
   {
     name: 'linuxpool'
-    vnetSubnetId: vnetModule.outputs.subnetId
+    vnetSubnetId: subnetModule.outputs.subnetDeails[0].subnetId
     osDiskSizeGB: 120
     count: 2
     vmSize: agentVMSize
@@ -51,7 +51,7 @@ var monitoredAKSPrimaryAgentPoolProfile = [
   }
   {
     name: 'window'
-    vnetSubnetId: vnetModule.outputs.subnetId
+    vnetSubnetId: subnetModule.outputs.subnetDeails[0].subnetId
     osDiskSizeGB: 120
     count: 1
     vmSize: agentVMSize
@@ -164,23 +164,44 @@ module workspaceSearchTable 'modules/Microsoft.OperationalInsights/workspaces/se
 //param location string
 param vnetName string
 param vnetAddressPrefix string
-param subnetName string
-param subnetAddressPrefix string
+param subnets array
+//param subnetName string
+//param subnetAddressPrefix string
+//var subnets = [
+ // {
+//    subnetName: 'api'
+//    subnetAddressPrefix: '10.144.0.0/24'
+//  }
+//  {
+//    subnetName: 'worker'
+//    subnetAddressPrefix: '10.144.1.0/24'
+//  }
+//]
 
-
-module vnetModule 'modules/Microsoft.Resources/vnet/vnet.bicep' = {
+module vnetModule 'modules/Microsoft.Network/virtualNetworks/vnet.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}vnetDeploy'
   params: {
     location: location
     vnetName: vnetName
     vnetAddressPrefix: vnetAddressPrefix
-    subnetName: subnetName
-    subnetAddressPrefix: subnetAddressPrefix
   }
   dependsOn: [
     rgModule
   ]
+}
+
+// deploy subnet
+
+  module subnetModule 'modules/Microsoft.Network/virtualNetworks/subnet/subnet.bicep' = {
+    scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+    name: '${prefix}subnetDeploy'
+    params: {
+      subnets: subnets
+    }
+    dependsOn: [
+      vnetModule
+    ]
 }
 
 // Monitored AKS cluster deployment

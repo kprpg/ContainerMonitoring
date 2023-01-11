@@ -162,8 +162,7 @@ stages:
           -nonMonitoredAKSNetworkPlugin $(nonMonitoredAKSNetworkPlugin)
           -kubernetesVersion ${{ parameters.clusterVersion }}
           -vnetName $(vnetName)
-          -subnetName $(subnetName)
-          -subnetAddressPrefix $(subnetAddressPrefix)
+          -subnets $(subnets)
           -vnetAddressPrefix $(vnetAddressPrefix)
 
 - stage: Preview
@@ -207,8 +206,7 @@ stages:
             nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
             kubernetesVersion = '${{ parameters.clusterVersion }}'
             vnetName = '$(vnetName)'
-            subnetName = '$(subnetName)'
-            subnetAddressPrefix = '$(subnetAddressPrefix)'
+            subnets = '$(subnets)'
             vnetAddressPrefix = '$(vnetAddressPrefix)'
           } -Verbose
 
@@ -260,7 +258,7 @@ stages:
             nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
             kubernetesVersion = '${{ parameters.clusterVersion }}'
             vnetName = '$(vnetName)'
-            subnetName = '$(subnetName)'
+            subnets = '$(subnets)'
             subnetAddressPrefix = '$(subnetAddressPrefix)'
             vnetAddressPrefix = '$(vnetAddressPrefix)'
           } -Verbose

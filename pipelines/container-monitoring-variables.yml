@@ -46,11 +46,22 @@ variables:
   value: kubenet
 
 
-- name: vnetName 
+- name: vnetName
   value: $(prefix)-vnet$(suffix)
 - name:  vnetAddressPrefix
   value: 10.223.0.0/16
-- name: subnetName
-  value: $(prefix)-subnet$(suffix)
-- name: subnetAddressPrefix
-  value: 10.223.0.0/24
+- name: subnets
+  value: |
+    [
+      {
+        "subnetName": "aks-subnet",
+        "properties": {
+          "subnetAddressPrefix": "10.223.0.0/24"
+        }
+      },
+      {
+        "subnetName": "akstest-subnet",
+        "properties": {
+          "subnetAddressPrefix": "10.223.1.0/24"
+      }
+    ]
