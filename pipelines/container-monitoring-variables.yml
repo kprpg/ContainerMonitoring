@@ -51,7 +51,7 @@ variables:
 - name:  vnetAddressPrefix
   value: 10.223.0.0/16
 - name: subnets
-  type: array
+  type: object
   value: |
     [
       {
