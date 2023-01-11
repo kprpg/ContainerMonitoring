@@ -11,7 +11,7 @@ resource subnet 'Microsoft.Network/virtualNetworks/subnets@2022-07-01' = [ for s
   }
 }]
 
-output subnetDeails array = [for (name,subnetIDx ) in subnets: {
-  subnetId: subnet[subnetIDx].id
+output subnetDeails array = [for (subnetName,subnetIDx ) in subnets: {
+  subnetId: subnets[subnetIDx].id
 }]
 
