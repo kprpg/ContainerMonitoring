@@ -161,10 +161,10 @@ stages:
           -nonMonitoredAKSNetworkPolicy $(nonMonitoredAKSNetworkPolicy)
           -nonMonitoredAKSNetworkPlugin $(nonMonitoredAKSNetworkPlugin)
           -kubernetesVersion ${{ parameters.clusterVersion }}
-          -vnetName = '$(vnetName)'
-          -subnetName = '$(subnetName)'
-          -subnetAddressPrefix = '$(subnetAddressPrefix)'
-          -vnetAddressPrefix = '$(vnetAddressPrefix)'
+          -vnetName $(vnetName)
+          -subnetName $(subnetName)
+          -subnetAddressPrefix $(subnetAddressPrefix)
+          -vnetAddressPrefix $(vnetAddressPrefix)
 
 - stage: Preview
   displayName: Bicep Preview
