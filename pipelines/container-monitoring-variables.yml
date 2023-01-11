@@ -55,13 +55,10 @@ variables:
     [
       {
         "subnetName": "aks-subnet",
-        "properties": {
-          "subnetAddressPrefix": "10.223.0.0/24"
-        }
+        "subnetAddressPrefix": "10.223.0.0/24"
       },
       {
         "subnetName": "akstest-subnet",
-        "properties": {
-          "subnetAddressPrefix": "10.223.1.0/24"
+        "subnetAddressPrefix": "10.223.1.0/24"
       }
     ]

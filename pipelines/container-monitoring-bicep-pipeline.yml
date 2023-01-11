@@ -259,7 +259,6 @@ stages:
             kubernetesVersion = '${{ parameters.clusterVersion }}'
             vnetName = '$(vnetName)'
             subnets = '$(subnets)'
-            subnetAddressPrefix = '$(subnetAddressPrefix)'
             vnetAddressPrefix = '$(vnetAddressPrefix)'
           } -Verbose
 
