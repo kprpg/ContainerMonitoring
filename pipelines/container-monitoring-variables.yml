@@ -56,7 +56,7 @@ variables:
       {
         "subnetName": "aks-subnet",
         "subnetAddressPrefix": "10.223.0.0/24"
-      },
+      }
       {
         "subnetName": "akstest-subnet",
         "subnetAddressPrefix": "10.223.1.0/24"
