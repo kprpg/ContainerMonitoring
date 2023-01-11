@@ -202,6 +202,10 @@ stages:
             nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
             nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
             kubernetesVersion = '${{ parameters.clusterVersion }}'
+            vnetName = '$(vnetName)'
+            subnetName = '$(subnetName)'
+            subnetAddressPrefix = '$(subnetAddressPrefix)'
+            vnetAddressPrefix = '$(vnetAddressPrefix)'
           } -Verbose
 
 - stage: BicepDeploy

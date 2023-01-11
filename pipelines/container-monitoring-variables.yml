@@ -44,3 +44,13 @@ variables:
   value: none
 - name: nonMonitoredAKSNetworkPlugin
   value: kubenet
+
+
+- name: vnetName 
+  value: $(prefix)-vnet$(suffix)
+- name:  vnetAddressPrefix
+  value: 10.223.0.0/16
+- name: subnetName
+  value: $(prefix)-subnet$(suffix)
+- name: subnetAddressPrefix
+  value: 10.223.0.0/24
