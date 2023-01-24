@@ -51,9 +51,8 @@ variables:
 - name:  vnetAddressPrefix
   value: 10.223.0.0/16
 - name: subnets
-  type: object
   value: |
-    [
+    @[
       {
         "subnetName": "aks-subnet",
         "subnetAddressPrefix": "10.223.0.0/24"
