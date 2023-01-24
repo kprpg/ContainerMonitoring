@@ -383,3 +383,18 @@ stages:
         kubernetesCluster: '$(AKSName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus-bundle.yaml'
+
+    - task: AzurePowerShell@5
+      name: executingKubernetesServicePesterTest
+      displayName: 'Running KubernetesService Pester Scripts'
+      inputs:
+        azureSubscription: $(azureSubscriptionEndpoint)
+        ScriptType: InlineScript
+        Inline: | 
+          $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests\KubernetesService.Tests.ps1  -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+          montioredClusterName = '$(AKSName)'
+          nonMontioredClusterName = '$(NonMonitoredAKSName)'
+          ContosoSH360ClusterSPObjectId = "$(ContosoSH360ClusterSPObjectId)"
+          }
+          Invoke-pester -Container $Container
+        azurePowerShellVersion: LatestVersion     

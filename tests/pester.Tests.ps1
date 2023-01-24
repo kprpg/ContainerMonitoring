@@ -12,24 +12,26 @@ param(
     [int] $retentionPeriod
 )
 
-#region check for Az.ManagedServiceIdentity module
-try {
-    if (!(Get-InstalledModule -Name Az.ManagedServiceIdentity -RequiredVersion 0.7.3  -ErrorAction SilentlyContinue)) {
-        Install-Module -Name Az.ManagedServiceIdentity -RequiredVersion 0.7.3 -AllowClobber -Scope CurrentUser -force -Confirm:$false -ErrorAction Stop -SkipPublisherCheck
-        Import-Module -Name Az.ManagedServiceIdentity -force
-        $msiAdded = $true
-    }
-    else {
-        Import-Module Az.ManagedServiceIdentity -force
-        Write-Information -InformationAction Continue "ManagedServiceIdentity module already installed so, just importing the module."
-    }
-}
-catch {
-    Write-Output  "Failed to Install Az.ManagedServiceIdentity Module, error:$($_.exception)"
-    throw
-}
-
 Describe "Checking for all resourceGroup validation" {
+    BeforeAll {
+   
+        #region check for Az.ManagedServiceIdentity module
+        try {
+            if (!(Get-InstalledModule -Name Az.ManagedServiceIdentity -RequiredVersion 0.7.3  -ErrorAction SilentlyContinue)) {
+                Install-Module -Name Az.ManagedServiceIdentity -RequiredVersion 0.7.3 -AllowClobber -Scope CurrentUser -force -Confirm:$false -ErrorAction Stop -SkipPublisherCheck
+                Import-Module -Name Az.ManagedServiceIdentity -force
+                $msiAdded = $true
+            }
+            else {
+                Import-Module Az.ManagedServiceIdentity -force
+                Write-Information -InformationAction Continue "ManagedServiceIdentity module already installed so, just importing the module."
+            }
+        }
+        catch {
+            Write-Output  "Failed to Install Az.ManagedServiceIdentity Module, error:$($_.exception)"
+            throw
+        }
+    }
     It "Checking for contosoSH360ClusterResourceGroup" {
         try {            
             $getRG = Get-AzResourceGroup -Name $contosoSH360ClusterResourceGroupName -WarningAction:SilentlyContinue
@@ -217,5 +219,19 @@ Describe "Checking for all resourceGroup validation" {
         $getNode.Type | Should -Be 'VirtualMachineScaleSets'
         $getNode.ProvisioningState | Should -Be 'Succeeded'
         $getNode.VmSize | Should -Be $agentVMSize
+    }
+
+    AfterAll {
+        #Unloading Unloading ManagedServiceIdentity Module Modules
+        try {
+            if ($msiAdded -eq $true) {
+                Write-Information -InformationAction Continue -MessageData "Unloading ManagedServiceIdentity Module."
+                Remove-Module Az.ManagedServiceIdentity -Confirm:$false -Force -WarningAction:SilentlyContinue -ErrorAction SilentlyContinue
+            }
+        }
+        catch {
+            Write-Information -InformationAction Continue -MessageData  "Failed to Unload ManagedServiceIdentity Module"
+            throw $_.exception
+        }
     }
 }
