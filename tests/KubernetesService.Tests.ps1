@@ -9,8 +9,8 @@ BeforeAll {
     #region check for az.aks module
     try {
         if (!(Get-InstalledModule -Name az.aks -RequiredVersion 4.2.1 -ErrorAction SilentlyContinue -WarningAction SilentlyContinue)) {
-            Install-Module -Name az.aks -RequiredVersion 4.2.1 -AllowClobber -force -Confirm:$false -ErrorAction Stop  -WarningAction SilentlyContinue
-            Import-Module -Name az.aks -force
+            Install-Module -Name az.aks -RequiredVersion 4.2.1 -AllowClobber -force
+            Import-Module -Name az.aks -RequiredVersion 4.2.1 -force
             $aksInstalled = $true
         }
         else {
