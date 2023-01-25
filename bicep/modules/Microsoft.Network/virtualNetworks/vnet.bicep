@@ -3,6 +3,8 @@
 param location string
 param vnetName string
 param vnetAddressPrefix string
+param subnetName string
+param subnetAddressPrefix string
 
 resource vnet 'Microsoft.Network/virtualNetworks@2022-07-01' = {
   name: vnetName
@@ -11,8 +13,22 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-07-01' = {
     addressSpace: {
       addressPrefixes: [vnetAddressPrefix]
     }
+    subnets: [
+      {
+        name: subnetName
+        properties: {
+          addressPrefix: subnetAddressPrefix
+        }
+      }
+    ]
   }
+
+  resource subnet1 'subnets' existing = {
+    name: subnetName
+  }
+
 }
 
 output vnetId string = vnet.id
 output vnetName string = vnet.name
+output vnetSubnetId string = vnet::subnet1.id

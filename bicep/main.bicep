@@ -27,6 +27,19 @@ param nonMontioredClusterName string
 param managedIdentityName string
 param searchTableName string
 
+// custom vent and subnet details param
+
+param montioredClustervnetName string
+param montioredClustervnetAddressPrefix string
+param montioredClustersubnetName string
+param montioredClustersubnetAddressPrefix string
+
+param nonmontioredClustervnetName string
+param nonmontioredClustervnetAddressPrefix string
+param nonmontioredClustersubnetName string
+param nonmontioredClustersubnetAddressPrefix string
+
+
 param contributorRoleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
 
 var resourceGroups = [
@@ -37,7 +50,7 @@ var resourceGroups = [
 var monitoredAKSPrimaryAgentPoolProfile = [
   {
     name: 'linuxpool'
-    vnetSubnetId: subnetModule.outputs.subnetDeails[0].subnetId
+    vnetSubnetId: montioredClustervnet.outputs.vnetSubnetId
     osDiskSizeGB: 120
     count: 2
     vmSize: agentVMSize
@@ -51,7 +64,7 @@ var monitoredAKSPrimaryAgentPoolProfile = [
   }
   {
     name: 'window'
-    vnetSubnetId: subnetModule.outputs.subnetDeails[0].subnetId
+    vnetSubnetId: montioredClustervnet.outputs.vnetSubnetId
     osDiskSizeGB: 120
     count: 1
     vmSize: agentVMSize
@@ -68,6 +81,7 @@ var monitoredAKSPrimaryAgentPoolProfile = [
 var nonMonitoredAKSPrimaryAgentPoolProfile = [
   {
     name: 'linuxpool'
+    vnetSubnetId: nonmontioredClustervnet.outputs.vnetSubnetId
     osDiskSizeGB: 120
     count: 3
     vmSize: agentVMSize
@@ -159,49 +173,38 @@ module workspaceSearchTable 'modules/Microsoft.OperationalInsights/workspaces/se
     searchTableModule
   ]
 }
-// deploy vnet
+// deploy vnet and subnet for monitored cluster
 
-//param location string
-param vnetName string
-param vnetAddressPrefix string
-param subnets array
-//param subnetName string
-//param subnetAddressPrefix string
-//var subnets = [
- // {
-//    subnetName: 'api'
-//    subnetAddressPrefix: '10.144.0.0/24'
-//  }
-//  {
-//    subnetName: 'worker'
-//    subnetAddressPrefix: '10.144.1.0/24'
-//  }
-//]
-
-module vnetModule 'modules/Microsoft.Network/virtualNetworks/vnet.bicep' = {
+module montioredClustervnet 'modules/Microsoft.Network/virtualNetworks/vnet.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}vnetDeploy'
   params: {
     location: location
-    vnetName: vnetName
-    vnetAddressPrefix: vnetAddressPrefix
+    vnetName: montioredClustervnetName
+    vnetAddressPrefix: montioredClustervnetAddressPrefix
+    subnetName:montioredClustersubnetName
+    subnetAddressPrefix: montioredClustersubnetAddressPrefix
   }
   dependsOn: [
     rgModule
   ]
 }
 
-// deploy subnet
+// deploy vnet and subnet for non monitored cluster
 
-  module subnetModule 'modules/Microsoft.Network/virtualNetworks/subnet/subnet.bicep' = {
-    scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-    name: '${prefix}subnetDeploy'
-    params: {
-      subnets: subnets
-    }
-    dependsOn: [
-      vnetModule
-    ]
+module nonmontioredClustervnet 'modules/Microsoft.Network/virtualNetworks/vnet.bicep' = {
+  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+  name: '${prefix}vnetDeploynonmonitored'
+  params: {
+    location: location
+    vnetName: nonmontioredClustervnetName
+    vnetAddressPrefix: nonmontioredClustervnetAddressPrefix
+    subnetName:nonmontioredClustersubnetName
+    subnetAddressPrefix: nonmontioredClustersubnetAddressPrefix
+  }
+  dependsOn: [
+    rgModule
+  ]
 }
 
 // Monitored AKS cluster deployment
@@ -224,7 +227,7 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/ak
   }
   dependsOn: [
     rgModule
-    vnetModule
+    montioredClustervnet
   ]
 }
 
@@ -247,6 +250,7 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
   }
   dependsOn: [
     rgModule
+    nonmontioredClustervnet
   ]
 }
 

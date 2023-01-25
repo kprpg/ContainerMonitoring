@@ -46,19 +46,22 @@ variables:
   value: kubenet
 
 
-- name: vnetName
-  value: $(prefix)-vnet$(suffix)
-- name:  vnetAddressPrefix
+- name: montioredClustervnetName
+  value: $(prefix)-vnetmon$(suffix)
+- name: nonmontioredClustervnetName
+  value: $(prefix)-vnetnonmon$(suffix)
+- name:  montioredClustervnetAddressPrefix
   value: 10.223.0.0/16
-- name: subnets
-  value: |
-    @[
-      {
-        "subnetName": "aks-subnet",
-        "subnetAddressPrefix": "10.223.0.0/24"
-      },
-      {
-        "subnetName": "akstest-subnet",
-        "subnetAddressPrefix": "10.223.1.0/24"
-      }
-    ]
+- name:  nonmontioredClustervnetAddressPrefix
+  value: 10.222.0.0/16
+
+- name:  montioredClustersubnetName
+  value: aks-mon-subnet
+- name:  montioredClustersubnetAddressPrefix
+  value: 10.223.0.0/24
+
+
+- name:  nonmontioredClustersubnetName
+  value: aks-nonmon-subnet
+- name:  montioredClustersubnetAddressPrefix
+  value: 10.222.0.0/24
