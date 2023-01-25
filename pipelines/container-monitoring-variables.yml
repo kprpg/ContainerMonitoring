@@ -63,5 +63,5 @@ variables:
 
 - name:  nonmontioredClustersubnetName
   value: aks-nonmon-subnet
-- name:  montioredClustersubnetAddressPrefix
+- name:  nonmontioredClustersubnetAddressPrefix
   value: 10.222.0.0/24
