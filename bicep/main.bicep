@@ -21,8 +21,8 @@ param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
 param retentionPeriod int
 
-param montioredClusterName string
-param nonMontioredClusterName string
+param monitoredClusterName string
+param nonmonitoredClusterName string
 
 param managedIdentityName string
 param searchTableName string
@@ -163,7 +163,7 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/ak
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}monitoredAKSDeploy'
   params: {
-    clusterName: montioredClusterName
+    clusterName: monitoredClusterName
     location: location
     servicePrincipalClientId: servicePrincipalClientId
     servicePrincipalClientSecret: servicePrincipalClientSecret
@@ -186,7 +186,7 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}nonMonitoredAKSDeploy'
   params: {
-    clusterName: nonMontioredClusterName
+    clusterName: nonmonitoredClusterName
     location: location
     servicePrincipalClientId: servicePrincipalClientId
     servicePrincipalClientSecret: servicePrincipalClientSecret

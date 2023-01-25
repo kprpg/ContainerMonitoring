@@ -144,8 +144,8 @@ stages:
           -opsResourceGroupName $(workspaceResourceGroupName)
           -logAnalyticsWorkspaceName $(workspaceName)
           -workspaceSkuName $(workspaceSkuName)
-          -montioredClusterName $(AKSName)
-          -nonMontioredClusterName $(NonMonitoredAKSName)
+          -monitoredClusterName $(AKSName)
+          -nonmonitoredClusterName $(NonMonitoredAKSName)
           -adminUser $(chVmAdminUser)
           -adminPassword $(chVmAdminPassword)
           -servicePrincipalClientId $(ContosoSH360ClusterSPClientId)
@@ -185,8 +185,8 @@ stages:
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
-            montioredClusterName = '$(AKSName)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
+            monitoredClusterName = '$(AKSName)'
+            nonmonitoredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
@@ -234,8 +234,8 @@ stages:
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
-            montioredClusterName = '$(AKSName)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
+            monitoredClusterName = '$(AKSName)'
+            nonmonitoredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
@@ -252,6 +252,28 @@ stages:
             nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
             kubernetesVersion = '${{ parameters.clusterVersion }}'
           } -Verbose
+    
+    - task: AzurePowerShell@5
+      name: executingPesterTest
+      displayName: 'Running Pester Scripts'
+      inputs:
+        azureSubscription: $(azureSubscriptionEndpoint)
+        ScriptType: InlineScript
+        Inline: | 
+          $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/pester.Tests.ps1  -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+          opsResourceGroupName = '$(workspaceResourceGroupName)'
+          logAnalyticsWorkspaceName = '$(workspaceName)'
+          monitoredClusterName = '$(AKSName)'
+          nonmonitoredClusterName = '$(NonMonitoredAKSName)'
+          retentionPeriod = $(retentionPeriod)
+          managedIdentityName = '$(managedIdentityName)'
+          searchTableName = '$(searchTableName)'
+          kubernetesVersion = '${{ parameters.clusterVersion }}'
+          workspaceSkuName = '$(workspaceSkuName)'
+          agentVMSize = '$(agentVMSize)'
+          }
+          Invoke-pester -Container $Container
+        azurePowerShellVersion: LatestVersion 
 
     - task: AzureCLI@2
       displayName: 'Cluster role assignment'
@@ -272,7 +294,7 @@ stages:
   - job: Deploy
     displayName: Deploy Manifests to Container Monitoring
     pool: 
-      vmImage: ubuntu-latest
+      vmImage:  windows-latest
     
     variables:
     - template: container-monitoring-variables.yml
@@ -361,3 +383,17 @@ stages:
         kubernetesCluster: '$(AKSName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus-bundle.yaml'
+
+    - task: AzurePowerShell@5
+      name: executingKubernetesServicePesterTest
+      displayName: 'Running KubernetesService Pester Scripts'
+      inputs:
+        azureSubscription: $(azureSubscriptionEndpoint)
+        ScriptType: InlineScript
+        Inline: | 
+          $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/KubernetesService.Tests.ps1 -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+          monitoredClusterName = '$(AKSName)'
+          ContosoSH360ClusterSPObjectId = "$(ContosoSH360ClusterSPObjectId)"
+          }
+          Invoke-pester -Container $Container
+        azurePowerShellVersion: LatestVersion 
