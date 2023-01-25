@@ -2,8 +2,8 @@ param(
     [string] $contosoSH360ClusterResourceGroupName,
     [string] $opsResourceGroupName,
     [string] $logAnalyticsWorkspaceName,
-    [string] $montioredClusterName,
-    [string] $nonMontioredClusterName ,
+    [string] $monitoredClusterName,
+    [string] $nonmonitoredClusterName ,
     [string] $managedIdentityName,
     [string] $searchTableName,
     [string] $kubernetesVersion,
@@ -138,12 +138,12 @@ Describe "Checking for all resourceGroup validation" {
 
     It "Checking for monitored AKS cluster deployment" {
         try {
-            $getkubernetes = Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $montioredClusterName -WarningAction:SilentlyContinue
+            $getkubernetes = Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $monitoredClusterName -WarningAction:SilentlyContinue
         }
         catch {
-            Write-output "Failed to fetch  AKS cluster $($montioredClusterName),Error:$($_.exception)."
+            Write-output "Failed to fetch  AKS cluster $($monitoredClusterName),Error:$($_.exception)."
         }
-        $getkubernetes.Name | Should -Be $montioredClusterName
+        $getkubernetes.Name | Should -Be $monitoredClusterName
         $getkubernetes.KubernetesVersion | Should -Be $kubernetesVersion
         $getkubernetes.ProvisioningState | Should -Be 'Succeeded'
         $getkubernetes.EnableRBAC | Should -Be $true
@@ -152,10 +152,10 @@ Describe "Checking for all resourceGroup validation" {
 
     It "Checking for monitored pool node linuxpool for AKS cluster deployment" {
         try {
-            $getNode = (Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $montioredClusterName -WarningAction:SilentlyContinue).AgentPoolProfiles | Where-Object -Property Name -eq 'linuxpool'
+            $getNode = (Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $monitoredClusterName -WarningAction:SilentlyContinue).AgentPoolProfiles | Where-Object -Property Name -eq 'linuxpool'
         }
         catch {
-            Write-output "Failed to fetch  AKS cluster node linuxpool  $($montioredClusterName),Error:$($_.exception)."
+            Write-output "Failed to fetch  AKS cluster node linuxpool  $($monitoredClusterName),Error:$($_.exception)."
         }
         $getNode.Name | Should -Be 'linuxpool'
         $getNode.Count | Should -Be 2
@@ -172,10 +172,10 @@ Describe "Checking for all resourceGroup validation" {
 
     It "Checking for monitored pool node window for AKS cluster deployment" {
         try {
-            $getNode = (Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $montioredClusterName -WarningAction:SilentlyContinue).AgentPoolProfiles | Where-Object -Property Name -eq 'window'
+            $getNode = (Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $monitoredClusterName -WarningAction:SilentlyContinue).AgentPoolProfiles | Where-Object -Property Name -eq 'window'
         }
         catch {
-            Write-output "Failed to fetch  AKS cluster node window for $($montioredClusterName),Error:$($_.exception)."
+            Write-output "Failed to fetch  AKS cluster node window for $($monitoredClusterName),Error:$($_.exception)."
         }
         $getNode.Name | Should -Be 'window'
         $getNode.Count | Should -Be 1
@@ -191,12 +191,12 @@ Describe "Checking for all resourceGroup validation" {
 
     It "Checking for nonMonitored AKS cluster deployment" {
         try {
-            $getkubernetes = Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $nonMontioredClusterName -WarningAction:SilentlyContinue
+            $getkubernetes = Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $nonmonitoredClusterName -WarningAction:SilentlyContinue
         }
         catch {
-            Write-output "Failed to fetch  AKS cluster $($nonMontioredClusterName),Error:$($_.exception)."
+            Write-output "Failed to fetch  AKS cluster $($nonmonitoredClusterName),Error:$($_.exception)."
         }
-        $getkubernetes.Name | Should -Be $nonMontioredClusterName
+        $getkubernetes.Name | Should -Be $nonmonitoredClusterName
         $getkubernetes.KubernetesVersion | Should -Be $kubernetesVersion
         $getkubernetes.ProvisioningState | Should -Be 'Succeeded'
         $getkubernetes.EnableRBAC | Should -Be $true
@@ -205,10 +205,10 @@ Describe "Checking for all resourceGroup validation" {
 
     It "Checking for nonMonitored pool node linuxpool for AKS cluster deployment" {
         try {
-            $getNode = (Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $nonMontioredClusterName  -WarningAction:SilentlyContinue).AgentPoolProfiles | Where-Object -Property Name -eq 'linuxpool'
+            $getNode = (Get-AzAksCluster -ResourceGroupName $contosoSH360ClusterResourceGroupName -Name $nonmonitoredClusterName  -WarningAction:SilentlyContinue).AgentPoolProfiles | Where-Object -Property Name -eq 'linuxpool'
         }
         catch {
-            Write-output "Failed to fetch  AKS cluster node linuxpool  $($nonMontioredClusterName),Error:$($_.exception)."
+            Write-output "Failed to fetch  AKS cluster node linuxpool  $($nonmonitoredClusterName),Error:$($_.exception)."
         }
         $getNode.Name | Should -Be 'linuxpool'
         $getNode.OsDiskSizeGB | Should -Be 120

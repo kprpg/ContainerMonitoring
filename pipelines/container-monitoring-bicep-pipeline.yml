@@ -144,8 +144,8 @@ stages:
           -opsResourceGroupName $(workspaceResourceGroupName)
           -logAnalyticsWorkspaceName $(workspaceName)
           -workspaceSkuName $(workspaceSkuName)
-          -montioredClusterName $(AKSName)
-          -nonMontioredClusterName $(NonMonitoredAKSName)
+          -monitoredClusterName $(AKSName)
+          -nonmonitoredClusterName $(NonMonitoredAKSName)
           -adminUser $(chVmAdminUser)
           -adminPassword $(chVmAdminPassword)
           -servicePrincipalClientId $(ContosoSH360ClusterSPClientId)
@@ -185,8 +185,8 @@ stages:
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
-            montioredClusterName = '$(AKSName)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
+            monitoredClusterName = '$(AKSName)'
+            nonmonitoredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
@@ -234,8 +234,8 @@ stages:
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
-            montioredClusterName = '$(AKSName)'
-            nonMontioredClusterName = '$(NonMonitoredAKSName)'
+            monitoredClusterName = '$(AKSName)'
+            nonmonitoredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
             servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
@@ -263,8 +263,8 @@ stages:
           $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/pester.Tests.ps1  -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
           opsResourceGroupName = '$(workspaceResourceGroupName)'
           logAnalyticsWorkspaceName = '$(workspaceName)'
-          montioredClusterName = '$(AKSName)'
-          nonMontioredClusterName = '$(NonMonitoredAKSName)'
+          monitoredClusterName = '$(AKSName)'
+          nonmonitoredClusterName = '$(NonMonitoredAKSName)'
           retentionPeriod = $(retentionPeriod)
           managedIdentityName = '$(managedIdentityName)'
           searchTableName = '$(searchTableName)'
@@ -294,7 +294,7 @@ stages:
   - job: Deploy
     displayName: Deploy Manifests to Container Monitoring
     pool: 
-      vmImage: ubuntu-latest
+      vmImage:  windows-latest
     
     variables:
     - template: container-monitoring-variables.yml
@@ -391,10 +391,9 @@ stages:
         azureSubscription: $(azureSubscriptionEndpoint)
         ScriptType: InlineScript
         Inline: | 
-          $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests\KubernetesService.Tests.ps1  -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-          montioredClusterName = '$(AKSName)'
-          nonMontioredClusterName = '$(NonMonitoredAKSName)'
+          $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/KubernetesService.Tests.ps1 -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+          monitoredClusterName = '$(AKSName)'
           ContosoSH360ClusterSPObjectId = "$(ContosoSH360ClusterSPObjectId)"
           }
           Invoke-pester -Container $Container
-        azurePowerShellVersion: LatestVersion     
+        azurePowerShellVersion: LatestVersion 
