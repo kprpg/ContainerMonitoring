@@ -44,3 +44,24 @@ variables:
   value: none
 - name: nonMonitoredAKSNetworkPlugin
   value: kubenet
+
+
+- name: monitoredClustervnetName
+  value: $(prefix)-vnetmon$(suffix)
+- name: nonmonitoredClustervnetName
+  value: $(prefix)-vnetnonmon$(suffix)
+- name:  monitoredClustervnetAddressPrefix
+  value: 10.223.0.0/16
+- name:  nonmonitoredClustervnetAddressPrefix
+  value: 10.222.0.0/16
+
+- name:  monitoredClustersubnetName
+  value: aks-mon-subnet
+- name:  monitoredClustersubnetAddressPrefix
+  value: 10.223.0.0/24
+
+
+- name:  nonmonitoredClustersubnetName
+  value: aks-nonmon-subnet
+- name:  nonmonitoredClustersubnetAddressPrefix
+  value: 10.222.0.0/24

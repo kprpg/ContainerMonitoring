@@ -161,6 +161,14 @@ stages:
           -nonMonitoredAKSNetworkPolicy $(nonMonitoredAKSNetworkPolicy)
           -nonMonitoredAKSNetworkPlugin $(nonMonitoredAKSNetworkPlugin)
           -kubernetesVersion ${{ parameters.clusterVersion }}
+          -monitoredClustervnetName $(monitoredClustervnetName)
+          -nonmonitoredClustervnetName $(nonmonitoredClustervnetName)
+          -monitoredClustervnetAddressPrefix $(monitoredClustervnetAddressPrefix)
+          -nonmonitoredClustervnetAddressPrefix $(nonmonitoredClustervnetAddressPrefix)
+          -monitoredClustersubnetName $(monitoredClustersubnetName)
+          -monitoredClustersubnetAddressPrefix $(monitoredClustersubnetAddressPrefix)
+          -nonmonitoredClustersubnetName $(nonmonitoredClustersubnetName)
+          -nonmonitoredClustersubnetAddressPrefix $(nonmonitoredClustersubnetAddressPrefix)
 
 - stage: Preview
   displayName: Bicep Preview
@@ -202,6 +210,14 @@ stages:
             nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
             nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
             kubernetesVersion = '${{ parameters.clusterVersion }}'
+            monitoredClustervnetName = '$(monitoredClustervnetName)'
+            nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
+            monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
+            nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
+            monitoredClustersubnetName = '$(monitoredClustersubnetName)'
+            monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
+            nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
+            nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
           } -Verbose
 
 - stage: BicepDeploy
@@ -251,6 +267,14 @@ stages:
             nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
             nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
             kubernetesVersion = '${{ parameters.clusterVersion }}'
+            monitoredClustervnetName = '$(monitoredClustervnetName)'
+            nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
+            monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
+            nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
+            monitoredClustersubnetName = '$(monitoredClustersubnetName)'
+            monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
+            nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
+            nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
           } -Verbose
     
     - task: AzurePowerShell@5

@@ -14,6 +14,7 @@ param kubernetesVersion string
 
 var dnsPrefix = '${clusterName}-dns'
 
+
 resource clusterResource 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
   name: clusterName
   location: location
