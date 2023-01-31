@@ -41,9 +41,9 @@ variables:
 - name: monitoredAKSNetworkPlugin
   value: azure
 - name: nonMonitoredAKSNetworkPolicy
-  value: none
+  value: azure
 - name: nonMonitoredAKSNetworkPlugin
-  value: kubenet
+  value: azure
 
 
 - name: monitoredClustervnetName
