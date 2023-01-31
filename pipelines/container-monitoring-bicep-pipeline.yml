@@ -214,7 +214,7 @@ stages:
             nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
             monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
             nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
-            mmonitoredClustersubnetName = '$(monitoredClustersubnetName)'
+            monitoredClustersubnetName = '$(monitoredClustersubnetName)'
             monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
             nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
             nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
