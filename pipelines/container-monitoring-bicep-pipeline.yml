@@ -269,7 +269,7 @@ stages:
             kubernetesVersion = '${{ parameters.clusterVersion }}'
             monitoredClustervnetName = '$(monitoredClustervnetName)'
             nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
-            mmonitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
+            monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
             nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
             monitoredClustersubnetName = '$(monitoredClustersubnetName)'
             monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
