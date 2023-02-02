@@ -14,7 +14,7 @@ param serviceCidr string
 
 var dnsPrefix = '${clusterName}-dns'
 
-resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-01-01' = {
+resource clusterResource 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
   name: clusterName
   location: location
   properties: {
