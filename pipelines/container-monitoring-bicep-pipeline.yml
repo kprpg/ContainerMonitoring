@@ -31,6 +31,8 @@ variables:
 - name: prefix
   value: ${{ parameters.prefix }}
 
+- group: ContainerMonitoring-AprilJones
+
 stages:
 - stage: Lint
   displayName: LintCode
