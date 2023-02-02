@@ -74,7 +74,7 @@ targetScope = 'subscription'
 
 // AKS cluster Resource group and workspace Resource group deployment 
 module rgModule 'modules/Microsoft.Resources/resourceGroups/resourceGroup.bicep' = [for resourceGroup in resourceGroups: {
-  name: 'rgDeploy${resourceGroup}'
+  name: 'rgDeploy${resourceGroup}${uniqueString(deployment().name)}'
   params: {
     resourceGroupName: resourceGroup
     location: location
@@ -84,7 +84,7 @@ module rgModule 'modules/Microsoft.Resources/resourceGroups/resourceGroup.bicep'
 //Log analytics workspace deployment
 module workspaceModule 'modules/Microsoft.OperationalInsights/workspaces/logAnalyticsWorkspace.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: '${prefix}workspaceDeploy'
+  name: '${prefix}workspaceDeploy${uniqueString(deployment().name)}'
   params: {
     workspaceName: logAnalyticsWorkspaceName
     location: location
@@ -112,7 +112,7 @@ module logAnalyticsWorkspaceSavedSearches 'modules/Microsoft.OperationalInsights
 // Monitored AKS cluster deployment
 module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/aks.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: '${prefix}monitoredAKSDeploy'
+  name: '${prefix}monitoredAKSDeploy${uniqueString(deployment().name)}'
   params: {
     clusterName: monitoredClusterName
     location: location
