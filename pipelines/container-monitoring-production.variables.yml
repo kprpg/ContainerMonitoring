@@ -12,4 +12,4 @@ variables:
   value: CH-StagingKV-Dev
 
 - name: location
-  value: eastus
+  value: eastus2
