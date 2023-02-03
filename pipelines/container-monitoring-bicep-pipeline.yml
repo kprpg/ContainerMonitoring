@@ -278,6 +278,49 @@ stages:
           } -Verbose
     
     - task: AzurePowerShell@5
+      displayName: Creation of dataCollectionRule
+      inputs:
+        azureSubscription: $(azureSubscriptionEndpoint)
+        azurePowerShellVersion: LatestVersion
+        ScriptType: 'InlineScript'
+        Inline: |
+            New-AzResourceGroupDeployment -ResourceGroupName '$(workspaceResourceGroupName)'  `
+                -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRule.bicep' `
+                -dataCollectionRuleName '$(dataCollectionRuleName)' `
+                -workspaceName '$(workspaceName)' `
+                -Verbose
+
+              #Fettching the DCR id and workspaceID
+              try {
+                $dcrID = (Get-AzDataCollectionRule -RuleName '$(dataCollectionRuleName)' -ResourceGroupName '$(workspaceResourceGroupName)' -WarningAction:SilentlyContinue).Id
+                $workspaceID = (Get-AzOperationalInsightsWorkspace -ResourceGroupName '$(workspaceResourceGroupName)' -Name '$(workspaceName)' -WarningAction:SilentlyContinue).ResourceId
+              }
+              catch {
+                Write-Information -InformationAction Continue  "Failed to fetch workspaceID and dcrID"
+                throw
+              }
+
+              ##--- Creating payload body for dcr rule ---##
+              $defaultDcrParams = @"
+              {
+                "properties": {
+                    "defaultDataCollectionRuleResourceId": "$dcrID"
+                }
+              }
+            "@
+
+              ###-----Adding DCR to workspace------###
+              try {  
+                Invoke-AzRestMethod -Path "${workspaceID}?api-version=2021-12-01-preview" -Method PATCH -payload $defaultDcrParams
+                Write-Information -InformationAction Continue  "DCR has been added to workspace."
+              }
+              catch {
+                Write-Information -InformationAction Continue  "Failed while adding data collection rule"
+                throw
+              }
+
+
+    - task: AzurePowerShell@5
       name: executingPesterTest
       displayName: 'Running Pester Scripts'
       inputs:

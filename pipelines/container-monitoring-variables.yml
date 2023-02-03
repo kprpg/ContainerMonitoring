@@ -65,3 +65,7 @@ variables:
   value: aks-nonmon-subnet
 - name:  nonmonitoredClustersubnetAddressPrefix
   value: 10.222.0.0/24
+- name: tableName
+  value: "SigninLogs"  
+- name: dataCollectionRuleName
+  value: "dataMasking"  
