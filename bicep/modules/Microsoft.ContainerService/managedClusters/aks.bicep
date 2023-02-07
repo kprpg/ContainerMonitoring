@@ -40,9 +40,9 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2021-02-01'
       }
     }
     aadProfile: {
-      managed: false
+      managed: true
       tenantID: tenant().tenantId
-      enableAzureRBAC: true
+      enableAzureRBAC: false
     }
   }
 }
