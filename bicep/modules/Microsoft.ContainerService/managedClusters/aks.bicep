@@ -14,7 +14,6 @@ param kubernetesVersion string
 
 var dnsPrefix = '${clusterName}-dns'
 
-
 resource clusterResource 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
   name: clusterName
   location: location
@@ -39,6 +38,11 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2021-02-01'
           logAnalyticsWorkspaceResourceID: !empty(workspaceResourceId) ? any(workspaceResourceId) : null
         }
       }
+    }
+    aadProfile: {
+      managed: true
+      tenantID: tenant().tenantId
+      enableAzureRBAC: true
     }
   }
 }
