@@ -388,6 +388,7 @@ stages:
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
+        useClusterAdmin: true
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/invalidimage.yaml'
 
