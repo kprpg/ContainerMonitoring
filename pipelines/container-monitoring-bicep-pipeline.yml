@@ -399,6 +399,7 @@ stages:
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
+        useClusterAdmin: true
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
 
@@ -409,6 +410,7 @@ stages:
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
+        useClusterAdmin: true
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft-namespace.yaml'
 
@@ -419,6 +421,7 @@ stages:
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
+        useClusterAdmin: true
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft3.yaml'
 
@@ -429,6 +432,7 @@ stages:
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
+        useClusterAdmin: true
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
 
@@ -439,6 +443,7 @@ stages:
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
+        useClusterAdmin: true
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus.yaml'
 
@@ -449,6 +454,7 @@ stages:
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
+        useClusterAdmin: true
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/windows-service.yaml'
 
@@ -459,6 +465,7 @@ stages:
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
         kubernetesCluster: '$(AKSName)'
+        useClusterAdmin: true
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus-bundle.yaml'
 
