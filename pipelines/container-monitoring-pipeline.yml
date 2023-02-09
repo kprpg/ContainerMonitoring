@@ -128,6 +128,16 @@ stages:
       displayName: 'Install Kubectl latest'
 
     - task: Kubernetes@1
+      displayName: 'kubectl login'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: '$(resourceGroupName)'
+        kubernetesCluster: '$(AKSName)'
+        useClusterAdmin: true
+        command: login
+
+    - task: Kubernetes@1
       displayName: 'kubectl apply invalidimage'
       inputs:
         connectionType: 'Azure Resource Manager'
