@@ -14,8 +14,7 @@ param kubernetesVersion string
 
 var dnsPrefix = '${clusterName}-dns'
 
-
-resource clusterResource 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
+resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-11-01' = {
   name: clusterName
   location: location
   properties: {
@@ -40,6 +39,9 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2021-02-01'
         }
       }
     }
+    enableFeatures: [
+      'LogAnalytics-ConainerLogV2'
+    ]
   }
 }
 
