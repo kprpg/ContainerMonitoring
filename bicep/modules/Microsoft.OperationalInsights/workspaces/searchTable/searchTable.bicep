@@ -13,7 +13,6 @@ resource workspaceNameContainerLogV2 'Microsoft.OperationalInsights/workspaces/t
     schema: {
       name: 'ContainerLogV2'
     }
-    retentionInDays: 8
   }
 }
 
