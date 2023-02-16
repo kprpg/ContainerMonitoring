@@ -4,14 +4,14 @@ resource workspaceResource 'microsoft.operationalinsights/workspaces@2021-06-01'
   name: workspaceName
 }
 
-resource workspaceNameConainerLogV2 'Microsoft.OperationalInsights/workspaces/tables@2021-12-01-preview' = {
+resource workspaceNameContainerLogV2 'Microsoft.OperationalInsights/workspaces/tables@2022-10-01' = {
   parent: workspaceResource
-  name: 'ConainerLogV2'
+  name: 'ContainerLogV2'
   properties: {
     totalRetentionInDays: 2556
     plan: 'Basic'
     schema: {
-      name: 'ConainerLogV2'
+      name: 'ContainerLogV2'
     }
     retentionInDays: 365
   }

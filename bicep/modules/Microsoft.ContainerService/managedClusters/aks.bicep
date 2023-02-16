@@ -40,7 +40,7 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-11-01'
       }
     }
     enableFeatures: [
-      'LogAnalytics-ConainerLogV2'
+      'LogAnalytics-ContainerLogV2'
     ]
   }
 }

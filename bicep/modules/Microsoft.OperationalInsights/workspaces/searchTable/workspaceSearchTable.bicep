@@ -60,7 +60,7 @@ resource createSearchJobTable 'Microsoft.Resources/deploymentScripts@2020-10-01'
         $reqbody = "{
         ""properties"": { 
         ""searchResults"": {
-              ""query"": ""ConainerLogV2"",
+              ""query"": ""ContainerLogV2"",
               ""limit"": 1000,
               ""startSearchTime"": ""$searchStartTime"",
               ""endSearchTime"": ""$searchEndTime""
