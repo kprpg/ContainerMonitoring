@@ -107,12 +107,12 @@ Describe "Checking for all resourceGroup validation" {
 
     It "Checking for logAnalyticsWorkspace search table" {
         try {
-            $getSearchTable = Get-AzOperationalInsightsTable -ResourceGroupName $opsResourceGroupName -WorkspaceName $logAnalyticsWorkspaceName -tableName "ContainerLog" -WarningAction:SilentlyContinue
+            $getSearchTable = Get-AzOperationalInsightsTable -ResourceGroupName $opsResourceGroupName -WorkspaceName $logAnalyticsWorkspaceName -tableName "ConainerLogV2" -WarningAction:SilentlyContinue
         }
         catch {
-            Write-output "Failed to fetch logAnalyticsWorkspace search Table ContainerLog for $($workspaceName),Error:$($_.exception)."
+            Write-output "Failed to fetch logAnalyticsWorkspace search Table ConainerLogV2 for $($workspaceName),Error:$($_.exception)."
         }
-        $getSearchTable.Name | Should -Be 'ContainerLog'
+        $getSearchTable.Name | Should -Be 'ConainerLogV2'
         $getSearchTable.RetentionInDays | Should -Be 365
     }
 
