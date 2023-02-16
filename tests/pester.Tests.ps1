@@ -113,7 +113,7 @@ Describe "Checking for all resourceGroup validation" {
             Write-output "Failed to fetch logAnalyticsWorkspace search Table ContainerLogV2 for $($workspaceName),Error:$($_.exception)."
         }
         $getSearchTable.Name | Should -Be 'ContainerLogV2'
-        $getSearchTable.RetentionInDays | Should -Be 365
+        $getSearchTable.RetentionInDays | Should -Be 8
     }
 
     It "Checking for logAnalyticsWorkspace Search Job Table" {
