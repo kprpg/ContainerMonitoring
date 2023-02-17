@@ -8,7 +8,7 @@ resource workspaceNameContainerLogV2 'Microsoft.OperationalInsights/workspaces/t
   parent: workspaceResource
   name: 'ContainerLogV2'
   properties: {
-    totalRetentionInDays: 1460
+    totalRetentionInDays: 1826
     plan: 'Basic'
     schema: {
       name: 'ContainerLogV2'
