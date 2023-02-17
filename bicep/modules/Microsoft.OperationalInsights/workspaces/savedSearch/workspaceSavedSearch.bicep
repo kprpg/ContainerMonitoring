@@ -19,7 +19,7 @@ var savedSearches = [
   {
     category: 'Container Insights'
     displayName: 'Logs contains Failure or Error or Exception'
-    query: 'ContainerLogV2\n| where TimeGenerated > ago(30m)\n| where (LogMessage contains "failed" or LogMessage contains "error" or LogMessage contains "exception")'
+    query: 'ContainerLogV2\n| where TimeGenerated > ago(30m)\n| where (LogEntry contains "failed" or LogEntry contains "error" or LogEntry contains "exception")\n| project TimeGenerated, LogEntry, ContainerID, Computer'
   }
   {
     category: 'Container Insights'
