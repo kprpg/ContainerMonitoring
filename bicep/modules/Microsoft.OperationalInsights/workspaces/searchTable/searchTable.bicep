@@ -9,10 +9,10 @@ resource workspaceNameContainerLogV2 'Microsoft.OperationalInsights/workspaces/t
   name: 'ContainerLogV2'
   properties: {
     totalRetentionInDays: 2556
-    plan: 'Basic'
+    plan: 'Analytics'
     schema: {
       name: 'ContainerLogV2'
     }
+    retentionInDays: 365
   }
 }
-
