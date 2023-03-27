@@ -148,8 +148,6 @@ stages:
           -nonmonitoredClusterName $(NonMonitoredAKSName)
           -adminUser $(chVmAdminUser)
           -adminPassword $(chVmAdminPassword)
-          -servicePrincipalClientId $(ContosoSH360ClusterSPClientId)
-          -servicePrincipalClientSecret $(ContosoSH360ClusterSPClientSecret)
           -agentVMSize $(agentVMSize)
           -retentionPeriod $(retentionPeriod)
           -serviceCidr $(aksClusterServiceCidr)
@@ -197,8 +195,6 @@ stages:
             nonmonitoredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
-            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
-            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
             retentionPeriod = $(retentionPeriod)
             serviceCidr = '$(aksClusterServiceCidr)'
@@ -254,8 +250,6 @@ stages:
             nonmonitoredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
-            servicePrincipalClientId = '$(ContosoSH360ClusterSPClientId)'
-            servicePrincipalClientSecret = '$(ContosoSH360ClusterSPClientSecret)'
             agentVMSize = '$(agentVMSize)'
             retentionPeriod = $(retentionPeriod)
             serviceCidr = '$(aksClusterServiceCidr)'
