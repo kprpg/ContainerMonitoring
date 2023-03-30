@@ -148,6 +148,7 @@ Describe "Checking for all resourceGroup validation" {
         $getkubernetes.ProvisioningState | Should -Be 'Succeeded'
         $getkubernetes.EnableRBAC | Should -Be $true
         $getkubernetes.AgentPoolProfiles.Count | Should -Be 2
+        $getkubernetes.ServicePrincipalProfile.ClientId | should -Be 'msi'
     }
 
     It "Checking for monitored pool node linuxpool for AKS cluster deployment" {
@@ -201,6 +202,7 @@ Describe "Checking for all resourceGroup validation" {
         $getkubernetes.ProvisioningState | Should -Be 'Succeeded'
         $getkubernetes.EnableRBAC | Should -Be $true
         $getkubernetes.AgentPoolProfiles.Count | Should -Be 1
+        $getkubernetes.ServicePrincipalProfile.ClientId | should -Be 'msi'
     }
 
     It "Checking for nonMonitored pool node linuxpool for AKS cluster deployment" {
@@ -218,7 +220,8 @@ Describe "Checking for all resourceGroup validation" {
         $getNode.MinCount | Should -Be 2
         $getNode.Type | Should -Be 'VirtualMachineScaleSets'
         $getNode.ProvisioningState | Should -Be 'Succeeded'
-        $getNode.VmSize | Should -Be $agentVMSize
+        $getNode.VmSize | Should -Be $agentVMSize 
+        
     }
 
     AfterAll {
