@@ -1,9 +1,6 @@
 param location string
 param clusterName string
 param primaryAgentPoolProfile array
-param servicePrincipalClientId string
-@secure()
-param servicePrincipalClientSecret string
 param workspaceResourceId string = ''
 param omsAgentEnabled bool = true
 param dockerBridgeCidr string
@@ -17,14 +14,13 @@ var dnsPrefix = '${clusterName}-dns'
 resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-11-01' = {
   name: clusterName
   location: location
+  identity: {
+      type: 'SystemAssigned'
+    }
   properties: {
     kubernetesVersion: kubernetesVersion
     dnsPrefix: dnsPrefix
     agentPoolProfiles: primaryAgentPoolProfile
-    servicePrincipalProfile: {
-      clientId: servicePrincipalClientId
-      secret: servicePrincipalClientSecret
-    }
     enableRBAC: true
     networkProfile: {
       networkPlugin: networkPlugin
