@@ -3,9 +3,6 @@ param prefix string
 param adminUser string
 @secure()
 param adminPassword string
-param servicePrincipalClientId string
-@secure()
-param servicePrincipalClientSecret string
 param agentVMSize string
 param dockerBridgeCidr string
 param serviceCidr string
@@ -214,8 +211,6 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/ak
   params: {
     clusterName: monitoredClusterName
     location: location
-    servicePrincipalClientId: servicePrincipalClientId
-    servicePrincipalClientSecret: servicePrincipalClientSecret
     workspaceResourceId: workspaceModule.outputs.workspaceId
     omsAgentEnabled: true
     primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
@@ -238,8 +233,6 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
   params: {
     clusterName: nonmonitoredClusterName
     location: location
-    servicePrincipalClientId: servicePrincipalClientId
-    servicePrincipalClientSecret: servicePrincipalClientSecret
     omsAgentEnabled: false
     primaryAgentPoolProfile: nonMonitoredAKSPrimaryAgentPoolProfile
     serviceCidr: serviceCidr
