@@ -221,7 +221,6 @@ Describe "Checking for all resourceGroup validation" {
         $getNode.Type | Should -Be 'VirtualMachineScaleSets'
         $getNode.ProvisioningState | Should -Be 'Succeeded'
         $getNode.VmSize | Should -Be $agentVMSize 
-        
     }
 
     AfterAll {
