@@ -68,4 +68,45 @@ variables:
 - name: tableName
   value: "SigninLogs"  
 - name: dataCollectionRuleName
-  value: "dataMasking"  
+  value: "dataMasking" 
+
+- name: AzureMonitorWorkspaceName
+  value: $(prefix)-prometheusworkspace$(suffix)  
+- name: azureMonitorWorkspaceResourceId
+  value: "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(AzureMonitorWorkspaceName)"
+- name: azureMonitorWorkspaceLocation
+  value: $(location)
+
+- name: clusterResourceId
+  value: "/subscriptions/$(azureSubscriptionId)/resourcegroups/$(resourceGroupName)/providers/Microsoft.ContainerService/managedClusters/$(AKSName)"
+- name: clusterLocation
+  value: $(location)
+- name: metricLabelsAllowlist 
+  value: ""
+- name: metricAnnotationsAllowList
+  value: ""
+- name: enableWindowsRecordingRules 
+  value: false
+- name: subscriptionId
+  value: ""
+
+- name: grafanaName
+  value: $(prefix)-grafana$(suffix)
+- name: grafanaresourceGroupName
+  value: $(prefix)-OpsRG-Pri$(suffix) 
+- name: grafanaResourceId
+  value:  "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(grafanaresourceGroupName)/providers/Microsoft.Dashboard/grafana/$(grafanaName)"
+- name: grafanaLocation
+  value: $(location)
+- name: grafanaSku
+  value: "Standard"
+
+
+- name: PrometheusactionGroup
+  value: "RecommendedAlertRulesforprometheus"
+- name: groupShortName
+  value: azmonwAG 
+- name: actionGroupResourceId
+  value: "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.insights/actionGroups/$(PrometheusactionGroup)"
+- name: Receiveremailactiongroups
+  value: paggarwal@microsoft.com

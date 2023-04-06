@@ -6,6 +6,9 @@ variables:
 - name: azureSubscriptionEndpoint
   value: 'Contoso Hotels Tenant - Integration'
 
+- name: azureSubscriptionId
+  value: 3ef9c878-c106-464a-820e-4ed22d65f3e2
+  
 - name: stagingSubscriptionEndpoint
   value: 'Contoso Hotels Tenant - PREPROD (DEV)'
 - name: stagingKeyVaultName
