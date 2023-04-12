@@ -71,7 +71,7 @@ variables:
   value: "dataMasking" 
 
 - name: AzureMonitorWorkspaceName
-  value: $(prefix)-prometheusworkspace$(suffix)  
+  value: $(prefix)-AzureMonitorWorkspace$(suffix)  
 - name: azureMonitorWorkspaceResourceId
   value: "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(AzureMonitorWorkspaceName)"
 - name: azureMonitorWorkspaceLocation
