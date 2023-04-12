@@ -1,11 +1,15 @@
 ## Introduction
-This project provides the below monitoring capabilities
-- Showcase the difference between monitored and non-monitored cluster
-- Container insight and health monitoring for AKS resources
-- Help in identification of bug and root cause analysis
+This demo scenario showcase below monitoring capabilities
+- Showcase the difference between monitored and non-monitored Azure kubernetes cluster
+- Health monitoring of AKS cluster including both container insights and managed Prometheus.
+- Publishing metrics from Prometheus workspace to Azure managed Grafana
 
 ## Azure Monitor for Containers
 This solution has been used to create an AKS monitoring scenario in the contoso demo environment, and can also be used by users to create replica in their own azure environment.
+
+## Implementation of Managed Prometheus
+This solution has also been used for Implementation of Managed Prometheus By Seclecting a appropriate flag " PrometheusDeployment" we can deploy Azure managed prometheus for the same scenario which is powerful tool that enables you to monitor and manage your applications and infrastructure more effectively, providing you with real-time insights and helping you quickly identify and resolve issues and also visualize data using Grafana dashboards.
+
 
 ## Contents
 
@@ -27,14 +31,13 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 * Owner/Contributor with User access administrator permission to an azure subscription
 * Contributor permission on Azure DevOps project
-* Client id and secret from service principal and Object id from enterprise application is required in azure environment
-    - How to create a service principal
-
-    ![steps to create service principal for the Kubernetes cluster](./deploymentStepGIFs/stepsToCreateAppRegistration.gif =1000x)
-
+* Object id from enterprise application is required in azure environment
     - How to retrieve service principal object id 
 
     ![steps to get object ID](./deploymentStepGIFs/stepsToGetObjectID.gif =1000x)
+
+* Create a new or use existing Managed garafana instance , We are currently using existing Azure managed grafana for the scenario 
+Repo Link - https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring?path=%2F&version=GBmain&_a=contents 
 
 ## Setup
 
@@ -63,9 +66,7 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 
 5. Enter below variables as pipeline secret variables
 
-    - **ContosoSH360ClusterSPClientId** - Client id of an azure spn
     - **ContosoSH360ClusterSPObjectId** - Object id from enterprise application
-    - **ContosoSH360ClusterSPClientSecret** - Client secret of an azure spn
     - **chVmAdminPassword** - Windows profile user password
     - **chVmAdminUser** - Windows profile username
 
@@ -88,3 +89,4 @@ This solution has been used to create an AKS monitoring scenario in the contoso 
 ## Contributing
 
 It is detailed under [contributing.md](./CONTRIBUTING.md) file which is present along with source code in the repository.
+

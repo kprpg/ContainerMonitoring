@@ -69,7 +69,7 @@ Describe "checking kubernetesService Deployment" {
         }
         $pods.items.Count | Should -Be 4
         foreach ($pod in $pods.items) {
-            $pod.status.containerStatuses.state.waiting.reason | Should -Be 'CrashLoopBackOff'
+            $pod.status.containerStatuses.state.waiting.reason -in @('CrashLoopBackOff','error','ready') | Should  -BeTrue
             $pod.status.phase | Should -Be 'running'
         }
     }

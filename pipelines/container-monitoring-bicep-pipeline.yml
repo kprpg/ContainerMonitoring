@@ -542,7 +542,6 @@ stages:
             Receiveremailactiongroups = '$(Receiveremailactiongroups)'
           } -Verbose          
    
-
     - task: AzurePowerShell@4
       displayName: 'Enable AKS and Grafana for prometheus workspace'
       inputs:
@@ -576,3 +575,21 @@ stages:
           clusterResourceId  = '$(clusterResourceId)'
           actionGroupResourceId  = '$(actionGroupResourceId)'
           } -Verbose  
+    - task: AzurePowerShell@5
+      name: executingprometheusPesterTest
+      displayName: 'Running Prometheus Pester Scripts'
+      inputs:
+        azureSubscription: $(azureSubscriptionEndpoint)
+        ScriptType: InlineScript
+        Inline: | 
+          $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/prometheus.Tests.ps1 -Data @{ AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName)'
+          azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId)'
+          resourceGroupName = '$(resourceGroupName)'
+          PrometheusactionGroup  = '$(PrometheusactionGroup)'
+          groupShortName = '$(groupShortName)'
+          Receiveremailactiongroups = '$(Receiveremailactiongroups)'
+          grafanaName= '$(grafanaName)'
+          grafanaresourceGroupName = '$(grafanaresourceGroupName)'
+          }
+          Invoke-pester -Container $Container
+        azurePowerShellVersion: LatestVersion          
