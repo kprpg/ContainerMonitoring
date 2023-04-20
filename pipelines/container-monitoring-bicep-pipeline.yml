@@ -176,7 +176,7 @@ stages:
 - stage: Preview
   displayName: Bicep Preview
   dependsOn: Validate
-  condition: ${{ parameters.Preview }}
+  condition: and(succeeded(),${{ parameters.Preview }})
   jobs:
   - job: PreviewAzureChanges
     displayName: Preview Azure changes
@@ -227,7 +227,7 @@ stages:
   dependsOn:
   - Validate
   - Preview
-  condition: ${{ parameters.InfrastructureDeployment }}
+  condition: and(succeeded(),${{ parameters.InfrastructureDeployment }})
   jobs:
   - job: Deploy
     displayName: Deploy Container Monitoring
@@ -363,7 +363,7 @@ stages:
   - Validate
   - Preview
   - BicepDeploy
-  condition: ${{ parameters.ApplicationDeployment }}
+  condition: and(succeeded(),${{ parameters.ApplicationDeployment }})
   jobs:
   - job: Deploy
     displayName: Deploy Manifests to Container Monitoring
@@ -496,7 +496,7 @@ stages:
   - Preview
   - BicepDeploy
   - ApplicationDeployment
-  condition: ${{ parameters.PrometheusDeployment }}
+  condition: and(succeeded(),${{ parameters.PrometheusDeployment }})
   jobs:
   - job: PrometheusDeployment
     displayName: Deploy Azure Monitore workspace
