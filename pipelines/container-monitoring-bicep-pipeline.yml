@@ -70,7 +70,7 @@ variables:
 - name: prefix
   value: ${{ parameters.prefix }}
 
-- isMain: $[eq(${{ parameters.InfrastructureDeployment }}, true)]
+- isMain: $[eq(${{ parameters.Preview }}, true)]
 
 stages:
 - stage: SecurityTest
@@ -178,7 +178,7 @@ stages:
 - stage: Preview
   displayName: Bicep Preview
   dependsOn: Validate
-  condition: and(succeeded(),eq(${{ parameters.Preview }}, 'true'))
+  condition: and(succeeded(),eq(variables.isMain, true))
   jobs:
   - job: PreviewAzureChanges
     displayName: Preview Azure changes
