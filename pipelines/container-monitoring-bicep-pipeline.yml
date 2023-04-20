@@ -176,7 +176,7 @@ stages:
 - stage: Preview
   displayName: Bicep Preview
   dependsOn: Validate
-  condition: and(succeeded(),eq(${{ parameters.Preview }}, true))
+  condition: and(succeeded(),eq(${{ parameters.Preview }}, 'true'))
   jobs:
   - job: PreviewAzureChanges
     displayName: Preview Azure changes
@@ -227,7 +227,7 @@ stages:
   dependsOn:
   - Validate
   - Preview
-  condition: and(succeeded(),${{ parameters.InfrastructureDeployment }})
+  condition: and(succeeded(),eq(${{ parameters.InfrastructureDeployment }}, 'true')
   jobs:
   - job: Deploy
     displayName: Deploy Container Monitoring
