@@ -17,37 +17,37 @@ parameters:
 - name: securityTest
   displayName: 'Deploy Security Test stage'
   type: boolean
-  default: false
+  default: true
 
 - name: Lint
   displayName: 'Deploy Lint stage'
   type: boolean
-  default: false
+  default: true
 
 - name: Validate
   displayName: 'Deploy Validate stage'
   type: boolean
-  default: false
+  default: true
 
 - name: Preview
   displayName: 'Deploy preview stage'
   type: boolean
-  default: false
+  default: true
 
 - name: InfrastructureDeployment
   displayName: 'Deploy Infrastructure stage'
   type: boolean
-  default: false
+  default: true
 
 - name: ApplicationDeployment
   displayName: 'Deploy Application stage'
   type: boolean
-  default: false
+  default: true
 
 - name: PrometheusDeployment
   displayName: 'Deploy Managed-Prometheus stage'
   type: boolean
-  default: false
+  default: true
 
 - name: prefix
   displayName: 'Prefix'
@@ -70,7 +70,6 @@ variables:
 - name: prefix
   value: ${{ parameters.prefix }}
 
-- isMain: $[eq(${{ parameters.Preview }}, true)]
 
 stages:
 - stage: SecurityTest
@@ -178,7 +177,7 @@ stages:
 - stage: Preview
   displayName: Bicep Preview
   dependsOn: Validate
-  condition: and(succeeded(),eq(variables.isMain, true))
+  condition: and(succeeded(),${{ parameters.Preview }})
   jobs:
   - job: PreviewAzureChanges
     displayName: Preview Azure changes
@@ -229,7 +228,7 @@ stages:
   dependsOn:
   - Validate
   - Preview
-  condition: and(succeeded(),eq(variables.isMain, true))
+  condition: and(succeeded(),${{ parameters.InfrastructureDeployment }})
   jobs:
   - job: Deploy
     displayName: Deploy Container Monitoring
