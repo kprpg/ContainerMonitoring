@@ -70,6 +70,8 @@ variables:
 - name: prefix
   value: ${{ parameters.prefix }}
 
+- isMain: $[eq(${{ parameters.InfrastructureDeployment }}, true)]
+
 stages:
 - stage: SecurityTest
   displayName: Run Security Code Analysis scan
@@ -227,7 +229,7 @@ stages:
   dependsOn:
   - Validate
   - Preview
-  condition: and(succeeded(),eq(${{ parameters.InfrastructureDeployment }}, 'true')
+  condition: and(succeeded(),eq(variables.isMain, true))
   jobs:
   - job: Deploy
     displayName: Deploy Container Monitoring
