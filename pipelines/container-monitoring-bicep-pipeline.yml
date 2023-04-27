@@ -223,7 +223,7 @@ stages:
 
 - stage: BicepDeploy
   displayName: Bicep Deployment
-  condition: ${{ parameters.InfrastructureDeployment }}
+  condition: and( ${{ parameters.InfrastructureDeployment }},  in(dependencies.Preview.result, 'Succeeded','Skipped') )
   jobs:
   - job: Deploy
     displayName: Deploy Container Monitoring
@@ -343,7 +343,6 @@ stages:
 
     - task: AzureCLI@2
       displayName: 'Cluster role assignment'
-      #condition: false
       inputs:
         azureSubscription: $(azureSubscriptionEndpoint)
         scriptType: pscore
@@ -355,7 +354,7 @@ stages:
 
 - stage: ApplicationDeployment
   displayName: Application Deployment
-  condition: ${{ parameters.ApplicationDeployment }}
+  condition: and(${{ parameters.ApplicationDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded','Skipped'))
   jobs:
   - job: Deploy
     displayName: Deploy Manifests to Container Monitoring
@@ -483,7 +482,7 @@ stages:
 
 - stage: PrometheusDeployment 
   displayName: Deploy Managed-Prometheus
-  condition: ${{ parameters.PrometheusDeployment }}
+  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.ApplicationDeployment.result, 'Succeeded','Skipped'))
   jobs:
   - job: PrometheusDeployment
     displayName: Deploy Azure Monitore workspace
@@ -592,6 +591,7 @@ stages:
           clusterResourceId  = '$(clusterResourceId)'
           actionGroupResourceId  = '$(actionGroupResourceId)'
           } -Verbose  
+
     - task: AzurePowerShell@5
       name: executingprometheusPesterTest
       displayName: 'Running Prometheus Pester Scripts'
