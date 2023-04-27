@@ -35,11 +35,6 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2022-11-01'
         }
       }
     }
-    aadProfile: {
-      managed: true
-      tenantID: tenant().tenantId
-      enableAzureRBAC: true
-    }
     enableFeatures: [
       'LogAnalytics-ContainerLogV2'
     ]
