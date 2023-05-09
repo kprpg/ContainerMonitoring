@@ -223,7 +223,7 @@ stages:
 
 - stage: BicepDeploy
   displayName: Bicep Deployment
-  condition: and( ${{ parameters.InfrastructureDeployment }},  in(dependencies.Preview.result, 'Succeeded','Skipped') )
+  condition: and( ${{ parameters.InfrastructureDeployment }},  in(dependencies.Preview.result, 'Succeeded') )
   jobs:
   - job: Deploy
     displayName: Deploy Container Monitoring
@@ -354,7 +354,7 @@ stages:
 
 - stage: ApplicationDeployment
   displayName: Application Deployment
-  condition: and(${{ parameters.ApplicationDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded','Skipped'))
+  condition: and(${{ parameters.ApplicationDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded'))
   jobs:
   - job: Deploy
     displayName: Deploy Manifests to Container Monitoring
@@ -465,7 +465,7 @@ stages:
 
 - stage: PrometheusDeployment 
   displayName: Deploy Managed-Prometheus
-  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.ApplicationDeployment.result, 'Succeeded','Skipped'))
+  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded'))
   jobs:
   - job: PrometheusDeployment
     displayName: Deploy Azure Monitore workspace
