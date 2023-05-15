@@ -198,6 +198,9 @@ stages:
           -AKSName $(AKSName )
           -azureSubscriptionId  $(azureSubscriptionId )
           -grafanaName $(grafanaName )
+          -roupShortName    $(groupShortName)
+          -PrometheusactionGroup       $(PrometheusactionGroup)
+          -Receiveremailactiongroups $(Receiveremailactiongroups)
 
 - stage: Preview
   displayName: Bicep Preview
@@ -260,7 +263,10 @@ stages:
             metricLabelsAllowlist = '$(metricLabelsAllowlist)'
             AKSName = '$(AKSName)'
             azureSubscriptionId = '$(azureSubscriptionId)'
-            grafanaName = '$(grafanaName)'            
+            grafanaName = '$(grafanaName)'   
+            groupShortName    = '$(groupShortName)' 
+            PrometheusactionGroup       = '$(PrometheusactionGroup)' 
+            Receiveremailactiongroups= '$(Receiveremailactiongroups)'          
           } -Verbose
     
 
@@ -332,7 +338,10 @@ stages:
             metricLabelsAllowlist = '$(metricLabelsAllowlist)'
             AKSName = '$(AKSName)'
             azureSubscriptionId = '$(azureSubscriptionId)'
-            grafanaName = '$(grafanaName)'            
+            grafanaName = '$(grafanaName)' 
+            groupShortName    = '$(groupShortName)' 
+            PrometheusactionGroup       = '$(PrometheusactionGroup)' 
+            Receiveremailactiongroups= '$(Receiveremailactiongroups)' 
           } -Verbose
     
     - task: AzurePowerShell@5
@@ -555,19 +564,6 @@ stages:
     #       $grafanaData = $grafana | ConvertFrom-Json
     #       az role assignment create --role "Monitoring Data Reader" --assignee $grafanaData.identity.principalId --description "Role assignment" --scope  "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(AzureMonitorWorkspaceName)"
   
-    - task: AzurePowerShell@4
-      displayName: 'Create Action Group For Azure monitore workspace'
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |          
-          New-AzResourceGroupDeployment -ResourceGroupName '$(resourceGroupName)'  -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.insights.actiongroup/actiongroup.bicep' -TemplateParameterObject @{
-            PrometheusactionGroup = '$(PrometheusactionGroup)'
-            groupShortName = '$(groupShortName)'
-            Receiveremailactiongroups = '$(Receiveremailactiongroups)'
-          } -Verbose          
-   
     - task: AzurePowerShell@5
       name: executingprometheusPesterTest
       displayName: 'Running Prometheus Pester Scripts'

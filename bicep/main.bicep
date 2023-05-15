@@ -41,8 +41,7 @@ param AzureMonitorWorkspaceName string
 param PrometheusDeploymentstage string
 param clusterResourceId string 
 param actionGroupResourceId string 
-param grafanaresourceGroupName string 
-param  azureMonitorWorkspaceLocation string
+param azureMonitorWorkspaceLocation string
 param azureMonitorWorkspaceResourceId string 
 param clusterLocation string 
 param grafanaLocation string 
@@ -52,6 +51,9 @@ param metricLabelsAllowlist string
 param AKSName string 
 param azureSubscriptionId string 
 param grafanaName string 
+param   groupShortName string 
+param PrometheusactionGroup string 
+param Receiveremailactiongroups string 
 
 param contributorRoleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
 
@@ -276,6 +278,20 @@ module workspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = if (
   ]
 }
 
+module actiongroup 'modules/Microsoft.insights.actiongroup/actiongroup.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
+  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+  name: 'actiongp'
+  params: {
+    groupShortName: groupShortName
+    PrometheusactionGroup: PrometheusactionGroup
+    Receiveremailactiongroups: Receiveremailactiongroups
+  }
+  dependsOn: [
+    rgModule
+    workspace
+
+  ]
+}
 
 module alertworkspace 'AzureMonitorAlertsProfile.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
