@@ -524,7 +524,7 @@ stages:
 
 - stage: PrometheusDeployment 
   displayName: Deploy Managed-Prometheus
-  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded'))
+  condition: ${{ parameters.PrometheusDeployment }}
   jobs:
   - job: PrometheusDeployment
     displayName: Deploy Azure Monitore workspace
