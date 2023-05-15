@@ -1,8 +1,8 @@
 variables:
 - name: prefix
-  value: CH
+  value: CH1
 - name: suffix
-  value: '-Dev'
+  value: '-Prepd'
 - name: azureSubscriptionEndpoint
   value: 'Contoso Hotels Tenant - PREPROD (DEV)'
 
