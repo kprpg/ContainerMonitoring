@@ -271,6 +271,9 @@ module workspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = if (
     PrometheusworkspaceName: AzureMonitorWorkspaceName
     location: location
   }
+  dependsOn: [
+    rgModule
+  ]
 }
 
 
@@ -283,6 +286,10 @@ module alertworkspace 'AzureMonitorAlertsProfile.bicep' = if ('${PrometheusDeplo
     location: location
     AKSName : AKSName
   }
+  dependsOn: [
+    rgModule
+    workspace
+  ]
 }
 
 module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
@@ -302,4 +309,9 @@ module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploym
     metricAnnotationsAllowList: metricAnnotationsAllowList
     metricLabelsAllowlist: metricLabelsAllowlist
   }
+  dependsOn: [
+    rgModule
+    workspace
+    alertworkspace
+  ]
 }
