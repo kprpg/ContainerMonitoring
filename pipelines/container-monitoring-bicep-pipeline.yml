@@ -48,6 +48,12 @@ parameters:
   displayName: 'Deploy Managed-Prometheus stage'
   type: boolean 
   default: false
+
+
+- name: PrometheusDeploymentstage
+  displayName: 'Deploy Managed-Prometheus stage'
+  type: string  
+  default: no
   values:
   - no
   - yes
@@ -179,7 +185,7 @@ stages:
           -resourceGroupName $(resourceGroupName)
           -resourceGroupName $(resourceGroupName)
           -AzureMonitorWorkspaceName $(AzureMonitorWorkspaceName) 
-          -PrometheusDeployment $(PrometheusDeployment)
+          -PrometheusDeploymentstage $(parameters.PrometheusDeploymentstage)
           -clusterResourceId $(clusterResourceId )
           -actionGroupResourceId $(actionGroupResourceId )
           -grafanaresourceGroupName $(grafanaresourceGroupName )
@@ -242,7 +248,7 @@ stages:
             nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
             resourceGroupName = '$(resourceGroupName )'
             AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName )'
-            PrometheusDeployment = '$(PrometheusDeployment )'
+            PrometheusDeploymentstage = '$(parameters.PrometheusDeploymentstage )'
             clusterResourceId = '$(clusterResourceId )'
             actionGroupResourceId = '$(actionGroupResourceId )'
             grafanaresourceGroupName = '$(grafanaresourceGroupName )'
@@ -314,7 +320,7 @@ stages:
             nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
             resourceGroupName = '$(resourceGroupName )'
             AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName )'
-            PrometheusDeployment = '$(PrometheusDeployment )'
+            PrometheusDeploymentstage = '$(parameters.PrometheusDeploymentstage )'
             clusterResourceId = '$(clusterResourceId )'
             actionGroupResourceId = '$(actionGroupResourceId )'
             grafanaresourceGroupName = '$(grafanaresourceGroupName )'
