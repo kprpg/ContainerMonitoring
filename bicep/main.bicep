@@ -36,6 +36,22 @@ param nonmonitoredClustervnetAddressPrefix string
 param nonmonitoredClustersubnetName string
 param nonmonitoredClustersubnetAddressPrefix string
 
+param resourceGroupName string
+param AzureMonitorWorkspaceName string
+param PrometheusDeployment string
+param clusterResourceId string 
+param actionGroupResourceId string 
+param grafanaresourceGroupName string 
+param  azureMonitorWorkspaceLocation string
+param azureMonitorWorkspaceResourceId string 
+param clusterLocation string 
+param grafanaLocation string 
+param grafanaSku string 
+param metricAnnotationsAllowList string  
+param metricLabelsAllowlist string 
+param AKSName string 
+param azureSubscriptionId string 
+param grafanaName string 
 
 param contributorRoleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
 
@@ -247,3 +263,43 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
   ]
 }
 
+// Azure monitor workspace deployment
+module workspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = if ('${PrometheusDeployment}' == 'yes') {
+  scope: resourceGroup(resourceGroupName)
+  name: 'workspaceDeploy'
+  params: {
+    PrometheusworkspaceName: AzureMonitorWorkspaceName
+    location: location
+  }
+}
+
+
+module alertworkspace 'AzureMonitorAlertsProfile.bicep' = if ('${PrometheusDeployment}' == 'yes') {
+  scope: resourceGroup(resourceGroupName)
+  name: 'workspacealertsrules'
+  params: {
+    actionGroupResourceId: actionGroupResourceId
+    AzureMonitorWorkspaceName: AzureMonitorWorkspaceName
+    location: location
+    AKSName : AKSName
+  }
+}
+
+module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeployment}' == 'yes') {
+  scope: resourceGroup(grafanaresourceGroupName)
+  name: 'prometheusmetrics'
+  params: {
+    azureMonitorWorkspaceLocation: azureMonitorWorkspaceLocation
+    azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
+    clusterLocation: clusterLocation
+    clusterResourceId: clusterResourceId
+    grafanaLocation: grafanaLocation
+    azureSubscriptionId  : azureSubscriptionId
+    resourceGroupName  : resourceGroupName
+    AKSName  : AKSName
+    grafanaName : grafanaName
+    grafanaSku: grafanaSku
+    metricAnnotationsAllowList: metricAnnotationsAllowList
+    metricLabelsAllowlist: metricLabelsAllowlist
+  }
+}

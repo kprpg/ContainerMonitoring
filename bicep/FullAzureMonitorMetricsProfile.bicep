@@ -2,16 +2,18 @@ param azureMonitorWorkspaceResourceId string
 param azureMonitorWorkspaceLocation string
 param clusterResourceId string
 param clusterLocation string
-param grafanaResourceId string
 param grafanaLocation string
 param grafanaSku string
 param metricLabelsAllowlist string 
 param metricAnnotationsAllowList string 
+param azureSubscriptionId string 
+param resourceGroupName string 
+param AKSName string 
+param grafanaName string 
 
-var azureMonitorWorkspaceSubscriptionId = split(azureMonitorWorkspaceResourceId, '/')[2]
-var clusterSubscriptionId = split(clusterResourceId, '/')[2]
-var clusterResourceGroup = split(clusterResourceId, '/')[4]
-var clusterName = split(clusterResourceId, '/')[8]
+var clusterSubscriptionId = azureSubscriptionId
+var clusterResourceGroup = resourceGroupName
+var clusterName = AKSName
 var dceName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'
 var dcrName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'
 var dcraName = 'MSProm-${clusterLocation}-${clusterName}'
@@ -428,8 +430,8 @@ resource nodeAndKubernetesRecordingRuleGroupNameWin 'Microsoft.AlertsManagement/
   }
 }
 
-resource grafanaResourceId_8 'Microsoft.Dashboard/grafana@2022-08-01' = {
-  name: split(grafanaResourceId, '/')[8]
+resource grafanaResourceId_grafanaName 'Microsoft.Dashboard/grafana@2022-08-01' = {
+  name: grafanaName
   sku: {
     name: grafanaSku
   }

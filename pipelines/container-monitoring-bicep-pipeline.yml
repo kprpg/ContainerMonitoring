@@ -46,8 +46,12 @@ parameters:
 
 - name: PrometheusDeployment
   displayName: 'Deploy Managed-Prometheus stage'
-  type: boolean 
-  default: false
+  type: string 
+  default: no
+  values:
+  - no
+  - yes
+
 
 - name: prefix
   displayName: 'Prefix'
@@ -172,6 +176,23 @@ stages:
           -monitoredClustersubnetAddressPrefix $(monitoredClustersubnetAddressPrefix)
           -nonmonitoredClustersubnetName $(nonmonitoredClustersubnetName)
           -nonmonitoredClustersubnetAddressPrefix $(nonmonitoredClustersubnetAddressPrefix)
+          -resourceGroupName $(resourceGroupName)
+          -resourceGroupName $(resourceGroupName)
+          -AzureMonitorWorkspaceName $(AzureMonitorWorkspaceName) 
+          -PrometheusDeployment $(PrometheusDeployment)
+          -clusterResourceId $(clusterResourceId )
+          -actionGroupResourceId $(actionGroupResourceId )
+          -grafanaresourceGroupName $(grafanaresourceGroupName )
+          -azureMonitorWorkspaceLocation $(azureMonitorWorkspaceLocation )
+          -azureMonitorWorkspaceResourceId $(azureMonitorWorkspaceResourceId )
+          -clusterLocation $(clusterLocation )
+          -grafanaLocation $(grafanaLocation )
+          -grafanaSku $(grafanaSku )
+          -metricAnnotationsAllowList $(metricAnnotationsAllowList )
+          -metricLabelsAllowlist $(metricLabelsAllowlist )
+          -AKSName = $(AKSName )
+          -azureSubscriptionId = $(azureSubscriptionId )
+          -grafanaName $(grafanaName )
 
 - stage: Preview
   displayName: Bicep Preview
@@ -219,7 +240,24 @@ stages:
             monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
             nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
             nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
+            resourceGroupName = '$(resourceGroupName )'
+            AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName )'
+            PrometheusDeployment = '$(PrometheusDeployment )'
+            clusterResourceId = '$(clusterResourceId )'
+            actionGroupResourceId = '$(actionGroupResourceId )'
+            grafanaresourceGroupName = '$(grafanaresourceGroupName )'
+            azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation )'
+            azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId )'
+            clusterLocation = '$(clusterLocation )'
+            grafanaLocation = '$(grafanaLocation )'
+            grafanaSku = '$(grafanaSku )'
+            metricAnnotationsAllowList = '$(metricAnnotationsAllowList )'
+            metricLabelsAllowlist = '$(metricLabelsAllowlist )'
+            AKSName = '$(AKSName )'
+            azureSubscriptionId = '$(azureSubscriptionId )'
+            grafanaName = '$(grafanaName )'            
           } -Verbose
+    
 
 - stage: BicepDeploy
   displayName: Bicep Deployment
@@ -274,6 +312,22 @@ stages:
             monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
             nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
             nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
+            resourceGroupName = '$(resourceGroupName )'
+            AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName )'
+            PrometheusDeployment = '$(PrometheusDeployment )'
+            clusterResourceId = '$(clusterResourceId )'
+            actionGroupResourceId = '$(actionGroupResourceId )'
+            grafanaresourceGroupName = '$(grafanaresourceGroupName )'
+            azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation )'
+            azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId )'
+            clusterLocation = '$(clusterLocation )'
+            grafanaLocation = '$(grafanaLocation )'
+            grafanaSku = '$(grafanaSku )'
+            metricAnnotationsAllowList = '$(metricAnnotationsAllowList )'
+            metricLabelsAllowlist = '$(metricLabelsAllowlist )'
+            AKSName = '$(AKSName )'
+            azureSubscriptionId = '$(azureSubscriptionId )'
+            grafanaName = '$(grafanaName )'            
           } -Verbose
     
     - task: AzurePowerShell@5
@@ -474,38 +528,6 @@ stages:
 
     steps:
     - checkout: self 
-
-    - task: AzurePowerShell@4
-      name: RunWhatIf
-      displayName: 'Run what-if for Azure Monitore workspace'
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |         
-            New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
-            location = '$(location)'
-            resourceGroupName = '$(resourceGroupName)'
-            AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName)'
-            } -Verbose     
-    
-    - task: AzurePowerShell@4
-      displayName: 'Create Azure Monitore workspace'
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |  
-         try {         
-            $AzureMonitoreworkspace = New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
-            location = '$(location)'
-            resourceGroupName = '$(resourceGroupName)'
-            AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName)'
-            } -Verbose
-          }
-          catch{ 
-           Write-output "Failed to create $($AzureMonitoreworkspace), Error: $($_.exception)"
-          }
           
     - task: AzureCLI@2
       displayName: 'Install amg extension for grafana'
@@ -541,40 +563,6 @@ stages:
             Receiveremailactiongroups = '$(Receiveremailactiongroups)'
           } -Verbose          
    
-    - task: AzurePowerShell@4
-      displayName: 'Enable AKS and Grafana for prometheus workspace'
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |     
-          New-AzResourceGroupDeployment -ResourceGroupName '$(grafanaresourceGroupName)'  -TemplateFile '$(Build.SourcesDirectory)/bicep/FullAzureMonitorMetricsProfile.bicep' -TemplateParameterObject @{
-          azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId)'
-          azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation)'
-          clusterResourceId = '$(clusterResourceId)'
-          metricLabelsAllowlist   = '$(metricLabelsAllowlist)'
-          metricAnnotationsAllowList  = '$(metricAnnotationsAllowList)'
-          clusterLocation = '$(clusterLocation)'
-          grafanaResourceId = '$(grafanaResourceId)'
-          grafanaLocation = '$(grafanaLocation)'
-          grafanaSku = '$(grafanaSku)'
-          } -Verbose  
-
-
-    - task: AzurePowerShell@4
-      displayName: 'Enable Alerts for Azure monitore workspace'
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |     
-          New-AzResourceGroupDeployment -ResourceGroupName '$(resourceGroupName)'  -TemplateFile '$(Build.SourcesDirectory)/bicep/AzureMonitorAlertsProfile.bicep' -TemplateParameterObject @{
-          azuremonitorWorkspaceName = '$(azuremonitorWorkspaceName)'
-          location = '$(location)'
-          clusterResourceId  = '$(clusterResourceId)'
-          actionGroupResourceId  = '$(actionGroupResourceId)'
-          } -Verbose  
-
     - task: AzurePowerShell@5
       name: executingprometheusPesterTest
       displayName: 'Running Prometheus Pester Scripts'
