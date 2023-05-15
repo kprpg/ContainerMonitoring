@@ -46,8 +46,8 @@ parameters:
 
 - name: PrometheusDeployment
   displayName: 'Deploy Managed-Prometheus stage'
-  type: string 
-  default: no
+  type: boolean 
+  default: false
   values:
   - no
   - yes
