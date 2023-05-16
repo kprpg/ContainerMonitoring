@@ -53,6 +53,7 @@ param grafanaName string
 param groupShortName string 
 param PrometheusactionGroup string 
 param Receiveremailactiongroups string 
+param resourceGroupName string 
 
 param contributorRoleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
 
@@ -319,7 +320,7 @@ module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploym
     clusterResourceId: clusterResourceId
     grafanaLocation: grafanaLocation
     azureSubscriptionId  : azureSubscriptionId
-    opsResourceGroupName  : opsResourceGroupName
+    resourceGroupName  : resourceGroupName
     AKSName  : AKSName
     grafanaName : grafanaName
     grafanaSku: grafanaSku
@@ -330,6 +331,6 @@ module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploym
     rgModule
     workspace
     actiongroup
-  
+    monitoredAksModule
   ]
 }
