@@ -51,7 +51,7 @@ param metricLabelsAllowlist string
 param AKSName string 
 param azureSubscriptionId string 
 param grafanaName string 
-param   groupShortName string 
+param groupShortName string 
 param PrometheusactionGroup string 
 param Receiveremailactiongroups string 
 
@@ -306,6 +306,7 @@ module alertworkspace 'AzureMonitorAlertsProfile.bicep' = if ('${PrometheusDeplo
     rgModule
     workspace
     metrics
+    actiongroup
   ]
 }
 
@@ -329,6 +330,7 @@ module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploym
   dependsOn: [
     rgModule
     workspace
+    actiongroup
   
   ]
 }
