@@ -548,18 +548,18 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: 'az extension add --name amg'
           
-    # - task: AzureCLI@2
-    #   displayName: 'Enable monitoring data reader on Azure Monitore workspace'
-    #   inputs:
-    #     azureSubscription: $(azureSubscriptionEndpoint)
-    #     scriptType: pscore
-    #     scriptLocation: inlineScript
-    #     inlineScript: |  
-    #       $context = az account show
-    #       $contextData = ($context | ConvertFrom-Json).id
-    #       $grafana = az grafana show --name $(grafanaName) --resource-group $(grafanaresourceGroupName) --output json
-    #       $grafanaData = $grafana | ConvertFrom-Json
-    #       az role assignment create --role "Monitoring Data Reader" --assignee $grafanaData.identity.principalId --description "Role assignment" --scope  "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(AzureMonitorWorkspaceName)"
+    - task: AzureCLI@2
+      displayName: 'Enable monitoring data reader on Azure Monitore workspace'
+      inputs:
+        azureSubscription: $(azureSubscriptionEndpoint)
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |  
+          $context = az account show
+          $contextData = ($context | ConvertFrom-Json).id
+          $grafana = az grafana show --name $(grafanaName) --resource-group $(grafanaresourceGroupName) --output json
+          $grafanaData = $grafana | ConvertFrom-Json
+          az role assignment create --role "Monitoring Data Reader" --assignee $grafanaData.identity.principalId --description "Role assignment" --scope  "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(AzureMonitorWorkspaceName)"
   
     - task: AzurePowerShell@5
       name: executingprometheusPesterTest
