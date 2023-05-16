@@ -7,12 +7,12 @@ param grafanaSku string
 param metricLabelsAllowlist string 
 param metricAnnotationsAllowList string 
 param azureSubscriptionId string 
-param resourceGroupName string 
+param opsResourceGroupName string 
 param AKSName string 
 param grafanaName string 
 
 var clusterSubscriptionId = azureSubscriptionId
-var clusterResourceGroup = resourceGroupName
+var clusterResourceGroup = opsResourceGroupName
 var clusterName = AKSName
 var dceName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'
 var dcrName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'

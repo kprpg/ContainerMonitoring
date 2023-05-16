@@ -36,7 +36,6 @@ param nonmonitoredClustervnetAddressPrefix string
 param nonmonitoredClustersubnetName string
 param nonmonitoredClustersubnetAddressPrefix string
 
-param resourceGroupName string
 param AzureMonitorWorkspaceName string
 param PrometheusDeploymentstage string
 param clusterResourceId string 
@@ -320,7 +319,7 @@ module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploym
     clusterResourceId: clusterResourceId
     grafanaLocation: grafanaLocation
     azureSubscriptionId  : azureSubscriptionId
-    resourceGroupName  : resourceGroupName
+    opsResourceGroupName  : opsResourceGroupName
     AKSName  : AKSName
     grafanaName : grafanaName
     grafanaSku: grafanaSku
