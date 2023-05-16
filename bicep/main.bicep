@@ -305,6 +305,7 @@ module alertworkspace 'AzureMonitorAlertsProfile.bicep' = if ('${PrometheusDeplo
   dependsOn: [
     rgModule
     workspace
+    metrics
   ]
 }
 
@@ -328,6 +329,6 @@ module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploym
   dependsOn: [
     rgModule
     workspace
-    alertworkspace
+  
   ]
 }
