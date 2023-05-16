@@ -265,8 +265,9 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
   ]
 }
 
-// Azure monitor workspace deployment
-module workspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = if ('${PrometheusDeploymentstage}' == 'yes') {
+// Azure monitor workspace deployment 
+// Azure Managed prometheus code 
+module azuremointerworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = if ('${PrometheusDeploymentstage}' == 'yes') {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'workspaceDeploy'
   params: {
@@ -288,12 +289,12 @@ module actiongroup 'modules/Microsoft.insights.actiongroup/actiongroup.bicep' = 
   }
   dependsOn: [
     rgModule
-    workspace
+    azuremointerworkspace
 
   ]
 }
 
-module alertworkspace 'AzureMonitorAlertsProfile.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
+module workspacealerts 'modules/Microsoft.insights.actiongroup/AzureMonitorAlertsProfile.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'workspacealertsrules'
   params: {
@@ -304,13 +305,12 @@ module alertworkspace 'AzureMonitorAlertsProfile.bicep' = if ('${PrometheusDeplo
   }
   dependsOn: [
     rgModule
-    workspace
-    metrics
+    metricsaddon
     actiongroup
   ]
 }
 
-module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
+module metricsaddon 'modules/Microsoft.insights.actiongroup/FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
   scope: resourceGroup(opsResourceGroupName)
   name: 'prometheusmetrics'
   params: {
@@ -329,7 +329,7 @@ module metrics 'FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploym
   }
   dependsOn: [
     rgModule
-    workspace
+    azuremointerworkspace
     actiongroup
     monitoredAksModule
   ]
