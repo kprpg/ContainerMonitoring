@@ -159,7 +159,7 @@ stages:
           -opsResourceGroupName $(workspaceResourceGroupName)
           -logAnalyticsWorkspaceName $(workspaceName)
           -workspaceSkuName $(workspaceSkuName)
-          -monitoredClusterName $(AKSName)
+          -monitoredClusterName $(AksName)
           -nonmonitoredClusterName $(NonMonitoredAKSName)
           -adminUser $(chVmAdminUser)
           -adminPassword $(chVmAdminPassword)
@@ -194,7 +194,7 @@ stages:
           -grafanaSku $(grafanaSku )
           -metricAnnotationsAllowList $(metricAnnotationsAllowList )
           -metricLabelsAllowlist $(metricLabelsAllowlist )
-          -AKSName $(AKSName )
+          -AksName $(AksName )
           -azureSubscriptionId  $(azureSubscriptionId )
           -grafanaName $(grafanaName )
           -groupShortName  $(groupShortName)
@@ -224,7 +224,7 @@ stages:
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
-            monitoredClusterName = '$(AKSName)'
+            monitoredClusterName = '$(AksName)'
             nonmonitoredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
@@ -259,7 +259,7 @@ stages:
             grafanaSku = '$(grafanaSku)'
             metricAnnotationsAllowList = '$(metricAnnotationsAllowList)'
             metricLabelsAllowlist = '$(metricLabelsAllowlist)'
-            AKSName = '$(AKSName)'
+            AksName = '$(AksName)'
             azureSubscriptionId = '$(azureSubscriptionId)'
             grafanaName = '$(grafanaName)'   
             groupShortName    = '$(groupShortName)' 
@@ -298,7 +298,7 @@ stages:
             opsResourceGroupName = '$(workspaceResourceGroupName)'
             logAnalyticsWorkspaceName = '$(workspaceName)'
             workspaceSkuName = '$(workspaceSkuName)'
-            monitoredClusterName = '$(AKSName)'
+            monitoredClusterName = '$(AksName)'
             nonmonitoredClusterName = '$(NonMonitoredAKSName)'
             adminUser = '$(chVmAdminUser)'
             adminPassword = '$(chVmAdminPassword)'
@@ -333,7 +333,7 @@ stages:
             grafanaSku = '$(grafanaSku)'
             metricAnnotationsAllowList = '$(metricAnnotationsAllowList)'
             metricLabelsAllowlist = '$(metricLabelsAllowlist)'
-            AKSName = '$(AKSName)'
+            AksName = '$(AksName)'
             azureSubscriptionId = '$(azureSubscriptionId)'
             grafanaName = '$(grafanaName)' 
             groupShortName    = '$(groupShortName)' 
@@ -394,7 +394,7 @@ stages:
           $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/pester.Tests.ps1  -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
           opsResourceGroupName = '$(workspaceResourceGroupName)'
           logAnalyticsWorkspaceName = '$(workspaceName)'
-          monitoredClusterName = '$(AKSName)'
+          monitoredClusterName = '$(AksName)'
           nonmonitoredClusterName = '$(NonMonitoredAKSName)'
           retentionPeriod = $(retentionPeriod)
           managedIdentityName = '$(managedIdentityName)'
@@ -413,7 +413,7 @@ stages:
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
-          $cluster = az aks show -g '$(resourceGroupName)' -n '$(AKSName)' --output json
+          $cluster = az aks show -g '$(resourceGroupName)' -n '$(AksName)' --output json
           $clusterData = $cluster | ConvertFrom-Json
           az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
 
@@ -440,7 +440,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(AksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/invalidimage.yaml'
 
@@ -450,7 +450,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(AksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
 
@@ -460,7 +460,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(AksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft-namespace.yaml'
 
@@ -470,7 +470,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(AksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft3.yaml'
 
@@ -480,7 +480,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(AksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
 
@@ -490,7 +490,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(AksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus.yaml'
 
@@ -500,7 +500,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(AksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/windows-service.yaml'
 
@@ -510,7 +510,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(AksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus-bundle.yaml'
 
@@ -522,7 +522,7 @@ stages:
         ScriptType: InlineScript
         Inline: | 
           $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/KubernetesService.Tests.ps1 -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-          monitoredClusterName = '$(AKSName)'
+          monitoredClusterName = '$(AksName)'
           ContosoSH360ClusterSPObjectId = "$(ContosoSH360ClusterSPObjectId)"
           }
           Invoke-pester -Container $Container

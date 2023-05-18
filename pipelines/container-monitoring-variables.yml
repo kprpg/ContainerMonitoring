@@ -8,7 +8,7 @@ variables:
   value: $(prefix)-OpsRG-Pri$(suffix)
 - name: resourceGroupName
   value: $(prefix)-ContosoSH360ClusterRG$(suffix)
-- name: AKSName
+- name: AksName
   value: $(prefix)-ContosoSH360Cluster$(suffix)
 - name: NonMonitoredAKSName
   value: $(prefix)-ContosoNonMonitoredCluster$(suffix)
@@ -78,7 +78,7 @@ variables:
   value: $(location)
 
 - name: clusterResourceId
-  value: "/subscriptions/$(azureSubscriptionId)/resourcegroups/$(resourceGroupName)/providers/Microsoft.ContainerService/managedClusters/$(AKSName)"
+  value: "/subscriptions/$(azureSubscriptionId)/resourcegroups/$(resourceGroupName)/providers/Microsoft.ContainerService/managedClusters/$(AksName)"
 - name: clusterLocation
   value: $(location)
 - name: metricLabelsAllowlist 

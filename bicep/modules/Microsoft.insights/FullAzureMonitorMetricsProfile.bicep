@@ -8,12 +8,12 @@ param metricLabelsAllowlist string
 param metricAnnotationsAllowList string 
 param azureSubscriptionId string 
 param resourceGroupName string
-param AKSName string 
+param AksName string 
 param grafanaName string 
 
 var clusterSubscriptionId = azureSubscriptionId
 var clusterResourceGroup = resourceGroupName
-var clusterName = AKSName
+var clusterName = AksName
 var dceName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'
 var dcrName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'
 var dcraName = 'MSProm-${clusterLocation}-${clusterName}'
@@ -79,7 +79,7 @@ resource dcr 'Microsoft.Insights/dataCollectionRules@2021-09-01-preview' = {
   }
 }
 
-module azuremonitormetrics_dcra_clusterResourceId '../AddonBicepTemplate/nested_azuremonitormetrics_dcra_clusterResourceId.bicep' = {
+module azuremonitormetrics_dcra_clusterResourceId '../Microsoft.OperationalInsights/dataCollectionRule/nested_azuremonitormetrics_dcra_clusterResourceId.bicep' = {
   name: 'azuremonitormetrics-dcra-${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
@@ -90,7 +90,7 @@ module azuremonitormetrics_dcra_clusterResourceId '../AddonBicepTemplate/nested_
   }
 }
 
-module azuremonitormetrics_profile_clusterResourceId '../AddonBicepTemplate/nested_azuremonitormetrics_profile_clusterResourceId.bicep'= {
+module azuremonitormetrics_profile_clusterResourceId '../Microsoft.OperationalInsights/dataCollectionRule/nested_azuremonitormetrics_profile_clusterResourceId.bicep'= {
   name: 'azuremonitormetrics-profile--${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {

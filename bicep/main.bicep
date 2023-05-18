@@ -47,7 +47,7 @@ param grafanaLocation string
 param grafanaSku string 
 param metricAnnotationsAllowList string  
 param metricLabelsAllowlist string 
-param AKSName string 
+param AksName string 
 param azureSubscriptionId string 
 param grafanaName string 
 param groupShortName string 
@@ -279,7 +279,7 @@ module azuremointerworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bi
   ]
 }
 
-module actiongroup 'modules/Microsoft.insights/actiongroup.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
+module actiongroup 'modules/Microsoft.insights/Actiongroup.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'actiongp'
   params: {
@@ -301,7 +301,7 @@ module workspacealerts 'modules/Microsoft.insights/AzureMonitorAlertsProfile.bic
     actionGroupResourceId: actionGroupResourceId
     AzureMonitorWorkspaceName: AzureMonitorWorkspaceName
     location: location
-    AKSName : AKSName
+    AksName : AksName
   }
   dependsOn: [
     rgModule
@@ -321,7 +321,7 @@ module metricsaddon 'modules/Microsoft.insights/FullAzureMonitorMetricsProfile.b
     grafanaLocation: grafanaLocation
     azureSubscriptionId  : azureSubscriptionId
     resourceGroupName  : resourceGroupName
-    AKSName  : AKSName
+    AksName  : AksName
     grafanaName : grafanaName
     grafanaSku: grafanaSku
     metricAnnotationsAllowList: metricAnnotationsAllowList

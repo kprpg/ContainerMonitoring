@@ -1,7 +1,7 @@
 param AzureMonitorWorkspaceName string
 param location string
 param actionGroupResourceId string
-param AKSName string 
+param AksName string 
 
 resource workspace 'Microsoft.Monitor/accounts@2021-06-03-preview' = {
   name: AzureMonitorWorkspaceName
@@ -11,14 +11,14 @@ resource workspace 'Microsoft.Monitor/accounts@2021-06-03-preview' = {
 }
 
 resource recommendedAlerts 'Microsoft.AlertsManagement/prometheusRuleGroups@2021-07-22-preview' = {
-  name: 'RecommendedCIAlerts-${AKSName}'
+  name: 'RecommendedCIAlerts-${AksName}'
   location: location
   properties: {
     description: 'Kubernetes Alert RuleGroup-RecommendedCIAlerts - 0.1'
     scopes: [
       workspace.id
     ]
-    clusterName: AKSName
+    clusterName: AksName
     enabled: true
     interval: 'PT5M'
     rules: [
@@ -236,14 +236,14 @@ resource recommendedAlerts 'Microsoft.AlertsManagement/prometheusRuleGroups@2021
 }
 
 resource communityALerts 'Microsoft.AlertsManagement/prometheusRuleGroups@2021-07-22-preview' = {
-  name: 'communityCIAlerts-${AKSName}'
+  name: 'communityCIAlerts-${AksName}'
   location: location
   properties: {
     description: 'Kubernetes Alert RuleGroup-communityCIAlerts - 0.1'
     scopes: [
       workspace.id
     ]
-    clusterName: AKSName
+    clusterName: AksName
     enabled: true
     interval: 'PT1M'
     rules: [
