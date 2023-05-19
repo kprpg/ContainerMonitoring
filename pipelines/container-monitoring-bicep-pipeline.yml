@@ -229,15 +229,11 @@ stages:
     displayName: Deploy Container Monitoring
     pool: 
       vmImage: ubuntu-latest
-
     environment: 'Contoso Hotels - Dev'
-
     variables:
     - template: container-monitoring-variables.yml
-    
     steps:
     - checkout: self
-
     - task: AzurePowerShell@4
       displayName: 'Create resources'
       inputs:
