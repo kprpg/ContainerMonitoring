@@ -277,81 +277,81 @@ stages:
                   nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
                 } -Verbose
     
-    - task: AzurePowerShell@5
-      displayName: Creation of dataCollectionRule
-      inputs:
-        azureSubscription: $(azureSubscriptionEndpoint)
-        azurePowerShellVersion: LatestVersion
-        ScriptType: 'InlineScript'
-        Inline: |
-            New-AzResourceGroupDeployment -ResourceGroupName '$(workspaceResourceGroupName)'  `
-                -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRule.bicep' `
-                -dataCollectionRuleName '$(dataCollectionRuleName)' `
-                -workspaceName '$(workspaceName)' `
-                -Verbose
+          - task: AzurePowerShell@5
+            displayName: Creation of dataCollectionRule
+            inputs:
+              azureSubscription: $(azureSubscriptionEndpoint)
+              azurePowerShellVersion: LatestVersion
+              ScriptType: 'InlineScript'
+              Inline: |
+                  New-AzResourceGroupDeployment -ResourceGroupName '$(workspaceResourceGroupName)'  `
+                      -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRule.bicep' `
+                      -dataCollectionRuleName '$(dataCollectionRuleName)' `
+                      -workspaceName '$(workspaceName)' `
+                      -Verbose
 
-              #Fettching the DCR id and workspaceID
-              try {
-                $dcrID = (Get-AzDataCollectionRule -RuleName '$(dataCollectionRuleName)' -ResourceGroupName '$(workspaceResourceGroupName)' -WarningAction:SilentlyContinue).Id
-                $workspaceID = (Get-AzOperationalInsightsWorkspace -ResourceGroupName '$(workspaceResourceGroupName)' -Name '$(workspaceName)' -WarningAction:SilentlyContinue).ResourceId
-              }
-              catch {
-                Write-Information -InformationAction Continue  "Failed to fetch workspaceID and dcrID"
-                throw
-              }
+                    #Fettching the DCR id and workspaceID
+                    try {
+                      $dcrID = (Get-AzDataCollectionRule -RuleName '$(dataCollectionRuleName)' -ResourceGroupName '$(workspaceResourceGroupName)' -WarningAction:SilentlyContinue).Id
+                      $workspaceID = (Get-AzOperationalInsightsWorkspace -ResourceGroupName '$(workspaceResourceGroupName)' -Name '$(workspaceName)' -WarningAction:SilentlyContinue).ResourceId
+                    }
+                    catch {
+                      Write-Information -InformationAction Continue  "Failed to fetch workspaceID and dcrID"
+                      throw
+                    }
 
-              ##--- Creating payload body for dcr rule ---##
-              $defaultDcrParams = @"
-              {
-                "properties": {
-                    "defaultDataCollectionRuleResourceId": "$dcrID"
+                    ##--- Creating payload body for dcr rule ---##
+                    $defaultDcrParams = @"
+                    {
+                      "properties": {
+                          "defaultDataCollectionRuleResourceId": "$dcrID"
+                      }
+                    }
+                  "@
+
+                    ###-----Adding DCR to workspace------###
+                    try {  
+                      Invoke-AzRestMethod -Path "${workspaceID}?api-version=2021-12-01-preview" -Method PATCH -payload $defaultDcrParams
+                      Write-Information -InformationAction Continue  "DCR has been added to workspace."
+                    }
+                    catch {
+                      Write-Information -InformationAction Continue  "Failed while adding data collection rule"
+                      throw
+                    }
+
+
+          - task: AzurePowerShell@5
+            name: executingPesterTest
+            displayName: 'Running Pester Scripts'
+            inputs:
+              azureSubscription: $(azureSubscriptionEndpoint)
+              ScriptType: InlineScript
+              Inline: | 
+                $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/pester.Tests.ps1  -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+                opsResourceGroupName = '$(workspaceResourceGroupName)'
+                logAnalyticsWorkspaceName = '$(workspaceName)'
+                monitoredClusterName = '$(AKSName)'
+                nonmonitoredClusterName = '$(NonMonitoredAKSName)'
+                retentionPeriod = $(retentionPeriod)
+                managedIdentityName = '$(managedIdentityName)'
+                searchTableName = '$(searchTableName)'
+                kubernetesVersion = '${{ parameters.clusterVersion }}'
+                workspaceSkuName = '$(workspaceSkuName)'
+                agentVMSize = '$(agentVMSize)'
                 }
-              }
-            "@
+                Invoke-pester -Container $Container
+              azurePowerShellVersion: LatestVersion 
 
-              ###-----Adding DCR to workspace------###
-              try {  
-                Invoke-AzRestMethod -Path "${workspaceID}?api-version=2021-12-01-preview" -Method PATCH -payload $defaultDcrParams
-                Write-Information -InformationAction Continue  "DCR has been added to workspace."
-              }
-              catch {
-                Write-Information -InformationAction Continue  "Failed while adding data collection rule"
-                throw
-              }
-
-
-    - task: AzurePowerShell@5
-      name: executingPesterTest
-      displayName: 'Running Pester Scripts'
-      inputs:
-        azureSubscription: $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: | 
-          $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/pester.Tests.ps1  -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-          opsResourceGroupName = '$(workspaceResourceGroupName)'
-          logAnalyticsWorkspaceName = '$(workspaceName)'
-          monitoredClusterName = '$(AKSName)'
-          nonmonitoredClusterName = '$(NonMonitoredAKSName)'
-          retentionPeriod = $(retentionPeriod)
-          managedIdentityName = '$(managedIdentityName)'
-          searchTableName = '$(searchTableName)'
-          kubernetesVersion = '${{ parameters.clusterVersion }}'
-          workspaceSkuName = '$(workspaceSkuName)'
-          agentVMSize = '$(agentVMSize)'
-          }
-          Invoke-pester -Container $Container
-        azurePowerShellVersion: LatestVersion 
-
-    - task: AzureCLI@2
-      displayName: 'Cluster role assignment'
-      inputs:
-        azureSubscription: $(azureSubscriptionEndpoint)
-        scriptType: pscore
-        scriptLocation: inlineScript
-        inlineScript: |
-          $cluster = az aks show -g '$(resourceGroupName)' -n '$(AKSName)' --output json
-          $clusterData = $cluster | ConvertFrom-Json
-          az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
+          - task: AzureCLI@2
+            displayName: 'Cluster role assignment'
+            inputs:
+              azureSubscription: $(azureSubscriptionEndpoint)
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                $cluster = az aks show -g '$(resourceGroupName)' -n '$(AKSName)' --output json
+                $clusterData = $cluster | ConvertFrom-Json
+                az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
 
 - stage: ApplicationDeployment
   displayName: Application Deployment
