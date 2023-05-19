@@ -232,47 +232,50 @@ stages:
     environment: 'Contoso Hotels - Dev'
     variables:
     - template: container-monitoring-variables.yml
-    steps:
-    - checkout: self
-    - task: AzurePowerShell@4
-      displayName: 'Create resources'
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |
-          $subscriptionId = (Get-AzContext).Subscription.Id
-          New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
-            location = '$(location)'
-            prefix = '$(prefix)'
-            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-            opsResourceGroupName = '$(workspaceResourceGroupName)'
-            logAnalyticsWorkspaceName = '$(workspaceName)'
-            workspaceSkuName = '$(workspaceSkuName)'
-            monitoredClusterName = '$(AKSName)'
-            nonmonitoredClusterName = '$(NonMonitoredAKSName)'
-            adminUser = '$(chVmAdminUser)'
-            adminPassword = '$(chVmAdminPassword)'
-            agentVMSize = '$(agentVMSize)'
-            retentionPeriod = $(retentionPeriod)
-            serviceCidr = '$(aksClusterServiceCidr)'
-            dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
-            managedIdentityName = '$(managedIdentityName)'
-            searchTableName = '$(searchTableName)'
-            monitoredAKSNetworkPolicy = '$(monitoredAKSNetworkPolicy)'
-            monitoredAKSNetworkPlugin = '$(monitoredAKSNetworkPlugin)'
-            nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
-            nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
-            kubernetesVersion = '${{ parameters.clusterVersion }}'
-            monitoredClustervnetName = '$(monitoredClustervnetName)'
-            nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
-            monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
-            nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
-            monitoredClustersubnetName = '$(monitoredClustersubnetName)'
-            monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
-            nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
-            nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
-          } -Verbose
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: AzurePowerShell@4
+            displayName: 'Create resources'
+            inputs:
+              azurePowerShellVersion: LatestVersion
+              azureSubscription:  $(azureSubscriptionEndpoint)
+              ScriptType: InlineScript
+              Inline: |
+                $subscriptionId = (Get-AzContext).Subscription.Id
+                New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
+                  location = '$(location)'
+                  prefix = '$(prefix)'
+                  contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+                  opsResourceGroupName = '$(workspaceResourceGroupName)'
+                  logAnalyticsWorkspaceName = '$(workspaceName)'
+                  workspaceSkuName = '$(workspaceSkuName)'
+                  monitoredClusterName = '$(AKSName)'
+                  nonmonitoredClusterName = '$(NonMonitoredAKSName)'
+                  adminUser = '$(chVmAdminUser)'
+                  adminPassword = '$(chVmAdminPassword)'
+                  agentVMSize = '$(agentVMSize)'
+                  retentionPeriod = $(retentionPeriod)
+                  serviceCidr = '$(aksClusterServiceCidr)'
+                  dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+                  managedIdentityName = '$(managedIdentityName)'
+                  searchTableName = '$(searchTableName)'
+                  monitoredAKSNetworkPolicy = '$(monitoredAKSNetworkPolicy)'
+                  monitoredAKSNetworkPlugin = '$(monitoredAKSNetworkPlugin)'
+                  nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
+                  nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
+                  kubernetesVersion = '${{ parameters.clusterVersion }}'
+                  monitoredClustervnetName = '$(monitoredClustervnetName)'
+                  nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
+                  monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
+                  nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
+                  monitoredClustersubnetName = '$(monitoredClustersubnetName)'
+                  monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
+                  nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
+                  nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
+                } -Verbose
     
     - task: AzurePowerShell@5
       displayName: Creation of dataCollectionRule
