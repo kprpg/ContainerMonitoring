@@ -229,7 +229,8 @@ stages:
     displayName: Deploy Container Monitoring
     pool: 
       vmImage: ubuntu-latest
-    environment: Contoso Hotels - Dev
+
+    environment: 'Contoso Hotels - Dev'
 
     variables:
     - template: container-monitoring-variables.yml
