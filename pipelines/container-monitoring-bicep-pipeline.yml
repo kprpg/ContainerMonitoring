@@ -225,7 +225,7 @@ stages:
   displayName: Bicep Deployment
   condition: and( ${{ parameters.InfrastructureDeployment }},  in(dependencies.Preview.result, 'Succeeded') )
   jobs:
-  - job: Deploy
+  - deployment: Deploy
     displayName: Deploy Container Monitoring
     pool: 
       vmImage: ubuntu-latest
