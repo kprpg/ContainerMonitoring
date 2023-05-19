@@ -31,8 +31,9 @@ stages:
     displayName: Deploy Container Monitoring
     pool: 
       vmImage: ubuntu-latest
-    environment: 
-     - ${{ if eq(parameters.environment, 'Integration') }}:'Contoso Hotels - Dev'
+      ${{ if eq(parameters.environment, 'Integration') }}:
+        environment: 'Contoso Hotels - Dev'
+    
     
     variables:
     - template: container-monitoring-variables.yml
