@@ -36,24 +36,6 @@ param nonmonitoredClustervnetAddressPrefix string
 param nonmonitoredClustersubnetName string
 param nonmonitoredClustersubnetAddressPrefix string
 
-param AzureMonitorWorkspaceName string
-param PrometheusDeploymentstage string
-param clusterResourceId string 
-param actionGroupResourceId string 
-param azureMonitorWorkspaceLocation string
-param azureMonitorWorkspaceResourceId string 
-param clusterLocation string 
-param grafanaLocation string 
-param grafanaSku string 
-param metricAnnotationsAllowList string  
-param metricLabelsAllowlist string 
-param AksName string 
-param azureSubscriptionId string 
-param grafanaName string 
-param groupShortName string 
-param PrometheusactionGroup string 
-param Receiveremailactiongroups string 
-param resourceGroupName string 
 
 param contributorRoleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
 
@@ -265,72 +247,3 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
   ]
 }
 
-// Azure monitor workspace deployment 
-// Azure Managed prometheus code 
-module azuremointerworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = if ('${PrometheusDeploymentstage}' == 'yes') {
-  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: 'workspaceDeploy'
-  params: {
-    PrometheusworkspaceName: AzureMonitorWorkspaceName
-    location: location
-  }
-  dependsOn: [
-    rgModule
-  ]
-}
-
-module actiongroup 'modules/Microsoft.insights/Actiongroup.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
-  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: 'actiongp'
-  params: {
-    groupShortName: groupShortName
-    PrometheusactionGroup: PrometheusactionGroup
-    Receiveremailactiongroups: Receiveremailactiongroups
-  }
-  dependsOn: [
-    rgModule
-    azuremointerworkspace
-
-  ]
-}
-
-module workspacealerts 'modules/Microsoft.insights/AzureMonitorAlertsProfile.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
-  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: 'workspacealertsrules'
-  params: {
-    actionGroupResourceId: actionGroupResourceId
-    AzureMonitorWorkspaceName: AzureMonitorWorkspaceName
-    location: location
-    AksName : AksName
-  }
-  dependsOn: [
-    rgModule
-    metricsaddon
-    actiongroup
-  ]
-}
-
-module metricsaddon 'modules/Microsoft.insights/FullAzureMonitorMetricsProfile.bicep' = if ('${PrometheusDeploymentstage}' == 'yes') {
-  scope: resourceGroup(opsResourceGroupName)
-  name: 'prometheusmetrics'
-  params: {
-    azureMonitorWorkspaceLocation: azureMonitorWorkspaceLocation
-    azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
-    clusterLocation: clusterLocation
-    clusterResourceId: clusterResourceId
-    grafanaLocation: grafanaLocation
-    azureSubscriptionId  : azureSubscriptionId
-    resourceGroupName  : resourceGroupName
-    AksName  : AksName
-    grafanaName : grafanaName
-    grafanaSku: grafanaSku
-    metricAnnotationsAllowList: metricAnnotationsAllowList
-    metricLabelsAllowlist: metricLabelsAllowlist
-  }
-  dependsOn: [
-    rgModule
-    azuremointerworkspace
-    actiongroup
-    monitoredAksModule
-  ]
-}

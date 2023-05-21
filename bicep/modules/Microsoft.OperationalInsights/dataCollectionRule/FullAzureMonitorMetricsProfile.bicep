@@ -79,7 +79,7 @@ resource dcr 'Microsoft.Insights/dataCollectionRules@2021-09-01-preview' = {
   }
 }
 
-module azuremonitormetrics_dcra_clusterResourceId '../Microsoft.OperationalInsights/dataCollectionRule/nested_azuremonitormetrics_dcra_clusterResourceId.bicep' = {
+module azuremonitormetrics_dcra_clusterResourceId 'nested_azuremonitormetrics_dcra_clusterResourceId.bicep' = {
   name: 'azuremonitormetrics-dcra-${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
@@ -90,7 +90,7 @@ module azuremonitormetrics_dcra_clusterResourceId '../Microsoft.OperationalInsig
   }
 }
 
-module azuremonitormetrics_profile_clusterResourceId '../Microsoft.OperationalInsights/dataCollectionRule/nested_azuremonitormetrics_profile_clusterResourceId.bicep'= {
+module azuremonitormetrics_profile_clusterResourceId 'nested_azuremonitormetrics_profile_clusterResourceId.bicep'= {
   name: 'azuremonitormetrics-profile--${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
