@@ -49,7 +49,7 @@ module azuremointerworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bi
   ]
 }
 
-module actiongroup 'modules/Microsoft.insights/Actiongroup.bicep' = {
+module actiongroup 'modules/Microsoft.insights/actiongroup.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'actiongp'
   params: {

@@ -477,19 +477,6 @@ stages:
     - checkout: self 
 
     - task: AzurePowerShell@4
-      displayName: 'Create Action Group For Azure monitore workspace'
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |          
-          New-AzResourceGroupDeployment -ResourceGroupName '$(resourceGroupName)'  -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.insights/Actiongroup.bicep' -TemplateParameterObject @{
-            PrometheusactionGroup = '$(PrometheusactionGroup)'
-            groupShortName = '$(groupShortName)'
-            Receiveremailactiongroups = '$(Receiveremailactiongroups)'
-          } -Verbose        
-
-    - task: AzurePowerShell@4
       name: RunWhatIfprometheus
       displayName: Run what-if for prometheus stage
       inputs:
@@ -515,6 +502,9 @@ stages:
             grafanaName = '$(grafanaName)' 
             contosoSH360ClusterResourceGroupName = '$(contosoSH360ClusterResourceGroupName)' 
             opsResourceGroupName  = '$(opsResourceGroupName)' 
+            PrometheusactionGroup  = '$(PrometheusactionGroup)' 
+            groupShortName   = '$(groupShortName)' 
+            Receiveremailactiongroups   = '$(Receiveremailactiongroups)' 
           } -Verbose   
         
     - task: AzurePowerShell@4
@@ -542,6 +532,9 @@ stages:
             grafanaName = '$(grafanaName)' 
             contosoSH360ClusterResourceGroupName = '$(contosoSH360ClusterResourceGroupName)' 
             opsResourceGroupName  = '$(opsResourceGroupName)' 
+            PrometheusactionGroup  = '$(PrometheusactionGroup)' 
+            groupShortName   = '$(groupShortName)' 
+            Receiveremailactiongroups   = '$(Receiveremailactiongroups)' 
           } -Verbose    
           
     - task: AzureCLI@2
