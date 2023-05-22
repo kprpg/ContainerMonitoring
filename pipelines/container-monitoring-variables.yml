@@ -8,7 +8,7 @@ variables:
   value: $(prefix)-OpsRG-Pri$(suffix)
 - name: resourceGroupName
   value: $(prefix)-ContosoSH360ClusterRG$(suffix)
-- name: AksName
+- name: aksName
   value: $(prefix)-ContosoSH360Cluster$(suffix)
 - name: NonMonitoredAKSName
   value: $(prefix)-ContosoNonMonitoredCluster$(suffix)
@@ -70,15 +70,15 @@ variables:
 - name: dataCollectionRuleName
   value: "dataMasking" 
 
-- name: AzureMonitorWorkspaceName
+- name: azureMonitorWorkspaceName
   value: $(prefix)-AzureMonitorWorkspace$(suffix)  
 - name: azureMonitorWorkspaceResourceId
-  value: "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(AzureMonitorWorkspaceName)"
+  value: "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(azureMonitorWorkspaceName)"
 - name: azureMonitorWorkspaceLocation
   value: $(location)
 
 - name: clusterResourceId
-  value: "/subscriptions/$(azureSubscriptionId)/resourcegroups/$(resourceGroupName)/providers/Microsoft.ContainerService/managedClusters/$(AksName)"
+  value: "/subscriptions/$(azureSubscriptionId)/resourcegroups/$(resourceGroupName)/providers/Microsoft.ContainerService/managedClusters/$(aksName)"
 - name: clusterLocation
   value: $(location)
 - name: metricLabelsAllowlist 
