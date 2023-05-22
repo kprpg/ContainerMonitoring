@@ -3,7 +3,7 @@ param actionGroupResourceId string
 param aksName string 
 param azureMonitorWorkspaceLocation string 
 param azureMonitorWorkspaceResourceId string 
-param azureMonitorWorkspaceName string 
+param PrometheusworkspaceName string 
 
 var clusterName = aksName
 var nodeRecordingRuleGroup = 'NodeRecordingRulesRuleGroup-'
@@ -20,7 +20,7 @@ var RecordingRuleGroupDescriptionWin = 'Recording Rules RuleGroup for Win'
 var version = ' - 0.1'
 
 resource workspace 'Microsoft.Monitor/accounts@2021-06-03-preview' existing = {
-  name:  azureMonitorWorkspaceName 
+  name:  PrometheusworkspaceName 
 }
 
 resource recommendedAlerts 'Microsoft.AlertsManagement/prometheusRuleGroups@2021-07-22-preview' = {

@@ -52,6 +52,7 @@ param location string
 param contosoSH360ClusterResourceGroupName string 
 param opsResourceGroupName string 
 param Prometheusstage string  
+param PrometheusworkspaceName string 
 
 var clusterName = aksName
 var dcraName = 'MSProm-${clusterLocation}-${clusterName}'
@@ -285,7 +286,7 @@ module azuremonitorworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bi
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'workspaceDeploy'
   params: {
-    azureMonitorWorkspaceName: azureMonitorWorkspaceName
+    PrometheusworkspaceName: azureMonitorWorkspaceName
     location: location
   }
   dependsOn: [
@@ -317,7 +318,7 @@ module workspacealerts 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.
     actionGroupResourceId: actionGroupResourceId
     azureMonitorWorkspaceLocation: azureMonitorWorkspaceLocation
     azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
-    azureMonitorWorkspaceName : azureMonitorWorkspaceName 
+    PrometheusworkspaceName : azureMonitorWorkspaceName 
   } 
   dependsOn: [
     rgModule
