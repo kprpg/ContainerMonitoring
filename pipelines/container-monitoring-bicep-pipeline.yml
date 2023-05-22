@@ -517,16 +517,16 @@ stages:
               azureSubscription: $(azureSubscriptionEndpoint)
               ScriptType: InlineScript
               Inline: |  
-              try {         
-                $AzureMonitorWorkspace = New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
-                location = '$(location)'
-                resourceGroupName = '$(resourceGroupName)'
-                AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName)'
-                } -Verbose
-              }
-              catch{ 
-                Write-Output "Failed to create $($AzureMonitorWorkspace), Error: $($_.exception)"
-              }
+                try {         
+                  $AzureMonitorWorkspace = New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
+                  location = '$(location)'
+                  resourceGroupName = '$(resourceGroupName)'
+                  AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName)'
+                  } -Verbose
+                }
+                catch{ 
+                  Write-Output "Failed to create $($AzureMonitorWorkspace), Error: $($_.exception)"
+                }
                 
           - task: AzureCLI@2
             displayName: 'Install amg extension for grafana'
