@@ -466,7 +466,7 @@ stages:
 
 - stage: PrometheusDeployment 
   displayName: Deploy Managed-Prometheus
-  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded'))
+  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded','skipped'))
   jobs:
   - job: PrometheusDeployment
     displayName: Deploy Azure Monitore workspace
@@ -478,7 +478,7 @@ stages:
 
     - task: AzurePowerShell@4
       name: RunWhatIfprometheus
-      displayName: Run what-if for promeetheus stage
+      displayName: Run what-if for prometheus stage
       inputs:
         azurePowerShellVersion: LatestVersion
         azureSubscription:  $(azureSubscriptionEndpoint)
