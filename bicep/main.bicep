@@ -52,10 +52,14 @@ param location string
 param contosoSH360ClusterResourceGroupName string 
 param opsResourceGroupName string 
 param Prometheusstage string  
-param PrometheusworkspaceName string 
+param PrometheusworkspaceName string
+param azureSubscriptionId string 
+param resourceGroupName string 
 
 var clusterName = aksName
 var dcraName = 'MSProm-${clusterLocation}-${clusterName}'
+var clusterSubscriptionId = azureSubscriptionId
+var clusterResourceGroup = resourceGroupName
 
 param contributorRoleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
 
@@ -216,7 +220,7 @@ module nonmonitoredClustervnet 'modules/Microsoft.Network/virtualNetworks/vnet.b
     location: location
     vnetName: nonmonitoredClustervnetName
     vnetAddressPrefix: nonmonitoredClustervnetAddressPrefix
-    subnetName:nonmonitoredClustersubnetName
+    subnetName: nonmonitoredClustersubnetName
     subnetAddressPrefix: nonmonitoredClustersubnetAddressPrefix
   }
   dependsOn: [
@@ -229,22 +233,16 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/ak
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}monitoredAKSDeploy'
   params: {
-    location: location
-    Prometheusstage: Prometheusstage 
-    clusterLocation: clusterLocation 
     clusterName: monitoredClusterName
-    clusterResourceId: clusterResourceId
-    dockerBridgeCidr: dockerBridgeCidr
-    kubernetesVersion: kubernetesVersion
-    metricAnnotationsAllowList: metricAnnotationsAllowList
-    metricLabelsAllowlist: metricLabelsAllowlist
-    networkPlugin: monitoredAKSNetworkPlugin
-    networkPolicy: monitoredAKSNetworkPolicy
+    location: location
+    workspaceResourceId: workspaceModule.outputs.workspaceId
+    omsAgentEnabled: true
     primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
     serviceCidr: serviceCidr
-    variables_clusterName: clusterName 
-    resourceId_Microsoft_Insights_dataCollectionRules_variables_dcrName : metricsaddon.outputs.dcrId
-    variables_dcraName : dcraName
+    dockerBridgeCidr: dockerBridgeCidr
+    networkPlugin: monitoredAKSNetworkPlugin
+    networkPolicy: monitoredAKSNetworkPolicy
+    kubernetesVersion: kubernetesVersion
   }
   dependsOn: [
     rgModule
@@ -266,18 +264,38 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
     networkPlugin: nonMonitoredAKSNetworkPlugin
     networkPolicy: nonMonitoredAKSNetworkPolicy
     kubernetesVersion: kubernetesVersion
-    clusterLocation: clusterLocation
-    clusterResourceId  : clusterResourceId
-    metricAnnotationsAllowList: metricAnnotationsAllowList
-    metricLabelsAllowlist: metricLabelsAllowlist
-    Prometheusstage: Prometheusstage
-    resourceId_Microsoft_Insights_dataCollectionRules_variables_dcrName: metricsaddon.outputs.dcrId
-    variables_clusterName: clusterName
-    variables_dcraName: dcraName
   }
   dependsOn: [
     rgModule
     nonmonitoredClustervnet
+  ]
+}
+
+//
+module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/dataCollectionRuleAssociations.bicep' = {
+  name: 'azuremonitormetrics-dcra-${uniqueString(clusterResourceId)}'
+  scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
+  params: {
+    resourceId_Microsoft_Insights_dataCollectionRules_variables_dcrName: dcrprometheus.outputs.dcrId
+    variables_clusterName: clusterName
+    variables_dcraName: dcraName
+    clusterLocation: clusterLocation
+  }
+}
+
+module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/metricsaddon.bicep'= {
+  name: 'azuremonitormetrics-profile--${uniqueString(clusterResourceId)}'
+  scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
+  params: {
+    variables_clusterName: clusterName
+    clusterLocation: clusterLocation
+    clusterResourceId: clusterResourceId
+    metricLabelsAllowlist: metricLabelsAllowlist
+    metricAnnotationsAllowList: metricAnnotationsAllowList
+  }
+  dependsOn: [
+    azuremonitormetrics_dcra_clusterResourceId
+    monitoredAksModule
   ]
 }
 
@@ -322,13 +340,13 @@ module workspacealerts 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.
   } 
   dependsOn: [
     rgModule
-    metricsaddon
+    dcrprometheus
     actiongroup
   ]
 }
 
 // Data Collection Rules for Azure monitore workspace 
-module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' =  {
+module dcrprometheus 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' =  {
   scope: resourceGroup(opsResourceGroupName)
   name: 'prometheusmetrics'
   params: {
