@@ -79,7 +79,7 @@ stages:
     displayName:  Run Security Code Analysis Scans
     pool:
       vmImage: windows-latest
-    environment: $(pipelineEnvrionment)
+    environment: $(pipelineEnvironment)
     strategy:
       runOnce:
         deploy:
@@ -125,7 +125,7 @@ stages:
   jobs:
   - deployment: LintCode
     displayName: Lint Code
-    environment: $(pipelineEnvrionment)
+    environment: $(pipelineEnvironment)
     strategy:
       runOnce:
         deploy:
@@ -140,7 +140,7 @@ stages:
   jobs:
   - deployment: ValidateBicepCode
     displayName: Validate Bicep code
-    environment: $(pipelineEnvrionment)
+    environment: $(pipelineEnvironment)
     strategy:
       runOnce:
         deploy:
@@ -190,7 +190,7 @@ stages:
   jobs: 
   - deployment: PreviewAzureChanges
     displayName: Preview Azure changes
-    environment: $(pipelineEnvrionment)
+    environment: $(pipelineEnvironment)
     strategy:
       runOnce:
         deploy:
@@ -244,7 +244,7 @@ stages:
     displayName: Deploy Container Monitoring
     pool: 
       vmImage: ubuntu-latest
-    environment: $(pipelineEnvrionment)
+    environment: $(pipelineEnvironment)
     variables:
     - template: container-monitoring-variables.yml
     strategy:
@@ -376,7 +376,7 @@ stages:
     displayName: Deploy Manifests to Container Monitoring
     pool: 
       vmImage:  windows-latest
-    environment: $(pipelineEnvrionment)
+    environment: $(pipelineEnvironment)
     variables:
     - template: container-monitoring-variables.yml
     strategy:
@@ -483,11 +483,11 @@ stages:
 
 - stage: PrometheusDeployment 
   displayName: Deploy Managed-Prometheus
-  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded'))
+  condition: and(${{ parameters.PrometheusDeployment }}, in(dependencies.BicepDeploy.result, 'Succeeded'))
   jobs:
   - deployment: PrometheusDeployment
-    displayName: Deploy Azure Monitore workspace
-    environment: $(pipelineEnvrionment)
+    displayName: Deploy Azure Monitor workspace
+    environment: $(pipelineEnvironment)
     variables:
     - template: container-monitoring-variables.yml
     strategy:
@@ -498,34 +498,34 @@ stages:
 
           - task: AzurePowerShell@4
             name: RunWhatIf
-            displayName: 'Run what-if for Azure Monitore workspace'
+            displayName: 'Run what-if for Azure Monitor workspace'
             inputs:
               azurePowerShellVersion: LatestVersion
-              azureSubscription:  $(azureSubscriptionEndpoint)
+              azureSubscription: $(azureSubscriptionEndpoint)
               ScriptType: InlineScript
               Inline: |         
-                  New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
+                  New-AzSubscriptionDeployment -WhatIf -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
                   location = '$(location)'
                   resourceGroupName = '$(resourceGroupName)'
                   AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName)'
                   } -Verbose     
           
           - task: AzurePowerShell@4
-            displayName: 'Create Azure Monitore workspace'
+            displayName: 'Create Azure Monitor workspace'
             inputs:
               azurePowerShellVersion: LatestVersion
-              azureSubscription:  $(azureSubscriptionEndpoint)
+              azureSubscription: $(azureSubscriptionEndpoint)
               ScriptType: InlineScript
               Inline: |  
               try {         
-                $AzureMonitoreworkspace = New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
+                $AzureMonitorWorkspace = New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
                 location = '$(location)'
                 resourceGroupName = '$(resourceGroupName)'
                 AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName)'
                 } -Verbose
               }
               catch{ 
-                Write-output "Failed to create $($AzureMonitoreworkspace), Error: $($_.exception)"
+                Write-Output "Failed to create $($AzureMonitorWorkspace), Error: $($_.exception)"
               }
                 
           - task: AzureCLI@2
