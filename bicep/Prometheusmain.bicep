@@ -1,4 +1,4 @@
-param AzureMonitorWorkspaceName string
+param azureMonitorWorkspaceName string
 param clusterResourceId string 
 param actionGroupResourceId string 
 param azureMonitorWorkspaceLocation string
@@ -8,7 +8,7 @@ param grafanaLocation string
 param grafanaSku string 
 param metricAnnotationsAllowList string  
 param metricLabelsAllowlist string 
-param AksName string 
+param aksName string 
 param azureSubscriptionId string 
 param grafanaName string 
 param groupShortName string 
@@ -41,7 +41,7 @@ module azuremointerworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bi
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'workspaceDeploy'
   params: {
-    PrometheusworkspaceName: AzureMonitorWorkspaceName
+    PrometheusworkspaceName: azureMonitorWorkspaceName
     location: location
   }
   dependsOn: [
@@ -64,15 +64,17 @@ module actiongroup 'modules/Microsoft.insights/Actiongroup.bicep' = {
   ]
 }
 
-module workspacealerts 'modules/Microsoft.insights/AzureMonitorAlertsProfile.bicep' =  {
+module workspacealerts 'modules/Microsoft.insights/prometheusRuleGroups.bicep' =  {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'workspacealertsrules'
   params: {
-    actionGroupResourceId: actionGroupResourceId
-    AzureMonitorWorkspaceName: AzureMonitorWorkspaceName
     location: location
-    AksName : AksName
-  }
+    aksName: aksName
+    azureMonitorWorkspaceName: azureMonitorWorkspaceName
+    actionGroupResourceId: actionGroupResourceId
+    azureMonitorWorkspaceLocation: azureMonitorWorkspaceLocation
+    azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
+  } 
   dependsOn: [
     rgModule
     metricsaddon
@@ -91,7 +93,7 @@ module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/Fu
     grafanaLocation: grafanaLocation
     azureSubscriptionId  : azureSubscriptionId
     resourceGroupName  : resourceGroupName
-    AksName  : AksName
+    aksName  : aksName
     grafanaName : grafanaName
     grafanaSku: grafanaSku
     metricAnnotationsAllowList: metricAnnotationsAllowList
