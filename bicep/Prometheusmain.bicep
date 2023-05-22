@@ -78,7 +78,6 @@ module workspacealerts 'modules/Microsoft.insights/prometheusRuleGroups.bicep' =
   dependsOn: [
     rgModule
     metricsaddon
-    actiongroup
   ]
 }
 
@@ -102,6 +101,5 @@ module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/Fu
   dependsOn: [
     rgModule
     azuremointerworkspace
-    actiongroup
   ]
 }
