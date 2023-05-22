@@ -19,6 +19,11 @@ param location string
 param contosoSH360ClusterResourceGroupName string 
 param opsResourceGroupName string 
 
+var clusterName = aksName
+var dcraName = 'MSProm-${clusterLocation}-${clusterName}'
+var clusterSubscriptionId = azureSubscriptionId
+var clusterResourceGroup = resourceGroupName
+
 var resourceGroups = [
   contosoSH360ClusterResourceGroupName
   opsResourceGroupName
@@ -35,9 +40,8 @@ module rgModule 'modules/Microsoft.Resources/resourceGroups/resourceGroup.bicep'
 }]
 
 
-// Azure monitor workspace deployment 
-
-module azuremointerworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = {
+// Azure monitor workspace Deployment 
+module azuremonitorworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'workspaceDeploy'
   params: {
@@ -48,8 +52,8 @@ module azuremointerworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bi
     rgModule
   ]
 }
-
-module actiongroup 'modules/Microsoft.insights/actiongroup.bicep' = {
+// Action Group Deployment 
+module actiongroup 'modules/Microsoft.AlertsManagement/actiongroup.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'actiongp'
   params: {
@@ -59,12 +63,12 @@ module actiongroup 'modules/Microsoft.insights/actiongroup.bicep' = {
   }
   dependsOn: [
     rgModule
-    azuremointerworkspace
-
+    azuremonitorworkspace
   ]
 }
 
-module workspacealerts 'modules/Microsoft.insights/prometheusRuleGroups.bicep' =  {
+// Prometheus Rule Groups "Alerts Rules and Recordeing Rules" Deployment 
+module workspacealerts 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.bicep' =  {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'workspacealertsrules'
   params: {
@@ -78,28 +82,65 @@ module workspacealerts 'modules/Microsoft.insights/prometheusRuleGroups.bicep' =
   dependsOn: [
     rgModule
     metricsaddon
+    actiongroup
   ]
 }
 
-module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/FullAzureMonitorMetricsProfile.bicep' =  {
+// Data Collection Rules for Azure monitore workspace 
+module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' =  {
   scope: resourceGroup(opsResourceGroupName)
   name: 'prometheusmetrics'
-  params: {
+   params: {
+    aksName: aksName
     azureMonitorWorkspaceLocation: azureMonitorWorkspaceLocation
     azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
+    }
+   dependsOn: [
+    rgModule
+    azuremonitorworkspace
+  ]
+}
+
+module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.OperationalInsights/dataCollectionRule/nested_azuremonitormetrics_dcra_clusterResourceId.bicep' = {
+  name: 'azuremonitormetrics-dcra-${uniqueString(clusterResourceId)}'
+  scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
+  params: {
+    resourceId_Microsoft_Insights_dataCollectionRules_variables_dcrName: metricsaddon.outputs.dcrId
+    variables_clusterName: clusterName
+    variables_dcraName: dcraName
+    clusterLocation: clusterLocation
+  }
+}
+
+// Azure Monitore workpsace metrics Add-on 
+module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.OperationalInsights/dataCollectionRule/nested_azuremonitormetrics_profile_clusterResourceId.bicep'= {
+  name: 'azuremonitormetrics-profile--${uniqueString(clusterResourceId)}'
+  scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
+  params: {
+    variables_clusterName: clusterName
     clusterLocation: clusterLocation
     clusterResourceId: clusterResourceId
-    grafanaLocation: grafanaLocation
-    azureSubscriptionId  : azureSubscriptionId
-    resourceGroupName  : resourceGroupName
-    aksName  : aksName
-    grafanaName : grafanaName
-    grafanaSku: grafanaSku
-    metricAnnotationsAllowList: metricAnnotationsAllowList
     metricLabelsAllowlist: metricLabelsAllowlist
+    metricAnnotationsAllowList: metricAnnotationsAllowList
+  }
+  dependsOn: [
+    azuremonitormetrics_dcra_clusterResourceId
+  ]
+}
+
+// Link Grafana to Azure Monitore Workspace 
+module grafana 'modules/Microsoft.Grafana/grafana.bicep' = {
+  scope: resourceGroup(opsResourceGroupName)
+  name: 'linkgrafana'
+  params: {
+    azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
+    grafanaLocation: grafanaLocation
+    grafanaName: grafanaName
+    grafanaSku: grafanaSku
   }
   dependsOn: [
     rgModule
-    azuremointerworkspace
+    azuremonitorworkspace
   ]
 }
+
