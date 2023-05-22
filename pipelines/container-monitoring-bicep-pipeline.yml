@@ -243,6 +243,7 @@ stages:
             PrometheusactionGroup  = '$(PrometheusactionGroup)'
             Receiveremailactiongroups  = '$(Receiveremailactiongroups)'
             Prometheusstage        = '${{ parameters.Prometheusstage }}'
+            PrometheusworkspaceName = '$(PrometheusworkspaceName)'
           } -Verbose
     
 
