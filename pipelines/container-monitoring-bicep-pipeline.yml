@@ -50,7 +50,7 @@ parameters:
   default: false
 
 - name: Prometheusstage 
-  displayname: 'Prometheus deployment'
+  displayName: 'Prometheus deployment'
   type: string
   default: no
   values:
