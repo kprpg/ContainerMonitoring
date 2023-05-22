@@ -466,7 +466,7 @@ stages:
 
 - stage: PrometheusDeployment 
   displayName: Deploy Managed-Prometheus
-  condition: ${{ parameters.PrometheusDeployment }}
+  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded'))
   jobs:
   - job: PrometheusDeployment
     displayName: Deploy Azure Monitore workspace
@@ -486,35 +486,26 @@ stages:
         Inline: |
           New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/Prometheusmain.bicep' -TemplateParameterObject @{
             location = '$(location)'
-            prefix = '$(prefix)'
-            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-            opsResourceGroupName = '$(workspaceResourceGroupName)'
-            logAnalyticsWorkspaceName = '$(workspaceName)'
-            workspaceSkuName = '$(workspaceSkuName)'
-            monitoredClusterName = '$(aksName)'
-            nonmonitoredClusterName = '$(NonMonitoredAKSName)'
-            adminUser = '$(chVmAdminUser)'
-            adminPassword = '$(chVmAdminPassword)'
-            agentVMSize = '$(agentVMSize)'
-            retentionPeriod = $(retentionPeriod)
-            serviceCidr = '$(aksClusterServiceCidr)'
-            dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
-            managedIdentityName = '$(managedIdentityName)'
-            searchTableName = '$(searchTableName)'
-            monitoredAKSNetworkPolicy = '$(monitoredAKSNetworkPolicy)'
-            monitoredAKSNetworkPlugin = '$(monitoredAKSNetworkPlugin)'
-            nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
-            nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
-            kubernetesVersion = '${{ parameters.clusterVersion }}'
-            monitoredClustervnetName = '$(monitoredClustervnetName)'
-            nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
-            monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
-            nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
-            monitoredClustersubnetName = '$(monitoredClustersubnetName)'
-            monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
-            nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
-            nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'        
-          } -Verbose
+            resourceGroupName = '$(resourceGroupName)'
+            azureMonitorWorkspaceName = '$(azureMonitorWorkspaceName)'
+            clusterResourceId = '$(clusterResourceId)'
+            actionGroupResourceId = '$(actionGroupResourceId)'
+            azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation)'
+            azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId)'
+            clusterLocation = '$(clusterLocation)'
+            grafanaLocation = '$(grafanaLocation)'
+            grafanaSku = '$(grafanaSku)'
+            metricAnnotationsAllowList = '$(metricAnnotationsAllowList)'
+            metricLabelsAllowlist = '$(metricLabelsAllowlist)'
+            aksName = '$(aksName)'
+            azureSubscriptionId = '$(azureSubscriptionId)'
+            grafanaName = '$(grafanaName)' 
+            groupShortName    = '$(groupShortName)' 
+            PrometheusactionGroup       = '$(PrometheusactionGroup)' 
+            Receiveremailactiongroups= '$(Receiveremailactiongroups)' 
+            contosoSH360ClusterResourceGroupName = '$(contosoSH360ClusterResourceGroupName)' 
+            opsResourceGroupName  = '$(opsResourceGroupName)' 
+          } -Verbose   
         
     - task: AzurePowerShell@4
       displayName: 'Create Azure Monitore workspace resources and Enable Grafana'
