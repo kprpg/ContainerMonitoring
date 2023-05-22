@@ -333,7 +333,7 @@ module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/da
   name: 'prometheusmetrics'
   params: {
     aksName: aksName
-    azureMonitorWorkspaceLocation: azureMonitorWorkspaceResourceId
+    azureMonitorWorkspaceLocation: azureMonitorWorkspaceLocation
     azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
   }
    dependsOn: [
