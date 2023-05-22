@@ -315,6 +315,7 @@ stages:
             PrometheusactionGroup  = '$(PrometheusactionGroup)'
             Receiveremailactiongroups  = '$(Receiveremailactiongroups)'
             Prometheusstage        = '${{ parameters.Prometheusstage }}'
+            PrometheusworkspaceName = '$(PrometheusworkspaceName)'
           } -Verbose
     
     - task: AzurePowerShell@5
