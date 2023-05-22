@@ -475,7 +475,7 @@ stages:
 
     steps:
     - checkout: self 
-    
+
     - task: AzurePowerShell@4
       displayName: 'Create Action Group For Azure monitore workspace'
       inputs:
@@ -483,7 +483,7 @@ stages:
         azureSubscription:  $(azureSubscriptionEndpoint)
         ScriptType: InlineScript
         Inline: |          
-          New-AzResourceGroupDeployment -ResourceGroupName '$(resourceGroupName)'  -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.insights.actiongroup/actiongroup.bicep' -TemplateParameterObject @{
+          New-AzResourceGroupDeployment -ResourceGroupName '$(resourceGroupName)'  -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.insights/Actiongroup.bicep' -TemplateParameterObject @{
             PrometheusactionGroup = '$(PrometheusactionGroup)'
             groupShortName = '$(groupShortName)'
             Receiveremailactiongroups = '$(Receiveremailactiongroups)'
