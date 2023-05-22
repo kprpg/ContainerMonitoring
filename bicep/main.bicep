@@ -281,6 +281,10 @@ module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.ContainerSe
     variables_dcraName: dcraName
     clusterLocation: clusterLocation
   }
+  dependsOn: [
+    rgModule
+    monitoredAksModule
+  ]
 }
 
 module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/metricsaddon.bicep'= {
@@ -294,6 +298,7 @@ module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.Containe
     metricAnnotationsAllowList: metricAnnotationsAllowList
   }
   dependsOn: [
+    rgModule
     azuremonitormetrics_dcra_clusterResourceId
     monitoredAksModule
   ]
