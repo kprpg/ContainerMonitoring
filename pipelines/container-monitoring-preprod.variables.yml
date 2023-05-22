@@ -22,3 +22,6 @@ variables:
 
 - name: retentionPeriod
   value: 30
+
+- name: pipelineEnvrionment
+  value: 'Contoso Hotels - PreProd'
