@@ -272,7 +272,7 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
 }
 
 //
-module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/dataCollectionRuleAssociations.bicep' = {
+module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/dataCollectionRuleAssociations.bicep' = if ('${Prometheusstage}' == 'yes')  {
   name: 'azuremonitormetrics-dcra-${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
@@ -287,7 +287,7 @@ module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.ContainerSe
   ]
 }
 
-module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/metricsaddon.bicep'= {
+module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/metricsaddon.bicep'=  if ('${Prometheusstage}' == 'yes') {
   name: 'azuremonitormetrics-profile--${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
@@ -351,7 +351,7 @@ module workspacealerts 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.
 }
 
 // Data Collection Rules for Azure monitore workspace 
-module dcrprometheus 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' =  {
+module dcrprometheus 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' = if ('${Prometheusstage}' == 'yes')  {
   scope: resourceGroup(opsResourceGroupName)
   name: 'prometheusmetrics'
   params: {
