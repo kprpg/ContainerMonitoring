@@ -242,10 +242,6 @@ stages:
             groupShortName  = '$(groupShortName)'
             PrometheusactionGroup  = '$(PrometheusactionGroup)'
             Receiveremailactiongroups  = '$(Receiveremailactiongroups)'
-            contosoSH360ClusterResourceGroupName  = '$(contosoSH360ClusterResourceGroupName)'
-            opsResourceGroupName  = '$(opsResourceGroupName)'
-            variables_dcraName = '$(variables_dcraName)'
-            variables_clusterName  = '$(variables_clusterName)'
             Prometheusstage        = '${{ parameters.Prometheusstage }}'
           } -Verbose
     
@@ -318,10 +314,6 @@ stages:
             groupShortName  = '$(groupShortName)'
             PrometheusactionGroup  = '$(PrometheusactionGroup)'
             Receiveremailactiongroups  = '$(Receiveremailactiongroups)'
-            contosoSH360ClusterResourceGroupName  = '$(contosoSH360ClusterResourceGroupName)'
-            opsResourceGroupName  = '$(opsResourceGroupName)'
-            variables_dcraName = '$(variables_dcraName)'
-            variables_clusterName  = '$(variables_clusterName)'
             Prometheusstage        = '${{ parameters.Prometheusstage }}'
           } -Verbose
     

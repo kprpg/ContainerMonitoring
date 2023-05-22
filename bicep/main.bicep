@@ -51,8 +51,6 @@ param Receiveremailactiongroups string
 param location string 
 param contosoSH360ClusterResourceGroupName string 
 param opsResourceGroupName string 
-param variables_dcraName string
-param variables_clusterName string 
 param Prometheusstage string  
 
 var clusterName = aksName
@@ -233,7 +231,7 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/ak
     location: location
     Prometheusstage: Prometheusstage 
     clusterLocation: clusterLocation 
-    clusterName: clusterName
+    clusterName: monitoredClusterName
     clusterResourceId: clusterResourceId
     dockerBridgeCidr: dockerBridgeCidr
     kubernetesVersion: kubernetesVersion
@@ -245,7 +243,7 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/ak
     serviceCidr: serviceCidr
     variables_clusterName: clusterName 
     resourceId_Microsoft_Insights_dataCollectionRules_variables_dcrName : metricsaddon.outputs.dcrId
-    variables_dcraName : variables_dcraName
+    variables_dcraName : dcraName
   }
   dependsOn: [
     rgModule
