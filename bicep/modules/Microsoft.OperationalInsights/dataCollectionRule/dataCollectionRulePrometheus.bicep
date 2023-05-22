@@ -2,7 +2,6 @@ param azureMonitorWorkspaceResourceId string
 param azureMonitorWorkspaceLocation string
 param aksName string 
 
-
 var clusterName = aksName
 var dceName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'
 var dcrName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'
@@ -55,4 +54,5 @@ resource dcr 'Microsoft.Insights/dataCollectionRules@2021-09-01-preview' = {
   }
 }
 output dcrId string = dcr.id 
+
 

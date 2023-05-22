@@ -1,4 +1,4 @@
-param location string
+
 param prefix string
 param adminUser string
 @secure()
@@ -13,8 +13,6 @@ param nonMonitoredAKSNetworkPlugin string
 param kubernetesVersion string
 
 param workspaceSkuName string
-param contosoSH360ClusterResourceGroupName string
-param opsResourceGroupName string
 param logAnalyticsWorkspaceName string
 param retentionPeriod int
 
@@ -35,7 +33,30 @@ param nonmonitoredClustervnetName string
 param nonmonitoredClustervnetAddressPrefix string
 param nonmonitoredClustersubnetName string
 param nonmonitoredClustersubnetAddressPrefix string
+param azureMonitorWorkspaceName string
+param clusterResourceId string 
+param actionGroupResourceId string 
+param azureMonitorWorkspaceLocation string
+param azureMonitorWorkspaceResourceId string 
+param clusterLocation string 
+param grafanaLocation string 
+param grafanaSku string 
+param metricAnnotationsAllowList string  
+param metricLabelsAllowlist string 
+param aksName string 
+param grafanaName string 
+param groupShortName string 
+param PrometheusactionGroup string 
+param Receiveremailactiongroups string 
+param location string 
+param contosoSH360ClusterResourceGroupName string 
+param opsResourceGroupName string 
+param variables_dcraName string
+param variables_clusterName string 
+param Prometheusstage string  
 
+var clusterName = aksName
+var dcraName = 'MSProm-${clusterLocation}-${clusterName}'
 
 param contributorRoleId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c' //contributor role
 
@@ -209,16 +230,22 @@ module monitoredAksModule 'modules/Microsoft.ContainerService/managedClusters/ak
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: '${prefix}monitoredAKSDeploy'
   params: {
-    clusterName: monitoredClusterName
     location: location
-    workspaceResourceId: workspaceModule.outputs.workspaceId
-    omsAgentEnabled: true
-    primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
-    serviceCidr: serviceCidr
+    Prometheusstage: Prometheusstage 
+    clusterLocation: clusterLocation 
+    clusterName: clusterName
+    clusterResourceId: clusterResourceId
     dockerBridgeCidr: dockerBridgeCidr
+    kubernetesVersion: kubernetesVersion
+    metricAnnotationsAllowList: metricAnnotationsAllowList
+    metricLabelsAllowlist: metricLabelsAllowlist
     networkPlugin: monitoredAKSNetworkPlugin
     networkPolicy: monitoredAKSNetworkPolicy
-    kubernetesVersion: kubernetesVersion
+    primaryAgentPoolProfile: monitoredAKSPrimaryAgentPoolProfile
+    serviceCidr: serviceCidr
+    variables_clusterName: clusterName 
+    resourceId_Microsoft_Insights_dataCollectionRules_variables_dcrName : metricsaddon.outputs.dcrId
+    variables_dcraName : variables_dcraName
   }
   dependsOn: [
     rgModule
@@ -240,10 +267,95 @@ module nonMonitoredAksModule 'modules/Microsoft.ContainerService/managedClusters
     networkPlugin: nonMonitoredAKSNetworkPlugin
     networkPolicy: nonMonitoredAKSNetworkPolicy
     kubernetesVersion: kubernetesVersion
+    clusterLocation: clusterLocation
+    clusterResourceId  : clusterResourceId
+    metricAnnotationsAllowList: metricAnnotationsAllowList
+    metricLabelsAllowlist: metricLabelsAllowlist
+    Prometheusstage: Prometheusstage
+    resourceId_Microsoft_Insights_dataCollectionRules_variables_dcrName: metricsaddon.outputs.dcrId
+    variables_clusterName: clusterName
+    variables_dcraName: dcraName
   }
   dependsOn: [
     rgModule
     nonmonitoredClustervnet
+  ]
+}
+
+// Azure monitor workspace Deployment 
+module azuremonitorworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = if ('${Prometheusstage}' == 'yes') {
+  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+  name: 'workspaceDeploy'
+  params: {
+    PrometheusworkspaceName: azureMonitorWorkspaceName
+    location: location
+  }
+  dependsOn: [
+    rgModule
+  ]
+}
+// Action Group Deployment 
+module actiongroup 'modules/Microsoft.AlertsManagement/actiongroup.bicep' = if ('${Prometheusstage}' == 'yes') {
+  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+  name: 'actiongp'
+  params: {
+    groupShortName: groupShortName
+    PrometheusactionGroup: PrometheusactionGroup
+    Receiveremailactiongroups: Receiveremailactiongroups
+  }
+  dependsOn: [
+    rgModule
+    azuremonitorworkspace
+  ]
+}
+
+// Prometheus Rule Groups "Alerts Rules and Recordeing Rules" Deployment 
+module workspacealerts 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.bicep' = if ('${Prometheusstage}' == 'yes')  {
+  scope: resourceGroup(contosoSH360ClusterResourceGroupName)
+  name: 'workspacealertsrules'
+  params: {
+    location: location
+    aksName: aksName
+    actionGroupResourceId: actionGroupResourceId
+    azureMonitorWorkspaceLocation: azureMonitorWorkspaceLocation
+    azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
+    PrometheusworkspaceName : azureMonitorWorkspaceName 
+  } 
+  dependsOn: [
+    rgModule
+    metricsaddon
+    actiongroup
+  ]
+}
+
+// Data Collection Rules for Azure monitore workspace 
+module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' =  {
+  scope: resourceGroup(opsResourceGroupName)
+  name: 'prometheusmetrics'
+  params: {
+    aksName: aksName
+    azureMonitorWorkspaceLocation: azureMonitorWorkspaceResourceId
+    azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
+  }
+   dependsOn: [
+    rgModule
+    azuremonitorworkspace
+  ]
+}
+ 
+// Link Grafana to Azure Monitore Workspace 
+module grafana 'modules/Microsoft.Grafana/grafana.bicep' = if ('${Prometheusstage}' == 'yes') {
+  scope: resourceGroup(opsResourceGroupName)
+  name: 'linkgrafana'
+  params: {
+    azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
+    grafanaLocation: grafanaLocation
+    grafanaName: grafanaName
+    grafanaSku: grafanaSku
+  }
+  dependsOn: [
+    rgModule
+    azuremonitorworkspace
   ]
 }
 

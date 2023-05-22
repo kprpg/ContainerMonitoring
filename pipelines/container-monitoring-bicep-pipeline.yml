@@ -49,6 +49,14 @@ parameters:
   type: boolean 
   default: false
 
+- name: Prometheusstage 
+  displayname: 'Prometheus deployment'
+  type: string
+  default: no
+  values:
+  - no
+  - yes
+  
 - name: prefix
   displayName: 'Prefix'
   type: string
@@ -218,7 +226,28 @@ stages:
             monitoredClustersubnetName = '$(monitoredClustersubnetName)'
             monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
             nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
-            nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'        
+            nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'   
+            azureMonitorWorkspaceName = '$(azureMonitorWorkspaceName)'  
+            clusterResourceId  = '$(clusterResourceId)'  
+            actionGroupResourceId  = '$(actionGroupResourceId)'
+            azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation)'
+            azureMonitorWorkspaceResourceId  = '$(azureMonitorWorkspaceResourceId)'
+            clusterLocation  = '$(clusterLocation)'
+            grafanaLocation  = '$(grafanaLocation)'
+            grafanaSku  = '$(grafanaSku)'
+            metricAnnotationsAllowList   = '$(metricAnnotationsAllowList)'
+            metricLabelsAllowlist  = '$(metricLabelsAllowlist)'
+            aksName  = '$(aksName)'
+            grafanaName  = '$(grafanaName)'
+            groupShortName  = '$(groupShortName)'
+            PrometheusactionGroup  = '$(PrometheusactionGroup)'
+            Receiveremailactiongroups  = '$(Receiveremailactiongroups)'
+            location  = '$(location)'
+            contosoSH360ClusterResourceGroupName  = '$(contosoSH360ClusterResourceGroupName)'
+            opsResourceGroupName  = '$(opsResourceGroupName)'
+            variables_dcraName = '$(variables_dcraName)'
+            variables_clusterName  = '$(variables_clusterName)'
+            Prometheusstage        = '${{ parameters.Prometheusstage }}'
           } -Verbose
     
 
@@ -275,6 +304,27 @@ stages:
             monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
             nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
             nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
+            azureMonitorWorkspaceName = '$(azureMonitorWorkspaceName)'  
+            clusterResourceId  = '$(clusterResourceId)'  
+            actionGroupResourceId  = '$(actionGroupResourceId)'
+            azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation)'
+            azureMonitorWorkspaceResourceId  = '$(azureMonitorWorkspaceResourceId)'
+            clusterLocation  = '$(clusterLocation)'
+            grafanaLocation  = '$(grafanaLocation)'
+            grafanaSku  = '$(grafanaSku)'
+            metricAnnotationsAllowList   = '$(metricAnnotationsAllowList)'
+            metricLabelsAllowlist  = '$(metricLabelsAllowlist)'
+            aksName  = '$(aksName)'
+            grafanaName  = '$(grafanaName)'
+            groupShortName  = '$(groupShortName)'
+            PrometheusactionGroup  = '$(PrometheusactionGroup)'
+            Receiveremailactiongroups  = '$(Receiveremailactiongroups)'
+            location  = '$(location)'
+            contosoSH360ClusterResourceGroupName  = '$(contosoSH360ClusterResourceGroupName)'
+            opsResourceGroupName  = '$(opsResourceGroupName)'
+            variables_dcraName = '$(variables_dcraName)'
+            variables_clusterName  = '$(variables_clusterName)'
+            Prometheusstage        = '${{ parameters.Prometheusstage }}'
           } -Verbose
     
     - task: AzurePowerShell@5
@@ -463,116 +513,3 @@ stages:
           }
           Invoke-pester -Container $Container
         azurePowerShellVersion: LatestVersion 
-
-- stage: PrometheusDeployment 
-  displayName: Deploy Managed-Prometheus
-  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded','skipped'))
-  jobs:
-  - job: PrometheusDeployment
-    displayName: Deploy Azure Monitore workspace
-    variables:
-    - template: container-monitoring-variables.yml
-
-    steps:
-    - checkout: self 
-
-    - task: AzurePowerShell@4
-      name: RunWhatIfprometheus
-      displayName: Run what-if for prometheus stage
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |
-          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/Prometheusmain.bicep' -TemplateParameterObject @{
-            location = '$(location)'
-            resourceGroupName = '$(resourceGroupName)'
-            azureMonitorWorkspaceName = '$(azureMonitorWorkspaceName)'
-            clusterResourceId = '$(clusterResourceId)'
-            actionGroupResourceId = '$(actionGroupResourceId)'
-            azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation)'
-            azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId)'
-            clusterLocation = '$(clusterLocation)'
-            grafanaLocation = '$(grafanaLocation)'
-            grafanaSku = '$(grafanaSku)'
-            metricAnnotationsAllowList = '$(metricAnnotationsAllowList)'
-            metricLabelsAllowlist = '$(metricLabelsAllowlist)'
-            aksName = '$(aksName)'
-            azureSubscriptionId = '$(azureSubscriptionId)'
-            grafanaName = '$(grafanaName)' 
-            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)' 
-            opsResourceGroupName  = '$(workspaceResourceGroupName)' 
-            PrometheusactionGroup  = '$(PrometheusactionGroup)' 
-            groupShortName   = '$(groupShortName)' 
-            Receiveremailactiongroups   = '$(Receiveremailactiongroups)' 
-          } -Verbose   
-        
-    - task: AzurePowerShell@4
-      displayName: 'Create Azure Monitore workspace resources and Enable Grafana'
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |
-          New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/Prometheusmain.bicep' -TemplateParameterObject @{
-            location = '$(location)'
-            resourceGroupName = '$(resourceGroupName)'
-            azureMonitorWorkspaceName = '$(azureMonitorWorkspaceName)'
-            clusterResourceId = '$(clusterResourceId)'
-            actionGroupResourceId = '$(actionGroupResourceId)'
-            azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation)'
-            azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId)'
-            clusterLocation = '$(clusterLocation)'
-            grafanaLocation = '$(grafanaLocation)'
-            grafanaSku = '$(grafanaSku)'
-            metricAnnotationsAllowList = '$(metricAnnotationsAllowList)'
-            metricLabelsAllowlist = '$(metricLabelsAllowlist)'
-            aksName = '$(aksName)'
-            azureSubscriptionId = '$(azureSubscriptionId)'
-            grafanaName = '$(grafanaName)' 
-            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)' 
-            opsResourceGroupName  = '$(workspaceResourceGroupName)' 
-            PrometheusactionGroup  = '$(PrometheusactionGroup)' 
-            groupShortName   = '$(groupShortName)' 
-            Receiveremailactiongroups   = '$(Receiveremailactiongroups)' 
-          } -Verbose    
-          
-    - task: AzureCLI@2
-      displayName: 'Install amg extension for grafana'
-      inputs:
-        azureSubscription: $(azureSubscriptionEndpoint)
-        scriptType: 'pscore'
-        scriptLocation: 'inlineScript'
-        inlineScript: 'az extension add --name amg'
-          
-    - task: AzureCLI@2
-      displayName: 'Enable monitoring data reader on Azure Monitore workspace'
-      inputs:
-        azureSubscription: $(azureSubscriptionEndpoint)
-        scriptType: pscore
-        scriptLocation: inlineScript
-        inlineScript: |  
-          $context = az account show
-          $contextData = ($context | ConvertFrom-Json).id
-          $grafana = az grafana show --name $(grafanaName) --resource-group $(grafanaresourceGroupName) --output json
-          $grafanaData = $grafana | ConvertFrom-Json
-          az role assignment create --role "Monitoring Data Reader" --assignee $grafanaData.identity.principalId --description "Role assignment" --scope  "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(azureMonitorWorkspaceName)"
-  
-    - task: AzurePowerShell@5
-      name: executingprometheusPesterTest
-      displayName: 'Running Prometheus Pester Scripts'
-      inputs:
-        azureSubscription: $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: | 
-          $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/prometheus.Tests.ps1 -Data @{ azureMonitorWorkspaceName = '$(azureMonitorWorkspaceName)'
-          azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId)'
-          resourceGroupName = '$(resourceGroupName)'
-          PrometheusactionGroup  = '$(PrometheusactionGroup)'
-          groupShortName = '$(groupShortName)'
-          Receiveremailactiongroups = '$(Receiveremailactiongroups)'
-          grafanaName= '$(grafanaName)'
-          grafanaresourceGroupName = '$(grafanaresourceGroupName)'
-          }
-          Invoke-pester -Container $Container
-        azurePowerShellVersion: LatestVersion          
