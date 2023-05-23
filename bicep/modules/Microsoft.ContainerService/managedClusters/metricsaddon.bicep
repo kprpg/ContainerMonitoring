@@ -9,7 +9,7 @@ resource variables_cluster 'Microsoft.ContainerService/managedClusters@2022-07-0
   name: variables_clusterName
   location: clusterLocation
   properties: {
-    mode: 'Incremental'
+    mode: 'Complete'
     id: clusterResourceId
     azureMonitorProfile: {
       metrics: {
