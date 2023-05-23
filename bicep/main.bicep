@@ -352,7 +352,7 @@ module workspacealerts 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.
 
 // Data Collection Rules for Azure monitore workspace 
 module dcrprometheus 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' = if ('${Prometheusstage}' == 'yes')  {
-  scope: resourceGroup(opsResourceGroupName)
+  scope: resourceGroup(resourceGroupName)
   name: 'prometheusmetrics'
   params: {
     aksName: aksName
