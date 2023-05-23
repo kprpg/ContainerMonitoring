@@ -24,20 +24,8 @@ var dcraName = 'MSProm-${clusterLocation}-${clusterName}'
 var clusterSubscriptionId = azureSubscriptionId
 var clusterResourceGroup = resourceGroupName
 
-var resourceGroups = [
-  contosoSH360ClusterResourceGroupName
-  opsResourceGroupName
-]
 
 targetScope = 'subscription'
-
-module rgModule 'modules/Microsoft.Resources/resourceGroups/resourceGroup.bicep' = [for resourceGroup in resourceGroups: {
-  name: 'rgDeploy${resourceGroup}'
-  params: {
-    resourceGroupName: resourceGroup
-    location: location
-  }
-}]
 
 
 // Azure monitor workspace Deployment 
@@ -49,7 +37,7 @@ module azuremonitorworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bi
     location: location
   }
   dependsOn: [
-    rgModule
+    
   ]
 }
 // Action Group Deployment 
@@ -62,7 +50,7 @@ module actiongroup 'modules/Microsoft.AlertsManagement/actiongroup.bicep' = {
     Receiveremailactiongroups: Receiveremailactiongroups
   }
   dependsOn: [
-    rgModule
+
     azuremonitorworkspace
   ]
 }
@@ -80,7 +68,6 @@ module workspacealerts 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.
     azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
   } 
   dependsOn: [
-    rgModule
     metricsaddon
     actiongroup
   ]
@@ -96,12 +83,12 @@ module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/da
     azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
     }
    dependsOn: [
-    rgModule
+
     azuremonitorworkspace
   ]
 }
 
-module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.OperationalInsights/dataCollectionRule/nested_azuremonitormetrics_dcra_clusterResourceId.bicep' = {
+module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/dataCollectionRuleAssociations.bicep' = {
   name: 'azuremonitormetrics-dcra-${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
@@ -113,7 +100,7 @@ module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.Operational
 }
 
 // Azure Monitore workpsace metrics Add-on 
-module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.OperationalInsights/dataCollectionRule/nested_azuremonitormetrics_profile_clusterResourceId.bicep'= {
+module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/MetricsAddon.bicep'= {
   name: 'azuremonitormetrics-profile--${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
@@ -139,7 +126,6 @@ module grafana 'modules/Microsoft.Grafana/grafana.bicep' = {
     grafanaSku: grafanaSku
   }
   dependsOn: [
-    rgModule
     azuremonitorworkspace
   ]
 }
