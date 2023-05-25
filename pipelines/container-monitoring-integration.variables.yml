@@ -22,3 +22,4 @@ variables:
 
 - name: retentionPeriod
   value: 30
+  
