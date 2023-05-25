@@ -79,14 +79,7 @@ stages:
     displayName:  Run Security Code Analysis Scans
     pool:
       vmImage: windows-latest
-    environment: |
-      ${{ if eq(parameters.environment, 'PreProd') }} 
-        Contoso Hotels - PreProd
-      ${{ if eq(parameters.environment, 'Production') }} 
-        Contoso Hotels - Prod
-      ${{ else }} 
-        Contoso Hotels - Dev
-      ${{ endif }}
+    environment: ${{ parameters.prefix }}
     strategy:
       runOnce:
         deploy:
@@ -132,12 +125,7 @@ stages:
   jobs:
   - deployment: LintCode
     displayName: Lint Code
-    ${{ if eq(parameters.environment, 'Integration') }}:
-      environment: 'Contoso Hotels - Dev'
-    ${{ if eq(parameters.environment, 'PreProd') }}:
-      environment: 'Contoso Hotels - PreProd'
-    ${{ if eq(parameters.environment, 'Production') }}:
-      environment: 'Contoso Hotels - Prod'
+    environment: ${{ parameters.prefix }}
     strategy:
       runOnce:
         deploy:
@@ -152,7 +140,7 @@ stages:
   jobs:
   - deployment: ValidateBicepCode
     displayName: Validate Bicep code
-    environment: $(pipelineEnvironment)
+    environment: ${{ parameters.prefix }}
     strategy:
       runOnce:
         deploy:
@@ -202,7 +190,7 @@ stages:
   jobs: 
   - deployment: PreviewAzureChanges
     displayName: Preview Azure changes
-    environment: $(pipelineEnvironment)
+    environment: ${{ parameters.prefix }}
     strategy:
       runOnce:
         deploy:
@@ -256,7 +244,7 @@ stages:
     displayName: Deploy Container Monitoring
     pool: 
       vmImage: ubuntu-latest
-    environment: $(pipelineEnvironment)
+    environment: ${{ parameters.prefix }}
     variables:
     - template: container-monitoring-variables.yml
     strategy:
@@ -388,7 +376,7 @@ stages:
     displayName: Deploy Manifests to Container Monitoring
     pool: 
       vmImage:  windows-latest
-    environment: $(pipelineEnvironment)
+    environment: ${{ parameters.prefix }}
     variables:
     - template: container-monitoring-variables.yml
     strategy:
@@ -499,7 +487,7 @@ stages:
   jobs:
   - deployment: PrometheusDeployment
     displayName: Deploy Azure Monitor workspace
-    environment: $(pipelineEnvironment)
+    environment: ${{ parameters.prefix }}
     variables:
     - template: container-monitoring-variables.yml
     strategy:
