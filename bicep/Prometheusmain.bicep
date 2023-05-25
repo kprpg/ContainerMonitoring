@@ -27,7 +27,6 @@ var clusterResourceGroup = resourceGroupName
 
 targetScope = 'subscription'
 
-
 // Azure monitor workspace Deployment 
 module azuremonitorworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bicep'  = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
@@ -50,15 +49,14 @@ module actiongroup 'modules/Microsoft.AlertsManagement/actiongroup.bicep' = {
     Receiveremailactiongroups: Receiveremailactiongroups
   }
   dependsOn: [
-
     azuremonitorworkspace
   ]
 }
 
 // Prometheus Rule Groups "Alerts Rules and Recordeing Rules" Deployment 
-module workspacealerts 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.bicep' =  {
+module RuleGroups 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.bicep' =  {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
-  name: 'workspacealertsrules'
+  name: 'workspacerulegroups'
   params: {
     location: location
     aksName: aksName
@@ -68,13 +66,13 @@ module workspacealerts 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.
     azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
   } 
   dependsOn: [
-    metricsaddon
+    datacollectionrule
     actiongroup
   ]
 }
 
 // Data Collection Rules for Azure monitore workspace 
-module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' =  {
+module datacollectionrule 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' =  {
   scope: resourceGroup(opsResourceGroupName)
   name: 'prometheusmetrics'
    params: {
@@ -87,20 +85,18 @@ module metricsaddon 'modules/Microsoft.OperationalInsights/dataCollectionRule/da
     azuremonitorworkspace
   ]
 }
-
-module azuremonitormetrics_dcra_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/dataCollectionRuleAssociations.bicep' = {
+module dataCollectionRuleAssociationprometheus 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRuleAssociationsPrometheus.bicep'= {
   name: 'azuremonitormetrics-dcra-${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
-    resourceId_Microsoft_Insights_dataCollectionRules_variables_dcrName: metricsaddon.outputs.dcrId
+    resourceId_Microsoft_Insights_dataCollectionRules_variables_dcrName: datacollectionrule.outputs.dcrId
     variables_clusterName: clusterName
     variables_dcraName: dcraName
     clusterLocation: clusterLocation
   }
 }
-
 // Azure Monitore workpsace metrics Add-on 
-module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.ContainerService/managedClusters/MetricsAddon.bicep'= {
+module azuremonitormetrics_profile_prometheus 'modules/Microsoft.ContainerService/managedClusters/metricsAddon.bicep'= {
   name: 'azuremonitormetrics-profile--${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
@@ -111,7 +107,7 @@ module azuremonitormetrics_profile_clusterResourceId 'modules/Microsoft.Containe
     metricAnnotationsAllowList: metricAnnotationsAllowList
   }
   dependsOn: [
-    azuremonitormetrics_dcra_clusterResourceId
+    dataCollectionRuleAssociationprometheus
   ]
 }
 

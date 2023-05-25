@@ -508,7 +508,7 @@ stages:
           } -Verbose   
         
     - task: AzurePowerShell@4
-      displayName: 'Create Azure Monitore workspace resources and Enable Grafana'
+      displayName: 'Create Azure Monitore workspace resources and link Grafana and Enable azure Monitore workspace'
       inputs:
         azurePowerShellVersion: LatestVersion
         azureSubscription:  $(azureSubscriptionEndpoint)
