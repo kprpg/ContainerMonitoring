@@ -80,9 +80,9 @@ stages:
     pool:
       vmImage: windows-latest
     environment: |
-      ${{ elseif eq(parameters.environment, 'PreProd') }} 
+      ${{ if eq(parameters.environment, 'PreProd') }} 
         Contoso Hotels - PreProd
-      ${{ elseif eq(parameters.environment, 'Production') }} 
+      ${{ if eq(parameters.environment, 'Production') }} 
         Contoso Hotels - Prod
       ${{ else }} 
         Contoso Hotels - Dev
