@@ -79,7 +79,14 @@ stages:
     displayName:  Run Security Code Analysis Scans
     pool:
       vmImage: windows-latest
-    environment: ${{ if eq(parameters.environment, 'PreProd') }}'Contoso Hotels - PreProd'${{ elseif eq(parameters.environment, 'Production') }}'Contoso Hotels - Prod'${{ else }}'Contoso Hotels - Dev'${{ endif }}
+    environment: |
+      ${{ elseif eq(parameters.environment, 'PreProd') }} 
+        Contoso Hotels - PreProd
+      ${{ elseif eq(parameters.environment, 'Production') }} 
+        Contoso Hotels - Prod
+      ${{ else }} 
+        Contoso Hotels - Dev
+      ${{ endif }}
     strategy:
       runOnce:
         deploy:
