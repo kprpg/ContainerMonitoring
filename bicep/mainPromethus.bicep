@@ -40,7 +40,7 @@ module azuremonitorworkspace 'modules/Microsoft.Monitor/azureMonitorWorkspace.bi
   ]
 }
 // Action Group Deployment 
-module actiongroup 'modules/Microsoft.AlertsManagement/actiongroup.bicep' = {
+module actiongroup 'modules/Microsoft.Insights/actionGroups.bicep' = {
   scope: resourceGroup(contosoSH360ClusterResourceGroupName)
   name: 'actiongp'
   params: {
@@ -72,7 +72,7 @@ module RuleGroups 'modules/Microsoft.AlertsManagement/prometheusRuleGroups.bicep
 }
 
 // Data Collection Rules for Azure monitore workspace 
-module datacollectionrule 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRulePrometheus.bicep' =  {
+module datacollectionrule 'modules/Microsoft.Insights/dataCollectionRule/dataCollectionRulesPromethus.bicep' =  {
   scope: resourceGroup(opsResourceGroupName)
   name: 'prometheusmetrics'
    params: {
@@ -85,7 +85,7 @@ module datacollectionrule 'modules/Microsoft.OperationalInsights/dataCollectionR
     azuremonitorworkspace
   ]
 }
-module dataCollectionRuleAssociationprometheus 'modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRuleAssociationsPrometheus.bicep'= {
+module dataCollectionRuleAssociationprometheus 'modules/Microsoft.ContainerService/managedClusters/dataCollectionRuleAssociations/dataCollectionRuleAssociations.bicep'= {
   name: 'azuremonitormetrics-dcra-${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
