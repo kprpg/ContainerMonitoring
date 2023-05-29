@@ -96,7 +96,7 @@ module dataCollectionRuleAssociationprometheus 'modules/Microsoft.ContainerServi
   }
 }
 // Azure Monitore workpsace metrics Add-on 
-module azuremonitormetrics_profile_prometheus 'modules/Microsoft.ContainerService/managedClusters/metricsAddonprometheus.bicep' = {
+module azuremonitormetrics_profile_prometheus 'modules/Microsoft.ContainerService/managedClusters/metricsAddOnPrometheus.bicep' = {
   name: 'azuremonitormetrics-profile--${uniqueString(clusterResourceId)}'
   scope: resourceGroup(clusterSubscriptionId, clusterResourceGroup)
   params: {
