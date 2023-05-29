@@ -8,12 +8,8 @@ var dceName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'
 var dcrName = 'MSProm-${azureMonitorWorkspaceLocation}-${clusterName}'
 
 
-resource dce 'Microsoft.Insights/dataCollectionEndpoints@2021-09-01-preview' = {
+resource dce 'Microsoft.Insights/dataCollectionEndpoints@2021-09-01-preview'  existing = {
   name: dceName
-  location: azureMonitorWorkspaceLocation
-  kind: 'Linux'
-  properties: {
-  }
 }
 
 resource dcr 'Microsoft.Insights/dataCollectionRules@2021-09-01-preview' = {
