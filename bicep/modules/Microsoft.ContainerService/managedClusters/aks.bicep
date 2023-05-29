@@ -18,7 +18,7 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2021-02-01'
   name: clusterName
   location: location
   properties: {
-    kubernetesVersion: '1.23.8'
+    kubernetesVersion: '1.25.6'
     dnsPrefix: dnsPrefix
     agentPoolProfiles: primaryAgentPoolProfile
     servicePrincipalProfile: {
