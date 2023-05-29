@@ -162,7 +162,7 @@ stages:
                 -opsResourceGroupName $(workspaceResourceGroupName)
                 -logAnalyticsWorkspaceName $(workspaceName)
                 -workspaceSkuName $(workspaceSkuName)
-                -monitoredClusterName $(AKSName)
+                -monitoredClusterName $(aksName)
                 -nonmonitoredClusterName $(NonMonitoredAKSName)
                 -adminUser $(chVmAdminUser)
                 -adminPassword $(chVmAdminPassword)
@@ -214,7 +214,7 @@ stages:
                   opsResourceGroupName = '$(workspaceResourceGroupName)'
                   logAnalyticsWorkspaceName = '$(workspaceName)'
                   workspaceSkuName = '$(workspaceSkuName)'
-                  monitoredClusterName = '$(AKSName)'
+                  monitoredClusterName = '$(aksName)'
                   nonmonitoredClusterName = '$(NonMonitoredAKSName)'
                   adminUser = '$(chVmAdminUser)'
                   adminPassword = '$(chVmAdminPassword)'
@@ -270,7 +270,7 @@ stages:
                   opsResourceGroupName = '$(workspaceResourceGroupName)'
                   logAnalyticsWorkspaceName = '$(workspaceName)'
                   workspaceSkuName = '$(workspaceSkuName)'
-                  monitoredClusterName = '$(AKSName)'
+                  monitoredClusterName = '$(aksName)'
                   nonmonitoredClusterName = '$(NonMonitoredAKSName)'
                   adminUser = '$(chVmAdminUser)'
                   adminPassword = '$(chVmAdminPassword)'
@@ -303,7 +303,7 @@ stages:
               ScriptType: 'InlineScript'
               Inline: |
                   New-AzResourceGroupDeployment -ResourceGroupName '$(workspaceResourceGroupName)'  `
-                      -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.OperationalInsights/dataCollectionRule/dataCollectionRule.bicep' `
+                      -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.Insights/dataCollectionRule/dataCollectionRule.bicep' `
                       -dataCollectionRuleName '$(dataCollectionRuleName)' `
                       -workspaceName '$(workspaceName)' `
                       -Verbose
@@ -348,7 +348,7 @@ stages:
                 $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/pester.Tests.ps1  -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
                 opsResourceGroupName = '$(workspaceResourceGroupName)'
                 logAnalyticsWorkspaceName = '$(workspaceName)'
-                monitoredClusterName = '$(AKSName)'
+                monitoredClusterName = '$(aksName)'
                 nonmonitoredClusterName = '$(NonMonitoredAKSName)'
                 retentionPeriod = $(retentionPeriod)
                 managedIdentityName = '$(managedIdentityName)'
@@ -367,7 +367,7 @@ stages:
               scriptType: pscore
               scriptLocation: inlineScript
               inlineScript: |
-                $cluster = az aks show -g '$(resourceGroupName)' -n '$(AKSName)' --output json
+                $cluster = az aks show -g '$(resourceGroupName)' -n '$(aksName)' --output json
                 $clusterData = $cluster | ConvertFrom-Json
                 az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
 
@@ -396,7 +396,7 @@ stages:
               connectionType: 'Azure Resource Manager'
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureResourceGroup: '$(resourceGroupName)'
-              kubernetesCluster: '$(AKSName)'
+              kubernetesCluster: '$(aksName)'
               command: apply
               arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/invalidimage.yaml'
 
@@ -406,7 +406,7 @@ stages:
               connectionType: 'Azure Resource Manager'
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureResourceGroup: '$(resourceGroupName)'
-              kubernetesCluster: '$(AKSName)'
+              kubernetesCluster: '$(aksName)'
               command: apply
               arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
 
@@ -416,7 +416,7 @@ stages:
               connectionType: 'Azure Resource Manager'
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureResourceGroup: '$(resourceGroupName)'
-              kubernetesCluster: '$(AKSName)'
+              kubernetesCluster: '$(aksName)'
               command: apply
               arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft-namespace.yaml'
 
@@ -426,7 +426,7 @@ stages:
               connectionType: 'Azure Resource Manager'
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureResourceGroup: '$(resourceGroupName)'
-              kubernetesCluster: '$(AKSName)'
+              kubernetesCluster: '$(aksName)'
               command: apply
               arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/minecraft3.yaml'
 
@@ -436,7 +436,7 @@ stages:
               connectionType: 'Azure Resource Manager'
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureResourceGroup: '$(resourceGroupName)'
-              kubernetesCluster: '$(AKSName)'
+              kubernetesCluster: '$(aksName)'
               command: apply
               arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/ngnix-app.yaml'
 
@@ -446,7 +446,7 @@ stages:
               connectionType: 'Azure Resource Manager'
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureResourceGroup: '$(resourceGroupName)'
-              kubernetesCluster: '$(AKSName)'
+              kubernetesCluster: '$(aksName)'
               command: apply
               arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus.yaml'
 
@@ -456,7 +456,7 @@ stages:
               connectionType: 'Azure Resource Manager'
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureResourceGroup: '$(resourceGroupName)'
-              kubernetesCluster: '$(AKSName)'
+              kubernetesCluster: '$(aksName)'
               command: apply
               arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/windows-service.yaml'
 
@@ -466,7 +466,7 @@ stages:
               connectionType: 'Azure Resource Manager'
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureResourceGroup: '$(resourceGroupName)'
-              kubernetesCluster: '$(AKSName)'
+              kubernetesCluster: '$(aksName)'
               command: apply
               arguments: '-f $(ContosoSH360ClusterFolder)/kubernetes-manifests/prometheus-bundle.yaml'
 
@@ -478,7 +478,7 @@ stages:
               ScriptType: InlineScript
               Inline: | 
                 $container = New-PesterContainer -Path $(Build.SourcesDirectory)/tests/KubernetesService.Tests.ps1 -Data @{ contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-                monitoredClusterName = '$(AKSName)'
+                monitoredClusterName = '$(aksName)'
                 ContosoSH360ClusterSPObjectId = "$(ContosoSH360ClusterSPObjectId)"
                 }
                 Invoke-pester -Container $Container
@@ -486,7 +486,7 @@ stages:
 
 - stage: PrometheusDeployment 
   displayName: Deploy Managed-Prometheus
-  condition: and( ${{ parameters.PrometheusDeployment }}, in(dependencies.BicepDeploy.result, 'Succeeded'))
+  condition: and( ${{ parameters.PrometheusDeployment }}, in(dependencies.BicepDeploy.result, 'Succeeded','skipped'))
   jobs:
   - deployment: PrometheusDeployment
     displayName: Deploy Azure Monitor workspace
@@ -500,37 +500,66 @@ stages:
           - checkout: self 
 
           - task: AzurePowerShell@4
-            name: RunWhatIf
-            displayName: 'Run what-if for Azure Monitor workspace'
-            inputs:
+            name: RunWhatIfprometheus
+            displayName: Run what-if for prometheus stage
+            inputs:     
               azurePowerShellVersion: LatestVersion
-              azureSubscription: $(azureSubscriptionEndpoint)
+              azureSubscription:  $(azureSubscriptionEndpoint)
               ScriptType: InlineScript
-              Inline: |         
-                  New-AzSubscriptionDeployment -WhatIf -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
-                  location = '$(location)'
-                  resourceGroupName = '$(resourceGroupName)'
-                  AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName)'
-                  } -Verbose     
-          
+              Inline: |     
+                 New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/mainPromethus.bicep' -TemplateParameterObject @{
+                   location = '$(location)'
+                   azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation)'
+                   resourceGroupName = '$(resourceGroupName)'
+                   azureMonitorWorkspaceName = '$(azureMonitorWorkspaceName)'
+                   clusterResourceId = '$(clusterResourceId)'
+                   actionGroupResourceId = '$(actionGroupResourceId)'
+                   azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId)'
+                   clusterLocation = '$(clusterLocation)'
+                   grafanaLocation = '$(grafanaLocation)'
+                   grafanaSku = '$(grafanaSku)'
+                   metricAnnotationsAllowList = '$(metricAnnotationsAllowList)'
+                   metricLabelsAllowlist = '$(metricLabelsAllowlist)'
+                   aksName = '$(aksName)'
+                   azureSubscriptionId = '$(azureSubscriptionId)'
+                   grafanaName = '$(grafanaName)' 
+                   contosoSH360ClusterResourceGroupName = '$(resourceGroupName)' 
+                   opsResourceGroupName  = '$(workspaceResourceGroupName)' 
+                   PrometheusactionGroup  = '$(PrometheusactionGroup)' 
+                   groupShortName   = '$(groupShortName)' 
+                   Receiveremailactiongroups   = '$(Receiveremailactiongroups)' 
+                 }  -Verbose    
+
           - task: AzurePowerShell@4
-            displayName: 'Create Azure Monitor workspace'
-            inputs:
+            displayName: 'Create Azure Monitore workspace resources and link Grafana and Enable azure Monitore workspace'
+            inputs:     
               azurePowerShellVersion: LatestVersion
-              azureSubscription: $(azureSubscriptionEndpoint)
+              azureSubscription:  $(azureSubscriptionEndpoint)
               ScriptType: InlineScript
-              Inline: |  
-                try {         
-                  $AzureMonitorWorkspace = New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/prometheus.bicep' -TemplateParameterObject @{
-                  location = '$(location)'
-                  resourceGroupName = '$(resourceGroupName)'
-                  AzureMonitorWorkspaceName = '$(AzureMonitorWorkspaceName)'
-                  } -Verbose
-                }
-                catch{ 
-                  Write-Output "Failed to create $($AzureMonitorWorkspace), Error: $($_.exception)"
-                }
-                
+              Inline: |     
+                 New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/mainPromethus.bicep' -TemplateParameterObject @{
+                   location = '$(location)'
+                   resourceGroupName = '$(resourceGroupName)'
+                   azureMonitorWorkspaceName = '$(azureMonitorWorkspaceName)'
+                   clusterResourceId = '$(clusterResourceId)'
+                   actionGroupResourceId = '$(actionGroupResourceId)'
+                   azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId)'
+                   clusterLocation = '$(clusterLocation)'
+                   grafanaLocation = '$(grafanaLocation)'
+                   grafanaSku = '$(grafanaSku)'
+                   metricAnnotationsAllowList = '$(metricAnnotationsAllowList)'
+                   metricLabelsAllowlist = '$(metricLabelsAllowlist)'
+                   aksName = '$(aksName)'
+                   azureSubscriptionId = '$(azureSubscriptionId)'
+                   grafanaName = '$(grafanaName)' 
+                   contosoSH360ClusterResourceGroupName = '$(resourceGroupName)' 
+                   opsResourceGroupName  = '$(workspaceResourceGroupName)' 
+                   PrometheusactionGroup  = '$(PrometheusactionGroup)' 
+                   groupShortName   = '$(groupShortName)' 
+                   Receiveremailactiongroups   = '$(Receiveremailactiongroups)' 
+                   azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation)'
+                 }  -Verbose  
+
           - task: AzureCLI@2
             displayName: 'Install amg extension for grafana'
             inputs:
@@ -550,54 +579,7 @@ stages:
                 $contextData = ($context | ConvertFrom-Json).id
                 $grafana = az grafana show --name $(grafanaName) --resource-group $(grafanaresourceGroupName) --output json
                 $grafanaData = $grafana | ConvertFrom-Json
-                az role assignment create --role "Monitoring Data Reader" --assignee $grafanaData.identity.principalId --description "Role assignment" --scope  "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(AzureMonitorWorkspaceName)"
-        
-          - task: AzurePowerShell@4
-            displayName: 'Create Action Group For Azure monitore workspace'
-            inputs:
-              azurePowerShellVersion: LatestVersion
-              azureSubscription:  $(azureSubscriptionEndpoint)
-              ScriptType: InlineScript
-              Inline: |          
-                New-AzResourceGroupDeployment -ResourceGroupName '$(resourceGroupName)'  -TemplateFile '$(Build.SourcesDirectory)/bicep/modules/Microsoft.insights.actiongroup/actiongroup.bicep' -TemplateParameterObject @{
-                  PrometheusactionGroup = '$(PrometheusactionGroup)'
-                  groupShortName = '$(groupShortName)'
-                  Receiveremailactiongroups = '$(Receiveremailactiongroups)'
-                } -Verbose          
-        
-          - task: AzurePowerShell@4
-            displayName: 'Enable AKS and Grafana for prometheus workspace'
-            inputs:
-              azurePowerShellVersion: LatestVersion
-              azureSubscription:  $(azureSubscriptionEndpoint)
-              ScriptType: InlineScript
-              Inline: |     
-                New-AzResourceGroupDeployment -ResourceGroupName '$(grafanaresourceGroupName)'  -TemplateFile '$(Build.SourcesDirectory)/bicep/FullAzureMonitorMetricsProfile.bicep' -TemplateParameterObject @{
-                azureMonitorWorkspaceResourceId = '$(azureMonitorWorkspaceResourceId)'
-                azureMonitorWorkspaceLocation = '$(azureMonitorWorkspaceLocation)'
-                clusterResourceId = '$(clusterResourceId)'
-                metricLabelsAllowlist   = '$(metricLabelsAllowlist)'
-                metricAnnotationsAllowList  = '$(metricAnnotationsAllowList)'
-                clusterLocation = '$(clusterLocation)'
-                grafanaResourceId = '$(grafanaResourceId)'
-                grafanaLocation = '$(grafanaLocation)'
-                grafanaSku = '$(grafanaSku)'
-                } -Verbose  
-
-
-          - task: AzurePowerShell@4
-            displayName: 'Enable Alerts for Azure monitore workspace'
-            inputs:
-              azurePowerShellVersion: LatestVersion
-              azureSubscription:  $(azureSubscriptionEndpoint)
-              ScriptType: InlineScript
-              Inline: |     
-                New-AzResourceGroupDeployment -ResourceGroupName '$(resourceGroupName)'  -TemplateFile '$(Build.SourcesDirectory)/bicep/AzureMonitorAlertsProfile.bicep' -TemplateParameterObject @{
-                azuremonitorWorkspaceName = '$(azuremonitorWorkspaceName)'
-                location = '$(location)'
-                clusterResourceId  = '$(clusterResourceId)'
-                actionGroupResourceId  = '$(actionGroupResourceId)'
-                } -Verbose  
+                az role assignment create --role "Monitoring Data Reader" --assignee $grafanaData.identity.principalId --description "Role assignment" --scope  "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.monitor/accounts/$(AzureMonitorWorkspaceName)"       
 
           - task: AzurePowerShell@5
             name: executingprometheusPesterTest
@@ -616,4 +598,4 @@ stages:
                 grafanaresourceGroupName = '$(grafanaresourceGroupName)'
                 }
                 Invoke-pester -Container $Container
-              azurePowerShellVersion: LatestVersion          
+              azurePowerShellVersion: LatestVersion                      

@@ -92,7 +92,7 @@ stages:
             location = '$(location)'
             servicePrincipalClientId = "$(ContosoSH360ClusterSPClientId)"
             servicePrincipalClientSecret = "$(ContosoSH360ClusterSPClientSecret)"
-            clusterName = "$(AKSName)"
+            clusterName = "$(aksName)"
             workspaceName = "$(workspaceName)"
             workspaceResourceGroupName = "$(workspaceResourceGroupName)"
           } -Verbose
@@ -105,7 +105,7 @@ stages:
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
-          $cluster = az aks show -g '$(resourceGroupName)' -n '$(AKSName)' --output json
+          $cluster = az aks show -g '$(resourceGroupName)' -n '$(aksName)' --output json
           $clusterData = $cluster | ConvertFrom-Json
           az role assignment create --assignee-object-id "$(ContosoSH360ClusterSPObjectId)" --scope $clusterData.id --role "Monitoring Metrics Publisher"
 
@@ -133,7 +133,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(aksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/yaml/invalidimage.yaml'
 
@@ -143,7 +143,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(aksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/yaml/ngnix-app.yaml'
 
@@ -153,7 +153,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(aksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/yaml/minecraft-namespace.yaml'
 
@@ -163,7 +163,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(aksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/yaml/minecraft3.yaml'
 
@@ -173,7 +173,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(aksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/yaml/ngnix-app.yaml'
 
@@ -183,7 +183,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(aksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/yaml/prometheus.yaml'
 
@@ -193,7 +193,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(aksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/yaml/windows-service.yaml'
 
@@ -203,6 +203,6 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
         azureResourceGroup: '$(resourceGroupName)'
-        kubernetesCluster: '$(AKSName)'
+        kubernetesCluster: '$(aksName)'
         command: apply
         arguments: '-f $(ContosoSH360ClusterFolder)/yaml/prometheus-bundle.yaml'

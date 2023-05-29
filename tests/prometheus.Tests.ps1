@@ -1,5 +1,5 @@
 param(   
-    [string] $AzureMonitorWorkspaceName,
+    [string] $azureMonitorWorkspaceName,
     [string] $azureMonitorWorkspaceResourceId,
     [string] $resourceGroupName,
     [string] $PrometheusactionGroup,
@@ -28,12 +28,12 @@ Describe "Checking for all resourceGroup validation for Managed prometheus imple
     }    
     It "Checking for Azure monitore workspace" {
         try {
-            $getWorkspace = Get-AzResource -name $AzureMonitorWorkspaceName -ResourceType Microsoft.Monitor/accounts -WarningAction:SilentlyContinue
+            $getWorkspace = Get-AzResource -name $azureMonitorWorkspaceName -ResourceType Microsoft.Monitor/accounts -WarningAction:SilentlyContinue
         }
         catch {
-            Write-output "Failed to fetch Azure monitore workspace $($AzureMonitorWorkspaceName),Error:$($_.exception)."
+            Write-output "Failed to fetch Azure monitore workspace $($azureMonitorWorkspaceName),Error:$($_.exception)."
         }
-        $getWorkspace.Name | Should -Be $AzureMonitorWorkspaceName
+        $getWorkspace.Name | Should -Be $azureMonitorWorkspaceName
         $getWorkspace.ResourceGroupName | should -Be $resourceGroupName
     }  
     It "Checking for Prometheus ActionGroup" {
