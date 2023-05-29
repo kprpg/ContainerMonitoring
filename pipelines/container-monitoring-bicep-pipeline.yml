@@ -484,18 +484,20 @@ stages:
                 Invoke-pester -Container $Container
               azurePowerShellVersion: LatestVersion 
 
-
 - stage: PrometheusDeployment 
   displayName: Deploy Managed-Prometheus
-  condition: and( ${{ parameters.PrometheusDeployment }},  in(dependencies.BicepDeploy.result, 'Succeeded','skipped'))
+  condition: and( ${{ parameters.PrometheusDeployment }}, in(dependencies.BicepDeploy.result, 'Succeeded'))
   jobs:
-  - job: PrometheusDeployment
-    displayName: Deploy Azure Monitore workspace
+  - deployment: PrometheusDeployment
+    displayName: Deploy Azure Monitor workspace
+    environment: ${{ parameters.environment }}
     variables:
     - template: container-monitoring-variables.yml
-
-    steps:
-    - checkout: self 
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self 
 
     - task: AzurePowerShell@4
       name: RunWhatIfprometheus
