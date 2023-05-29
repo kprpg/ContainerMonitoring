@@ -75,207 +75,225 @@ stages:
   displayName: Run Security Code Analysis scan
   condition: ${{ parameters.securityTest }}
   jobs:
-  - job: SecurityCodeAnalysisScans
+  - deployment: SecurityCodeAnalysisScans
     displayName:  Run Security Code Analysis Scans
     pool:
       vmImage: windows-latest
-    
-    steps:
-    - checkout: self
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
 
-    - task: AntiMalware@3
-      inputs:
-        FileDirPath: '$(Build.SourcesDirectory)'
-        EnableServices: true
+          - task: AntiMalware@3
+            inputs:
+              FileDirPath: '$(Build.SourcesDirectory)'
+              EnableServices: true
 
-    - task: CredScan@3
-      inputs:
-        toolMajorVersion: Latest
-        scanFolder: '$(Build.SourcesDirectory)'
+          - task: CredScan@3
+            inputs:
+              toolMajorVersion: Latest
+              scanFolder: '$(Build.SourcesDirectory)'
 
-    - task: Armory@2
-      inputs:
-        targetDirectory: '$(Build.SourcesDirectory)'
-        targetFiles: 'f|**\*.json;-|.gdn\**;'
+          - task: Armory@2
+            inputs:
+              targetDirectory: '$(Build.SourcesDirectory)'
+              targetFiles: 'f|**\*.json;-|.gdn\**;'
 
-    - task: SdtReport@2
-      inputs:
-        GdnExportSarifFile: false
-        GdnExportHtmlFile: true
-        GdnExportAllTools: true
+          - task: SdtReport@2
+            inputs:
+              GdnExportSarifFile: false
+              GdnExportHtmlFile: true
+              GdnExportAllTools: true
 
-    - task: PublishSecurityAnalysisLogs@3
-      inputs:
-        ArtifactName: 'CodeAnalysisLogs'
-        ArtifactType: 'Container'
-        AllTools: true
-        ToolLogsNotFoundAction: 'Standard'
+          - task: PublishSecurityAnalysisLogs@3
+            inputs:
+              ArtifactName: 'CodeAnalysisLogs'
+              ArtifactType: 'Container'
+              AllTools: true
+              ToolLogsNotFoundAction: 'Standard'
 
-    - task: PostAnalysis@2
-      displayName: 'Post Analysis'
-      inputs:
-        GdnBreakAllTools: true
+          - task: PostAnalysis@2
+            displayName: 'Post Analysis'
+            inputs:
+              GdnBreakAllTools: true
 
 - stage: Lint
   displayName: LintCode
   condition: ${{ parameters.Lint }}
   jobs:
-  - job: LintCode
+  - deployment: LintCode
     displayName: Lint Code
-    steps:
-    - script: |
-          az bicep build --file $(Build.SourcesDirectory)/bicep/main.bicep
-      displayName: 'Run Bicep linter'
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - script: |
+                az bicep build --file $(Build.SourcesDirectory)/bicep/main.bicep
+            displayName: 'Run Bicep linter'
       
 - stage: Validate
   displayName: Validate Bicep code
   condition: ${{ parameters.Validate }}
   jobs:
-  - job: ValidateBicepCode
+  - deployment: ValidateBicepCode
     displayName: Validate Bicep code
-    steps:
-    - task: AzureResourceManagerTemplateDeployment@3
-      inputs:
-        deploymentScope: 'Subscription'
-        azureResourceManagerConnection: '$(azureSubscriptionEndpoint)'
-        location: '$(location)'
-        templateLocation: 'Linked artifact'
-        csmFile: '$(Build.SourcesDirectory)/bicep/main.bicep'
-        deploymentMode: 'Validation'
-        overrideParameters: >
-          -location $(location)
-          -prefix $(prefix)
-          -contosoSH360ClusterResourceGroupName $(resourceGroupName)
-          -opsResourceGroupName $(workspaceResourceGroupName)
-          -logAnalyticsWorkspaceName $(workspaceName)
-          -workspaceSkuName $(workspaceSkuName)
-          -monitoredClusterName $(aksName)
-          -nonmonitoredClusterName $(NonMonitoredAKSName)
-          -adminUser $(chVmAdminUser)
-          -adminPassword $(chVmAdminPassword)
-          -agentVMSize $(agentVMSize)
-          -retentionPeriod $(retentionPeriod)
-          -serviceCidr $(aksClusterServiceCidr)
-          -dockerBridgeCidr $(aksClusterDockerBridgeCidr)
-          -managedIdentityName $(managedIdentityName)
-          -searchTableName $(searchTableName)
-          -monitoredAKSNetworkPolicy $(monitoredAKSNetworkPolicy)
-          -monitoredAKSNetworkPlugin $(monitoredAKSNetworkPlugin)
-          -nonMonitoredAKSNetworkPolicy $(nonMonitoredAKSNetworkPolicy)
-          -nonMonitoredAKSNetworkPlugin $(nonMonitoredAKSNetworkPlugin)
-          -kubernetesVersion ${{ parameters.clusterVersion }}
-          -monitoredClustervnetName $(monitoredClustervnetName)
-          -nonmonitoredClustervnetName $(nonmonitoredClustervnetName)
-          -monitoredClustervnetAddressPrefix $(monitoredClustervnetAddressPrefix)
-          -nonmonitoredClustervnetAddressPrefix $(nonmonitoredClustervnetAddressPrefix)
-          -monitoredClustersubnetName $(monitoredClustersubnetName)
-          -monitoredClustersubnetAddressPrefix $(monitoredClustersubnetAddressPrefix)
-          -nonmonitoredClustersubnetName $(nonmonitoredClustersubnetName)
-          -nonmonitoredClustersubnetAddressPrefix $(nonmonitoredClustersubnetAddressPrefix)
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              deploymentScope: 'Subscription'
+              azureResourceManagerConnection: '$(azureSubscriptionEndpoint)'
+              location: '$(location)'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(Build.SourcesDirectory)/bicep/main.bicep'
+              deploymentMode: 'Validation'
+              overrideParameters: >
+                -location $(location)
+                -prefix $(prefix)
+                -contosoSH360ClusterResourceGroupName $(resourceGroupName)
+                -opsResourceGroupName $(workspaceResourceGroupName)
+                -logAnalyticsWorkspaceName $(workspaceName)
+                -workspaceSkuName $(workspaceSkuName)
+                -monitoredClusterName $(AKSName)
+                -nonmonitoredClusterName $(NonMonitoredAKSName)
+                -adminUser $(chVmAdminUser)
+                -adminPassword $(chVmAdminPassword)
+                -agentVMSize $(agentVMSize)
+                -retentionPeriod $(retentionPeriod)
+                -serviceCidr $(aksClusterServiceCidr)
+                -dockerBridgeCidr $(aksClusterDockerBridgeCidr)
+                -managedIdentityName $(managedIdentityName)
+                -searchTableName $(searchTableName)
+                -monitoredAKSNetworkPolicy $(monitoredAKSNetworkPolicy)
+                -monitoredAKSNetworkPlugin $(monitoredAKSNetworkPlugin)
+                -nonMonitoredAKSNetworkPolicy $(nonMonitoredAKSNetworkPolicy)
+                -nonMonitoredAKSNetworkPlugin $(nonMonitoredAKSNetworkPlugin)
+                -kubernetesVersion ${{ parameters.clusterVersion }}
+                -monitoredClustervnetName $(monitoredClustervnetName)
+                -nonmonitoredClustervnetName $(nonmonitoredClustervnetName)
+                -monitoredClustervnetAddressPrefix $(monitoredClustervnetAddressPrefix)
+                -nonmonitoredClustervnetAddressPrefix $(nonmonitoredClustervnetAddressPrefix)
+                -monitoredClustersubnetName $(monitoredClustersubnetName)
+                -monitoredClustersubnetAddressPrefix $(monitoredClustersubnetAddressPrefix)
+                -nonmonitoredClustersubnetName $(nonmonitoredClustersubnetName)
+                -nonmonitoredClustersubnetAddressPrefix $(nonmonitoredClustersubnetAddressPrefix)
 
 - stage: Preview
   displayName: Bicep Preview
   condition: ${{ parameters.Preview }}
   jobs: 
-  - job: PreviewAzureChanges
+  - deployment: PreviewAzureChanges
     displayName: Preview Azure changes
-    steps:
-    - task: AzurePowerShell@4
-      name: RunWhatIf
-      displayName: Run what-if
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |
-          $subscriptionId = (Get-AzContext).Subscription.Id
-          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
-            location = '$(location)'
-            prefix = '$(prefix)'
-            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-            opsResourceGroupName = '$(workspaceResourceGroupName)'
-            logAnalyticsWorkspaceName = '$(workspaceName)'
-            workspaceSkuName = '$(workspaceSkuName)'
-            monitoredClusterName = '$(aksName)'
-            nonmonitoredClusterName = '$(NonMonitoredAKSName)'
-            adminUser = '$(chVmAdminUser)'
-            adminPassword = '$(chVmAdminPassword)'
-            agentVMSize = '$(agentVMSize)'
-            retentionPeriod = $(retentionPeriod)
-            serviceCidr = '$(aksClusterServiceCidr)'
-            dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
-            managedIdentityName = '$(managedIdentityName)'
-            searchTableName = '$(searchTableName)'
-            monitoredAKSNetworkPolicy = '$(monitoredAKSNetworkPolicy)'
-            monitoredAKSNetworkPlugin = '$(monitoredAKSNetworkPlugin)'
-            nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
-            nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
-            kubernetesVersion = '${{ parameters.clusterVersion }}'
-            monitoredClustervnetName = '$(monitoredClustervnetName)'
-            nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
-            monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
-            nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
-            monitoredClustersubnetName = '$(monitoredClustersubnetName)'
-            monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
-            nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
-            nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'        
-          } -Verbose
-    
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: AzurePowerShell@4
+            name: RunWhatIf
+            displayName: Run what-if
+            inputs:
+              azurePowerShellVersion: LatestVersion
+              azureSubscription:  $(azureSubscriptionEndpoint)
+              ScriptType: InlineScript
+              Inline: |
+                $subscriptionId = (Get-AzContext).Subscription.Id
+                New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
+                  location = '$(location)'
+                  prefix = '$(prefix)'
+                  contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+                  opsResourceGroupName = '$(workspaceResourceGroupName)'
+                  logAnalyticsWorkspaceName = '$(workspaceName)'
+                  workspaceSkuName = '$(workspaceSkuName)'
+                  monitoredClusterName = '$(AKSName)'
+                  nonmonitoredClusterName = '$(NonMonitoredAKSName)'
+                  adminUser = '$(chVmAdminUser)'
+                  adminPassword = '$(chVmAdminPassword)'
+                  agentVMSize = '$(agentVMSize)'
+                  retentionPeriod = $(retentionPeriod)
+                  serviceCidr = '$(aksClusterServiceCidr)'
+                  dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+                  managedIdentityName = '$(managedIdentityName)'
+                  searchTableName = '$(searchTableName)'
+                  monitoredAKSNetworkPolicy = '$(monitoredAKSNetworkPolicy)'
+                  monitoredAKSNetworkPlugin = '$(monitoredAKSNetworkPlugin)'
+                  nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
+                  nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
+                  kubernetesVersion = '${{ parameters.clusterVersion }}'
+                  monitoredClustervnetName = '$(monitoredClustervnetName)'
+                  nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
+                  monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
+                  nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
+                  monitoredClustersubnetName = '$(monitoredClustersubnetName)'
+                  monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
+                  nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
+                  nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
+                } -Verbose
 
 - stage: BicepDeploy
   displayName: Bicep Deployment
   condition: and( ${{ parameters.InfrastructureDeployment }},  in(dependencies.Preview.result, 'Succeeded') )
   jobs:
-  - job: Deploy
+  - deployment: DeployContainerMonitoring
     displayName: Deploy Container Monitoring
     pool: 
       vmImage: ubuntu-latest
-    
+    environment: ${{ parameters.environment }}
     variables:
     - template: container-monitoring-variables.yml
-    
-    steps:
-    - checkout: self
-
-    - task: AzurePowerShell@4
-      displayName: 'Create resources'
-      inputs:
-        azurePowerShellVersion: LatestVersion
-        azureSubscription:  $(azureSubscriptionEndpoint)
-        ScriptType: InlineScript
-        Inline: |
-          $subscriptionId = (Get-AzContext).Subscription.Id
-          New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
-            location = '$(location)'
-            prefix = '$(prefix)'
-            contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
-            opsResourceGroupName = '$(workspaceResourceGroupName)'
-            logAnalyticsWorkspaceName = '$(workspaceName)'
-            workspaceSkuName = '$(workspaceSkuName)'
-            monitoredClusterName = '$(aksName)'
-            nonmonitoredClusterName = '$(NonMonitoredAKSName)'
-            adminUser = '$(chVmAdminUser)'
-            adminPassword = '$(chVmAdminPassword)'
-            agentVMSize = '$(agentVMSize)'
-            retentionPeriod = $(retentionPeriod)
-            serviceCidr = '$(aksClusterServiceCidr)'
-            dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
-            managedIdentityName = '$(managedIdentityName)'
-            searchTableName = '$(searchTableName)'
-            monitoredAKSNetworkPolicy = '$(monitoredAKSNetworkPolicy)'
-            monitoredAKSNetworkPlugin = '$(monitoredAKSNetworkPlugin)'
-            nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
-            nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
-            kubernetesVersion = '${{ parameters.clusterVersion }}'
-            monitoredClustervnetName = '$(monitoredClustervnetName)'
-            nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
-            monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
-            nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
-            monitoredClustersubnetName = '$(monitoredClustersubnetName)'
-            monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
-            nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
-            nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
-          } -Verbose
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: AzurePowerShell@4
+            displayName: 'Create resources'
+            inputs:
+              azurePowerShellVersion: LatestVersion
+              azureSubscription:  $(azureSubscriptionEndpoint)
+              ScriptType: InlineScript
+              Inline: |
+                $subscriptionId = (Get-AzContext).Subscription.Id
+                New-AzSubscriptionDeployment -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/main.bicep' -TemplateParameterObject @{
+                  location = '$(location)'
+                  prefix = '$(prefix)'
+                  contosoSH360ClusterResourceGroupName = '$(resourceGroupName)'
+                  opsResourceGroupName = '$(workspaceResourceGroupName)'
+                  logAnalyticsWorkspaceName = '$(workspaceName)'
+                  workspaceSkuName = '$(workspaceSkuName)'
+                  monitoredClusterName = '$(AKSName)'
+                  nonmonitoredClusterName = '$(NonMonitoredAKSName)'
+                  adminUser = '$(chVmAdminUser)'
+                  adminPassword = '$(chVmAdminPassword)'
+                  agentVMSize = '$(agentVMSize)'
+                  retentionPeriod = $(retentionPeriod)
+                  serviceCidr = '$(aksClusterServiceCidr)'
+                  dockerBridgeCidr = '$(aksClusterDockerBridgeCidr)'
+                  managedIdentityName = '$(managedIdentityName)'
+                  searchTableName = '$(searchTableName)'
+                  monitoredAKSNetworkPolicy = '$(monitoredAKSNetworkPolicy)'
+                  monitoredAKSNetworkPlugin = '$(monitoredAKSNetworkPlugin)'
+                  nonMonitoredAKSNetworkPolicy = '$(nonMonitoredAKSNetworkPolicy)'
+                  nonMonitoredAKSNetworkPlugin = '$(nonMonitoredAKSNetworkPlugin)'
+                  kubernetesVersion = '${{ parameters.clusterVersion }}'
+                  monitoredClustervnetName = '$(monitoredClustervnetName)'
+                  nonmonitoredClustervnetName = '$(nonmonitoredClustervnetName)'
+                  monitoredClustervnetAddressPrefix = '$(monitoredClustervnetAddressPrefix)'
+                  nonmonitoredClustervnetAddressPrefix = '$(nonmonitoredClustervnetAddressPrefix)'
+                  monitoredClustersubnetName = '$(monitoredClustersubnetName)'
+                  monitoredClustersubnetAddressPrefix = '$(monitoredClustersubnetAddressPrefix)'
+                  nonmonitoredClustersubnetName = '$(nonmonitoredClustersubnetName)'
+                  nonmonitoredClustersubnetAddressPrefix = '$(nonmonitoredClustersubnetAddressPrefix)'
+                } -Verbose
     
     - task: AzurePowerShell@5
       displayName: Creation of dataCollectionRule
