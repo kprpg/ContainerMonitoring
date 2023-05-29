@@ -484,7 +484,7 @@ stages:
         azureSubscription:  $(azureSubscriptionEndpoint)
         ScriptType: InlineScript
         Inline: |
-          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/Prometheusmain.bicep' -TemplateParameterObject @{
+          New-AzSubscriptionDeployment -Whatif -Location '$(location)' -TemplateFile '$(Build.SourcesDirectory)/bicep/mainPromethus.bicep' -TemplateParameterObject @{
             location = '$(location)'
             resourceGroupName = '$(resourceGroupName)'
             azureMonitorWorkspaceName = '$(azureMonitorWorkspaceName)'
