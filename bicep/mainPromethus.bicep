@@ -94,6 +94,9 @@ module dataCollectionRuleAssociationprometheus 'modules/Microsoft.ContainerServi
     variables_dcraName: dcraName
     clusterLocation: clusterLocation
   }
+  dependsOn: [
+    datacollectionrule
+  ]
 }
 // Azure Monitore workpsace metrics Add-on 
 module azuremonitormetrics_profile_prometheus 'modules/Microsoft.ContainerService/managedClusters/metricsAddOnPrometheus.bicep' = {
