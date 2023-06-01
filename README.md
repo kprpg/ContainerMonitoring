@@ -41,7 +41,9 @@ Repo Link - https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/Contain
 
 ## Setup
 
-1. Clone/Fork the repository [ContainerMonitoring](https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring) to your Azure DevOps project.
+
+1. [Fork](https://learn.microsoft.com/en-us/azure/devops/repos/git/forks?view=azure-devops&tabs=visual-studio) the repository [ContainerMonitoring](https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring) to [forks](https://contosohotelsdev.visualstudio.com/Forks) Azure DevOps project or [Clone](https://learn.microsoft.com/en-us/azure/devops/repos/git/clone?view=azure-devops&tabs=visual-studio-2022) the repository [ContainerMonitoring](https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring) to your Azure DevOps project
+
 - How to fork a repository
 
     ![steps to fork container monitoring repository in your Azure DevOps project](./deploymentStepGIFs/stepsToForkRepo.gif =1000x)
