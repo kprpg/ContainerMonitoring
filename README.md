@@ -95,13 +95,13 @@ Project owners will review the pull request and action accordingly.
 
 - **Optional:** Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
 
-# Pipeline execution
+# How to run pipeline
 
-1.  Run the pipeline and enter prefix based on your environment naming convention
+- Run the pipeline and enter prefix based on your environment naming convention
 
     ![steps to run pipeline](./deploymentStepGIFs/stepsToRunPipeline.gif =1000x)
 
-2. Parameter Selection
+- Parameter Selection
 
     * **AKS Cluster Version** - Use supported version for your region
 
