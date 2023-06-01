@@ -63,11 +63,7 @@ Here’s how it generally works:
 
 - Create a new branch in your forked repository to make your changes.
 
-![gif to create a branch](./deploymentStepGIFs/wiki_create_Branch.gif =1000x)
-
 - Commit the changes and publish the branch. Raise a pull request
-
-![gif to create a branch](./deploymentStepGIFs/wiki_create_PR.gif =1000x)
 
 Project owners will review the pull request and action accordingly.
 
