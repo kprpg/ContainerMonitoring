@@ -38,13 +38,6 @@ stages:
     steps:
     - checkout: self
 
-    - task: AzureKeyVault@1
-      displayName: Load Secrets
-      inputs:
-        azureSubscription: '$(stagingSubscriptionEndpoint)'
-        KeyVaultName: '$(stagingKeyVaultName)'
-        SecretsFilter: 'ContosoSH360ClusterSPClientId, ContosoSH360ClusterSPClientSecret, ContosoSH360ClusterSPObjectId'
-
     - task: AzurePowerShell@4
       displayName: 'Create resource groups'
       inputs:

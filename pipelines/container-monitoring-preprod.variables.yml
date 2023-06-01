@@ -5,20 +5,11 @@ variables:
   value: '-Prepd'
 - name: azureSubscriptionEndpoint
   value: 'Contoso Hotels Tenant - PREPROD (DEV)'
-
 - name: azureSubscriptionId
   value: 59f6f1ab-6d68-4c90-b4e5-ad2d71cefc57
-  
-- name: stagingSubscriptionEndpoint
-  value: 'Contoso Hotels Tenant - PREPROD (DEV)'
-- name: stagingKeyVaultName
-  value: CH-StagingKV-Dev
-
 - name: location
   value: eastus
-
 - name: agentVMSize
   value: Standard_B2s
-
 - name: retentionPeriod
   value: 30
