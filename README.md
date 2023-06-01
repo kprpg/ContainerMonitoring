@@ -53,7 +53,7 @@ Here’s how it generally works:
 - The project owner merges or closes the Pull Request.
 - Sync the updated master back to your fork.
 
-# How to contribute
+## How to contribute
 
 - [Fork](https://learn.microsoft.com/en-us/azure/devops/repos/git/forks?view=azure-devops&tabs=visual-studio) the repository [ContainerMonitoring](https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring) to [forks](https://contosohotelsdev.visualstudio.com/Forks) Azure DevOps project.
 
