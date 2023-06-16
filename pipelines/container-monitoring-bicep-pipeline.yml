@@ -37,7 +37,7 @@ parameters:
 - name: InfrastructureDeployment 
   displayName: 'Deploy Infrastructure stage'
   type: boolean 
-  default: false
+  default: true
 
 - name: ApplicationDeployment 
   displayName: 'Deploy Application stage'
