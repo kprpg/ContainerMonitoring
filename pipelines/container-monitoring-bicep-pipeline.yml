@@ -8,7 +8,7 @@ parameters:
 - name: environment
   displayName: 'Environment to deploy'
   type: string
-  default: Integration
+  default: PreProd
   values:
   - Integration
   - PreProd
@@ -17,22 +17,22 @@ parameters:
 - name: securityTest 
   displayName: 'Deploy Security Test stage'
   type: boolean 
-  default: false
+  default: true
 
 - name: Lint 
   displayName: 'Deploy Lint stage'
   type: boolean 
-  default: false
+  default: true
 
 - name: Validate 
   displayName: 'Deploy Validate stage'
   type: boolean 
-  default: false
+  default: true
 
 - name: Preview 
   displayName: 'Deploy preview stage'
   type: boolean 
-  default: false 
+  default: true 
 
 - name: InfrastructureDeployment 
   displayName: 'Deploy Infrastructure stage'
@@ -42,20 +42,22 @@ parameters:
 - name: ApplicationDeployment 
   displayName: 'Deploy Application stage'
   type: boolean 
-  default: false 
+  default: true 
 
 - name: PrometheusDeployment
   displayName: 'Deploy Managed-Prometheus stage'
   type: boolean 
-  default: false
+  default: true
 
 - name: prefix
   displayName: 'Prefix'
   type: string
+  default: CH1
 
 - name: clusterVersion
   displayName: 'AKS Cluster Version'
   type: string
+  default: 1.24.10
 
 variables:
 - ${{ if eq(parameters.environment, 'Integration') }}:
