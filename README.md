@@ -29,7 +29,9 @@ This solution has also been used for Implementation of Managed Prometheus By Sec
 | `LICENSE`                                        | License file                         |
 | `README.md`                                      | Readme file                        |
 
-# Prerequisites
+# How to deploy in your environment (Do-It-Yourself)
+
+## Prerequisites
 
 * Owner/Contributor with User access administrator permission to an azure subscription
 * Contributor permission on Azure DevOps project
@@ -41,7 +43,7 @@ This solution has also been used for Implementation of Managed Prometheus By Sec
 * Create a new or use existing Managed garafana instance , We are currently using existing Azure managed grafana for the scenario 
 Repo Link - https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring?path=%2F&version=GBmain&_a=contents 
 
-# How to deploy in your environment (Do-It-Yourself)
+## Deployment steps
 - [Clone](https://learn.microsoft.com/en-us/azure/devops/repos/git/clone?view=azure-devops&tabs=visual-studio-2022) the repository [ContainerMonitoring](https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring) to your Azure DevOps project.
 
 - Create or use existing [service principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
