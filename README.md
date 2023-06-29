@@ -41,32 +41,6 @@ This solution has also been used for Implementation of Managed Prometheus By Sec
 * Create a new or use existing Managed garafana instance , We are currently using existing Azure managed grafana for the scenario 
 Repo Link - https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring?path=%2F&version=GBmain&_a=contents 
 
-# Contribution Workflow
-
-Here’s how it generally works:
-- Fork the project.
-- Create a topic branch from master.
-- Make some commits to improve the project.
-- Push this branch to your forked repo.
-- Open a Pull Request on project.
-- Discuss, and optionally continue committing.
-- The project owner merges or closes the Pull Request.
-- Sync the updated master back to your fork.
-
-## How to contribute
-
-- [Fork](https://learn.microsoft.com/en-us/azure/devops/repos/git/forks?view=azure-devops&tabs=visual-studio) the repository [ContainerMonitoring](https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring) to [forks](https://contosohotelsdev.visualstudio.com/Forks) Azure DevOps project.
-
-- How to fork a repository
-
-    ![steps to fork container monitoring repository in your Azure DevOps project](./deploymentStepGIFs/stepsToForkRepo.gif =1000x)
-
-- Create a new branch in your forked repository to make your changes.
-
-- Commit the changes and publish the branch. Raise a pull request
-
-Project owners will review the pull request and action accordingly.
-
 # How to create pipeline in user environment
 - [Clone](https://learn.microsoft.com/en-us/azure/devops/repos/git/clone?view=azure-devops&tabs=visual-studio-2022) the repository [ContainerMonitoring](https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring) to your Azure DevOps project.
 
@@ -95,7 +69,7 @@ Project owners will review the pull request and action accordingly.
 
 - **Optional:** Update variables in Container-monitoring-environment.variables.yml variables file to match your environment naming convention
 
-# How to run pipeline
+## How to run pipeline
 
 - Run the pipeline and enter prefix based on your environment naming convention
 
@@ -107,3 +81,28 @@ Project owners will review the pull request and action accordingly.
 
         To find out what versions are currently available for your subscription and region, please refer [AKS cluster supported versions](https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-powershell#azure-portal-and-cli-versions).
 
+# Contribution Workflow
+
+Here’s how it generally works:
+- Fork the project.
+- Create a topic branch from master.
+- Make some commits to improve the project.
+- Push this branch to your forked repo.
+- Open a Pull Request on project.
+- Discuss, and optionally continue committing.
+- The project owner merges or closes the Pull Request.
+- Sync the updated master back to your fork.
+
+## How to contribute
+
+- [Fork](https://learn.microsoft.com/en-us/azure/devops/repos/git/forks?view=azure-devops&tabs=visual-studio) the repository [ContainerMonitoring](https://contosohotelsdev.visualstudio.com/ContosoHotels/_git/ContainerMonitoring) to [forks](https://contosohotelsdev.visualstudio.com/Forks) Azure DevOps project.
+
+- How to fork a repository
+
+    ![steps to fork container monitoring repository in your Azure DevOps project](./deploymentStepGIFs/stepsToForkRepo.gif =1000x)
+
+- Create a new branch in your forked repository to make your changes.
+
+- Commit the changes and publish the branch. Raise a pull request
+
+Project owners will review the pull request and action accordingly.
