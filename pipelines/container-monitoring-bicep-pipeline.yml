@@ -14,14 +14,14 @@ parameters:
   - PreProd
   - Production
 
-- name: sonarqube
-  displayName: Perform Sonarqube Analysis
-  type: boolean
-  default: true
-
 - name: securityTest 
   displayName: 'Deploy Security Test stage'
   type: boolean 
+  default: true
+
+- name: sonarqube
+  displayName: Perform Sonarqube Analysis
+  type: boolean
   default: true
 
 - name: Lint 
