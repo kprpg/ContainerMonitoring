@@ -19,6 +19,11 @@ parameters:
   type: boolean 
   default: true
 
+- name: sonarqube
+  displayName: Perform Sonarqube Analysis
+  type: boolean
+  default: true
+
 - name: Lint 
   displayName: 'Deploy Lint stage'
   type: boolean 
@@ -120,6 +125,29 @@ stages:
             displayName: 'Post Analysis'
             inputs:
               GdnBreakAllTools: true
+
+  - job: SonarQubeAnalysis
+    displayName: SonarQube Analysis
+    condition: ${{ parameters.sonarqube }}
+    steps:
+      - task: SonarQubePrepare@5
+        displayName: Prepare SonarQube Analysis
+        inputs:
+          SonarQube: 'ServicesSonar-Prod'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'ContainerMonitoring'
+          cliProjectName: 'ContainerMonitoring_#ACAI'
+          cliSources: '.'
+          extraProperties: |
+            # Additional properties that will be passed to the scanner, 
+            # Put one key=value per line, example:
+            # sonar.exclusions=**/*.bin
+
+      - task: SonarQubeAnalyze@5
+        displayName: Run Code Analysis
+        inputs:
+          jdkversion: 'JAVA_HOME_11_X64'  
 
 - stage: Lint
   displayName: LintCode
