@@ -110,3 +110,10 @@ variables:
   value: "/subscriptions/$(azureSubscriptionId)/resourceGroups/$(resourceGroupName)/providers/microsoft.insights/actionGroups/$(PrometheusactionGroup)"
 - name: Receiveremailactiongroups
   value: paggarwal@microsoft.com
+
+- name: cliProjectKey
+  value: OpenAI-Service
+- name: cliProjectName
+  value: 'OpenAI-Service_#ACAI'
+- name: SonarQube
+  value: ServicesSonar-Prod
