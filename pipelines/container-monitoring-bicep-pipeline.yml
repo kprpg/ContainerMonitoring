@@ -133,11 +133,11 @@ stages:
       - task: SonarQubePrepare@5
         displayName: Prepare SonarQube Analysis
         inputs:
-          SonarQube: 'ServicesSonar-Prod'
+          SonarQube: $(SonarQube)
           scannerMode: 'CLI'
           configMode: 'manual'
-          cliProjectKey: 'ContainerMonitoring'
-          cliProjectName: 'ContainerMonitoring_#ACAI'
+          cliProjectKey: $(cliProjectKey)
+          cliProjectName: $(cliProjectName)
           cliSources: '.'
           extraProperties: |
             # Additional properties that will be passed to the scanner, 
