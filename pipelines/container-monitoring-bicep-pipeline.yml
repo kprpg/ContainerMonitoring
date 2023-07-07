@@ -133,7 +133,7 @@ stages:
       - task: SonarQubePrepare@5
         displayName: Prepare SonarQube Analysis
         inputs:
-          SonarQube: $(SonarQube)
+          SonarQube: $(SonarQubeConnection)
           scannerMode: 'CLI'
           configMode: 'manual'
           cliProjectKey: $(cliProjectKey)
