@@ -115,5 +115,5 @@ variables:
   value: ContainerMonitoring
 - name: cliProjectName
   value: 'ContainerMonitoring_#ACAI'
-- name: SonarQube
+- name: SonarQubeConnection
   value: ServicesSonar-Prod
